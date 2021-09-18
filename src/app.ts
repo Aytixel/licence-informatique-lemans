@@ -2,6 +2,7 @@ import { config } from "https://deno.land/x/dotenv@v3.0.0/mod.ts";
 import { join, parse } from "https://deno.land/std@0.107.0/path/mod.ts";
 import { exists } from "https://deno.land/std@0.107.0/fs/mod.ts";
 import Mime from "./mime.ts";
+import compress from "./compress.ts";
 import { Error404, Error500 } from "./error.ts";
 
 const env = config({ safe: true });
@@ -9,7 +10,6 @@ const server = Deno.listen({
   port: Number(env.PORT),
   hostname: env.HOSTNAME,
 });
-const body = new TextEncoder().encode("Hello World");
 
 async function readFile(
   returnDataType: string,
@@ -38,9 +38,13 @@ async function handle(conn: Deno.Conn) {
       const headers = { "content-type": Mime.getMimeType(parsedPath.ext) };
 
       if (await exists(filePath)) {
-        const body = await readFile(
-          Mime.getReturnDataType(parsedPath.ext),
-          filePath,
+        const body = compress(
+          request,
+          await readFile(
+            Mime.getReturnDataType(parsedPath.ext),
+            filePath,
+          ),
+          headers,
         );
         const response = new Response(body, { headers });
 
