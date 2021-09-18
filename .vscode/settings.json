@@ -1,4 +1,8 @@
 {
+    "files.associations": {
+        "*.env.example": "dotenv",
+        "*.env.defaults": "dotenv",
+    },
     "editor.formatOnSave": true,
     "deno.enable": true,
     "[typescript]": {
