@@ -21,19 +21,23 @@ async function readFile(
   let data: any = new Uint8Array();
   let status = 200;
 
-  switch (returnDataType) {
-    case "text":
-      data = new TextEncoder().encode(await Deno.readTextFile(pathname));
-      break;
-    case "stream":
-      let streamData = await stream(request, pathname, headers);
+  try {
+    switch (returnDataType) {
+      case "text":
+        data = new TextEncoder().encode(await Deno.readTextFile(pathname));
+        break;
+      case "stream":
+        let streamData = await stream(request, pathname, headers);
 
-      data = streamData.data;
-      status = streamData.status;
-
-      break;
-    case "binary":
-      data = await Deno.readFile(pathname);
+        data = streamData.data;
+        status = streamData.status;
+        break;
+      case "binary":
+        data = await Deno.readFile(pathname);
+    }
+  } catch (error) {
+    status = 500;
+    console.error(error);
   }
 
   return { data, status };

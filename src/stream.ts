@@ -23,9 +23,9 @@ export default async function (
     file.close();
 
     return { data: data, status: 206 };
-  } else {
-    headers["content-length"] = fileSize;
-
-    return { data: new Uint8Array(), status: 200 };
   }
+
+  headers["content-length"] = fileSize;
+
+  return { data: new Uint8Array(), status: 200 };
 }
