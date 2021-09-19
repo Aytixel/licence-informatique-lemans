@@ -123,17 +123,18 @@ const returnDataTypes: any = {
 };
 
 class Mime {
-  private static extensionToFileType(extension: string) {
+  private static extensionToFileType(extension: string): string {
     if (extension.startsWith(".")) extension = extension.substring(1);
     if (extensions[extension]) return extensions[extension];
+
     return extension;
   }
 
-  static getMimeType(extension: string) {
-    return mimeTypes[Mime.extensionToFileType(extension)] || mimeTypes;
+  static getMimeType(extension: string): string {
+    return mimeTypes[Mime.extensionToFileType(extension)] || defaultMimeType;
   }
 
-  static getMimeTypeCategory(extension: string) {
+  static getMimeTypeCategory(extension: string): string {
     const fileType = Mime.extensionToFileType(extension);
 
     for (const mimeTypeCategory in mimeTypeCategorys) {
@@ -149,7 +150,7 @@ class Mime {
     return defaultMimeTypeCategory;
   }
 
-  static getReturnDataType(extension: string) {
+  static getReturnDataType(extension: string): string {
     const fileType = Mime.extensionToFileType(extension);
 
     for (const returnDataType in returnDataTypes) {
