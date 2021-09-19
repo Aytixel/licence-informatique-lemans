@@ -124,6 +124,8 @@ const returnDataTypes: any = {
 
 class Mime {
   private static extensionToFileType(extension: string): string {
+    extension = extension.toLowerCase();
+
     if (extension.startsWith(".")) extension = extension.substring(1);
     if (extensions[extension]) return extensions[extension];
 
