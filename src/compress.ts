@@ -9,18 +9,21 @@ export default function (
   const acceptEncoding = request.headers.get("accept-encoding") || "";
 
   if (/\bgzip\b/.test(acceptEncoding)) {
-    headers["Vary"] = "Accept-Encoding";
-    headers["Content-Encoding"] = "gzip";
+    headers["vary"] = "Accept-Encoding";
+    headers["content-encoding"] = "gzip";
+
     return gzip(data, undefined);
   }
   if (/\bdeflate\b/.test(acceptEncoding)) {
-    headers["Vary"] = "Accept-Encoding";
-    headers["Content-Encoding"] = "deflate";
+    headers["vary"] = "Accept-Encoding";
+    headers["content-encoding"] = "deflate";
+
     return deflate(data, undefined);
   }
   if (/\bbr\b/.test(acceptEncoding)) {
-    headers["Vary"] = "Accept-Encoding";
-    headers["Content-Encoding"] = "br";
+    headers["vary"] = "Accept-Encoding";
+    headers["content-encoding"] = "br";
+
     return decompress(data);
   }
 
