@@ -83,7 +83,7 @@ const mimeTypeCategorys: any = {
   "video": ["mp4", "mpeg", "avi", "ogv", "ogx", "webm"],
   "audio": ["m4a", "mp3", "aac", "oga", "wav", "weba"],
 };
-const defaultReturnDataType = "text";
+const defaultReturnDataType = "binary";
 const returnDataTypes: any = {
   "text": [
     "html",
