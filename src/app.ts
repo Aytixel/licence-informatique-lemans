@@ -61,10 +61,10 @@ async function handle(conn: Deno.Conn) {
         );
         const response = new Response(body, { headers, status });
 
-        respondWith(response);
-      } else respondWith(new Error404());
+        respondWith(response).catch(console.error);
+      } else respondWith(new Error404()).catch(console.error);
     } catch (error) {
-      respondWith(new Error500());
+      respondWith(new Error500()).catch(console.error);
 
       console.error(error);
     }
