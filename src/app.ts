@@ -1,6 +1,6 @@
 import { config } from "https://deno.land/x/dotenv@v3.0.0/mod.ts";
-import { join, parse } from "https://deno.land/std@0.107.0/path/mod.ts";
 import { exists } from "https://deno.land/std@0.107.0/fs/mod.ts";
+import { Router } from "./router.ts";
 import Mime from "./mime.ts";
 import stream from "./stream.ts";
 import compress from "./compress.ts";
@@ -36,26 +36,35 @@ async function readFile(
         data = await Deno.readFile(pathname);
     }
   } catch (error) {
-    status = 500;
-    console.error(error);
+    switch (error.name) {
+      case "NotFound":
+      case "PermissionDenied":
+        status = 404;
+        break;
+      default:
+        status = 500;
+        console.error(error);
+    }
   }
 
   return { data, status };
 }
 
 async function handle(conn: Deno.Conn) {
+  const router = new Router(env);
+
   for await (const { request, respondWith } of Deno.serveHttp(conn)) {
     try {
-      const url = new URL(request.url);
-      const parsedPath = parse(url.pathname);
-      const filePath = join(env.PUBLIC_PATH, url.pathname);
-      const headers = { "content-type": Mime.getMimeType(parsedPath.ext) };
+      const { routerData, subDomainFound } = router.route(request);
+      const headers = {
+        "content-type": Mime.getMimeType(routerData.parsedPath.ext),
+      };
 
-      if (await exists(filePath)) {
+      if (subDomainFound && await exists(routerData.filePath)) {
         const { data, status } = await readFile(
           request,
-          Mime.getReturnDataType(parsedPath.ext),
-          filePath,
+          Mime.getReturnDataType(routerData.parsedPath.ext),
+          routerData.filePath,
           headers,
         );
         const body = compress(
