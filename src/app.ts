@@ -7,6 +7,7 @@ import compress from "./compress.ts";
 import { Error404, Error500 } from "./error.ts";
 
 const env = config({ safe: true });
+const router = new Router(env);
 const server = Deno.listen({
   port: Number(env.PORT),
   hostname: env.HOSTNAME,
@@ -51,8 +52,6 @@ async function readFile(
 }
 
 async function handle(conn: Deno.Conn) {
-  const router = new Router(env);
-
   for await (const { request, respondWith } of Deno.serveHttp(conn)) {
     try {
       const { routerData, subDomainFound } = router.route(request);
