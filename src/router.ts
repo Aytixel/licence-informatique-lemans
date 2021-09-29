@@ -1,26 +1,16 @@
 import { DotenvConfig } from "https://deno.land/x/dotenv@v3.0.0/mod.ts";
 import { join, parse } from "https://deno.land/std@0.107.0/path/mod.ts";
-import { getJsonSync } from "./utils.ts";
+import { createSubDomainConfig, getJsonSync } from "./utils.ts";
 
 class Router {
   private config: any;
   private publicPath: string;
 
   constructor(env: DotenvConfig) {
-    this.config = getJsonSync("./src/config/router.json");
+    this.config = createSubDomainConfig(
+      getJsonSync("./src/config/router.json"),
+    );
     this.publicPath = env.PUBLIC_PATH;
-
-    // create sub domain config from default config and sub domain overwrite config
-    for (const subDomainName in this.config.subDomain) {
-      const tempConfig = Object.assign({}, this.config.defaultConfig);
-      const subDomainConfig = this.config.subDomain[subDomainName];
-
-      for (const pathToRedirect in subDomainConfig) {
-        tempConfig[pathToRedirect] = subDomainConfig[pathToRedirect];
-      }
-
-      this.config.subDomain[subDomainName] = tempConfig;
-    }
   }
 
   route(request: Request) {

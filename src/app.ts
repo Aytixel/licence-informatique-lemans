@@ -55,11 +55,11 @@ async function handle(conn: Deno.Conn) {
   for await (const { request, respondWith } of Deno.serveHttp(conn)) {
     try {
       const { routerData, subDomainFound } = router.route(request);
-      const headers = {
-        "content-type": Mime.getMimeType(routerData.parsedPath.ext),
-      };
 
       if (subDomainFound && await exists(routerData.filePath)) {
+        const headers = {
+          "content-type": Mime.getMimeType(routerData.parsedPath.ext),
+        };
         const { data, status } = await readFile(
           request,
           Mime.getReturnDataType(routerData.parsedPath.ext),
