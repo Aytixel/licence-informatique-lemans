@@ -40,12 +40,12 @@ class Router {
 
       // get whether it should route the response and redirect it or not, and if so where ?
       const parsedPath = parse(routerData.url.pathname);
-      let redirect = null;
+      let redirectionPathToApply = null;
 
       for (
-        const pathToRedirect in subDomainConfig
+        const redirectionPath in subDomainConfig
       ) {
-        const subDomainConfigRegExp = subDomainConfig[pathToRedirect];
+        const subDomainConfigRegExp = subDomainConfig[redirectionPath];
         const regExpPassed = [0, 0, 0]; // 0 = not have to be test, 1 = have to be test, 2 = tested true
 
         if (typeof subDomainConfigRegExp.all === "string") {
@@ -71,15 +71,17 @@ class Router {
         }
 
         if (regExpPassed.filter((x) => x).every((x) => x == 2)) {
-          redirect = pathToRedirect;
+          redirectionPathToApply = redirectionPath;
           break;
         }
       }
 
-      if (redirect) {
+      if (redirectionPathToApply) {
         routerData.filePath = join(
           routerData.domainPath,
-          redirect.slice(-1) == "/" ? redirect + parsedPath.base : redirect,
+          redirectionPathToApply.slice(-1) == "/"
+            ? redirectionPathToApply + parsedPath.base
+            : redirectionPathToApply,
         );
       } else {
         routerData.filePath = join(
