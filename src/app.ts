@@ -4,10 +4,12 @@ import { Router } from "./router.ts";
 import Mime from "./mime.ts";
 import stream from "./stream.ts";
 import compress from "./compress.ts";
-import { Error404, Error500 } from "./error.ts";
+import { Cache } from "./cache.ts";
+import { Error404, Error500, NotModified304 } from "./status.ts";
 
 const env = config({ safe: true });
 const router = new Router(env);
+const cache = new Cache();
 const server = Deno.listen({
   port: Number(env.PORT),
   hostname: env.HOSTNAME,
@@ -71,9 +73,14 @@ async function handle(conn: Deno.Conn) {
           data,
           headers,
         );
-        const response = new Response(body, { headers, status });
 
-        respondWith(response).catch(console.error);
+        if (cache.addCacheHeader(request, data, routerData, headers)) {
+          respondWith(new NotModified304()).catch(console.error);
+        } else {
+          const response = new Response(body, { headers, status });
+
+          respondWith(response).catch(console.error);
+        }
       } else respondWith(new Error404()).catch(console.error);
     } catch (error) {
       respondWith(new Error500()).catch(console.error);
