@@ -55,24 +55,34 @@ class Router {
       for (
         const pathToRedirect in subDomainConfig
       ) {
-        if (pathToRedirect.slice(-1) == "/") {
-          if (
-            RegExp(subDomainConfig[pathToRedirect], "i").test(
-              parsedPath.dir,
-            )
-          ) {
-            redirect = pathToRedirect;
-            break;
-          }
-        } else {
-          if (
-            RegExp(subDomainConfig[pathToRedirect], "i").test(
+        const subDomainConfigRegExp = subDomainConfig[pathToRedirect];
+        const regExpPassed = [0, 0, 0]; // 0 = not have to be test, 1 = have to be test, 2 = tested true
+
+        if (typeof subDomainConfigRegExp.all === "string") {
+          regExpPassed[0] = RegExp(subDomainConfigRegExp.all, "i").test(
               routerData.url.pathname,
             )
-          ) {
-            redirect = pathToRedirect;
-            break;
-          }
+            ? 2
+            : 1;
+        }
+        if (typeof subDomainConfigRegExp.path === "string") {
+          regExpPassed[1] = RegExp(subDomainConfigRegExp.path, "i").test(
+              parsedPath.dir,
+            )
+            ? 2
+            : 1;
+        }
+        if (typeof subDomainConfigRegExp.file === "string") {
+          regExpPassed[2] = RegExp(subDomainConfigRegExp.file, "i").test(
+              parsedPath.base,
+            )
+            ? 2
+            : 1;
+        }
+
+        if (regExpPassed.filter((x) => x).every((x) => x == 2)) {
+          redirect = pathToRedirect;
+          break;
         }
       }
 
