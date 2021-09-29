@@ -59,12 +59,9 @@ class Cache {
           if (cacheConfig.includes("no-cache")) {
             headers["etag"] = tempEtag;
           }
-          if (
-            request.headers.get("if-none-match") ==
-              tempEtag
-          ) {
-            return true;
-          }
+
+          return request.headers.get("if-none-match") ==
+            tempEtag;
         }
 
         return false;

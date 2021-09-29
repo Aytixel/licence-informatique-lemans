@@ -76,20 +76,14 @@ class Router {
         }
       }
 
-      if (redirectionPathToApply) {
-        routerData.filePath = join(
-          routerData.domainPath,
-          redirectionPathToApply.slice(-1) == "/"
+      routerData.filePath = join(
+        routerData.domainPath,
+        redirectionPathToApply
+          ? (redirectionPathToApply.slice(-1) == "/"
             ? redirectionPathToApply + parsedPath.base
-            : redirectionPathToApply,
-        );
-      } else {
-        routerData.filePath = join(
-          routerData.domainPath,
-          routerData.url.pathname,
-        );
-      }
-
+            : redirectionPathToApply)
+          : routerData.url.pathname,
+      );
       routerData.parsedPath = parse(routerData.filePath);
     } else subDomainFound = false;
 
