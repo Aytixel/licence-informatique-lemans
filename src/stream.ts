@@ -1,6 +1,6 @@
 import { readRange } from "https://deno.land/std@0.107.0/io/mod.ts";
 
-export default async function (
+async function stream(
   request: Request,
   pathname: string,
   headers: any,
@@ -29,3 +29,5 @@ export default async function (
 
   return { data: new Uint8Array(), status: 200 };
 }
+
+export { stream };

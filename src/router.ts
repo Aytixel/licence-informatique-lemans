@@ -33,11 +33,6 @@ class Router {
       ];
 
     if (subDomainConfig) {
-      routerData.domainPath = join(
-        this.publicPath,
-        routerData.subDomain,
-      );
-
       // get whether it should route the response and redirect it or not, and if so where ?
       const parsedPath = parse(routerData.url.pathname);
       let redirectionPathToApply = null;
@@ -76,13 +71,17 @@ class Router {
         }
       }
 
-      routerData.filePath = join(
-        routerData.domainPath,
+      routerData.domainFilePath = join(
+        routerData.subDomain,
         redirectionPathToApply
           ? (redirectionPathToApply.slice(-1) == "/"
             ? redirectionPathToApply + parsedPath.base
             : redirectionPathToApply)
           : routerData.url.pathname,
+      );
+      routerData.filePath = join(
+        this.publicPath,
+        routerData.domainFilePath,
       );
       routerData.parsedPath = parse(routerData.filePath);
     } else subDomainFound = false;

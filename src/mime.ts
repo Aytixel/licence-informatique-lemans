@@ -169,4 +169,4 @@ class Mime {
   }
 }
 
-export default Mime;
+export { Mime };

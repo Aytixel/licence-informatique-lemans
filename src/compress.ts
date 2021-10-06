@@ -1,7 +1,7 @@
 import { decompress } from "https://deno.land/x/brotli@v0.1.4/mod.ts";
 import { deflate, gzip } from "https://deno.land/x/denoflate@1.2.1/mod.ts";
 
-export default function (
+function compress(
   request: Request,
   data: Uint8Array,
   headers: any,
@@ -29,3 +29,5 @@ export default function (
 
   return data;
 }
+
+export { compress };

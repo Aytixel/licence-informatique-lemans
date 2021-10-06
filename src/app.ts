@@ -1,15 +1,17 @@
 import { config } from "https://deno.land/x/dotenv@v3.0.0/mod.ts";
 import { exists } from "https://deno.land/std@0.107.0/fs/mod.ts";
 import { Router } from "./router.ts";
-import Mime from "./mime.ts";
-import stream from "./stream.ts";
-import compress from "./compress.ts";
+import { Mime } from "./mime.ts";
+import { stream } from "./stream.ts";
+import { compress } from "./compress.ts";
 import { Cache } from "./cache.ts";
 import { Error404, Error500, NotModified304 } from "./status.ts";
+import { Runner } from "./runner.ts";
 
 const env = config({ safe: true });
 const router = new Router(env);
 const cache = new Cache();
+const runner = new Runner(env);
 const server = Deno.listen({
   port: Number(env.PORT),
   hostname: env.HOSTNAME,
@@ -18,7 +20,7 @@ const server = Deno.listen({
 async function readFile(
   request: Request,
   returnDataType: string,
-  pathname: string,
+  routerData: any,
   headers: any,
 ): Promise<{ data: any; status: number }> {
   let data: any = new Uint8Array();
@@ -27,16 +29,27 @@ async function readFile(
   try {
     switch (returnDataType) {
       case "text":
-        data = new TextEncoder().encode(await Deno.readTextFile(pathname));
+        data = new TextEncoder().encode(
+          await runner.runModification(
+            request,
+            routerData,
+            await Deno.readTextFile(routerData.filePath),
+            headers,
+          ),
+        );
         break;
       case "stream":
-        let streamData = await stream(request, pathname, headers);
+        let streamData = await stream(request, routerData.filePath, headers);
 
         data = streamData.data;
         status = streamData.status;
+
+        await runner.run(request, routerData, headers);
         break;
       case "binary":
-        data = await Deno.readFile(pathname);
+        data = await Deno.readFile(routerData.filePath);
+
+        await runner.run(request, routerData, headers);
     }
   } catch (error) {
     switch (error.name) {
@@ -65,7 +78,7 @@ async function handle(conn: Deno.Conn) {
         const { data, status } = await readFile(
           request,
           Mime.getReturnDataType(routerData.parsedPath.ext),
-          routerData.filePath,
+          routerData,
           headers,
         );
         const body = compress(
