@@ -52,7 +52,7 @@ class Runner {
     const runnablePath = this.getRunnablePath(routerData.domainFilePath);
 
     if (runnablePath) {
-      return (await import(runnablePath)).default(
+      return await (await import(runnablePath)).default(
         request,
         routerData,
         data,
