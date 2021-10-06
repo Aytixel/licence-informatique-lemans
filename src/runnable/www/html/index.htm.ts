@@ -1,4 +1,5 @@
 export default function (
+  app: any,
   request: Request,
   routerData: any,
   data: string,

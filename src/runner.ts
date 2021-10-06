@@ -5,6 +5,7 @@ import { join, resolve } from "https://deno.land/std@0.110.0/path/mod.ts";
 class Runner {
   private runnablePath: string;
   private publicPath: string;
+  private app: any;
 
   constructor(env: DotenvConfig) {
     this.runnablePath = env.RUNNABLE_PATH;
@@ -28,7 +29,7 @@ class Runner {
   private async runApp() {
     const runnablePath = this.getRunnablePath("app");
 
-    if (runnablePath) (await import(runnablePath)).default();
+    if (runnablePath) this.app = new (await import(runnablePath)).default();
   }
 
   async run(request: Request, routerData: any, headers: any) {
@@ -36,6 +37,7 @@ class Runner {
 
     if (runnablePath) {
       (await import(runnablePath)).default(
+        this.app,
         request,
         routerData,
         headers,
@@ -53,6 +55,7 @@ class Runner {
 
     if (runnablePath) {
       return await (await import(runnablePath)).default(
+        this.app,
         request,
         routerData,
         data,

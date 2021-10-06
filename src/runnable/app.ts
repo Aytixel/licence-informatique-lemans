@@ -1,3 +1,5 @@
-export default function () {
-  console.log("app");
+export default class {
+  constructor() {
+    console.log("app");
+  }
 }
