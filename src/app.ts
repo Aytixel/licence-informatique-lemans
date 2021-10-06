@@ -30,7 +30,7 @@ async function readFile(
     switch (returnDataType) {
       case "text":
         data = new TextEncoder().encode(
-          await runner.runModification(
+          await runner.runWithTextData(
             request,
             routerData,
             await Deno.readTextFile(routerData.filePath),

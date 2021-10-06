@@ -43,7 +43,7 @@ class Runner {
     }
   }
 
-  async runModification(
+  async runWithTextData(
     request: Request,
     routerData: any,
     data: string,
