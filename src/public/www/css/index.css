@@ -1,0 +1,36 @@
+* {
+    position: relative;
+    z-index: 0;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    background-color: #1c1c1c;
+
+    font-family: sans-serif;
+    color: #c2c2c2;
+}
+
+nav {
+    width: 100%;
+    height: 7.5vh;
+}
+
+nav a {
+    color: #c2c2c2;
+    text-decoration: none;
+}
+
+header {
+    width: 100%;
+    height: 92.5vh;
+}
+
+header h1 {
+    font-size: 7.5vmin;
+}
+
+header h2 {
+    font-size: 2.5vmin;
+}
