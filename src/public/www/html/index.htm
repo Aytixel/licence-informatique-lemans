@@ -3,36 +3,70 @@
 
     <head>
         <link rel="alternate" hreflang="fr" href="https://licence-informatique-lemans.tk/" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+        <link rel="manifest" href="/site.webmanifest">
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="author" content="Aytixel">
         <meta name="description" content="Site non officiel de la Licence Informatique du Mans">
         <title>Licence Informatique LeMans</title>
+        <link rel="preload stylesheet" as="style" type="text/css" href="/css/fonts.css">
         <link rel="preload stylesheet" as="style" type="text/css" href="/css/index.css">
     </head>
 
     <body>
         <div class="menu">
+            <img class="logo" alt="logo" src="/resource/img/logo.svg" />
             <nav>
-                <a href="#">Planning</a>
+                <a href="#planning">Planning</a>
                 <a href="#">Réseaux</a>
             </nav>
         </div>
 
         <div class="body">
             <header>
+                <div class="background-banner"></div>
                 <h1>Salut bienvenue sur le site</h1>
-                <h2>Absolument non officiel de la Licence Informatique du Mans</h2>
+                <h2>{Absolument non officiel de la Licence Informatique du Mans}</h2>
+                <div class="wave"></div>
             </header>
 
             <main>
-                <article>
-                    <h1>Planning</h1>
-                </article>
+                <h1>Planning</h1>
 
-                <article>
-                    <h1>Réseaux</h1>
-                </article>
+                <div class="planning" id="planning">
+                    <div class="controls">
+                        <span class="study-level-selector">
+                            <select>
+                                <option value="l1">L1</option>
+                                <option value="l2">L2</option>
+                                <option value="l3">L3</option>
+                            </select>
+                        </span>
+                        <span class="work-group-selector">
+                            <select>
+                                <option value="1">TPGr1</option>
+                                <option value="2">TPGr2</option>
+                                <option value="3">TPGr3</option>
+                                <option value="4">TPGr4</option>
+                                <option value="5">TPGr5</option>
+                                <option value="6">TPGr6</option>
+                            </select>
+                        </span>
+                        <input class="reload" type="button" value="Recharger"/>
+                    </div>
+                    <div class="hour-grid">
+                        <div class="date"></div>
+                        <div class="date"></div>
+                        <div class="date"></div>
+                        <div class="date"></div>
+                        <div class="date"></div>
+                        <div class="date"></div>
+                        <div class="date"></div>
+                    </div>
+                </div>
             </main>
         </div>
     </body>

@@ -5,32 +5,194 @@
     margin: 0;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
-    background-color: #1c1c1c;
+    background-color: #d9d9d9;
 
-    font-family: sans-serif;
-    color: #c2c2c2;
+    font-family: "louis_george_cafe";
+    color: #1c1c1c;
 }
 
-nav {
+.menu {
+    z-index: 1;
+
     width: 100%;
-    height: 7.5vh;
+    height: 6vmin;
+
+    border-bottom: solid #2e2e2e 3vmin;
+
+    background-color: #1c1c1c;
 }
 
-nav a {
-    color: #c2c2c2;
+.menu .logo {
+    top: 1.5vmin;
+    left: 4.5vmin;
+
+    height: 11vmin;
+}
+
+.menu nav {
+    display: inline-block;
+
+    position: absolute;
+    bottom: -15%;
+    right: 9vmin;
+}
+
+.menu a {
+    margin-left: 7vmin;
+
+    font-family: "edo_sz";
+    font-size: 4vmin;
+    color: #d9d9d9;
     text-decoration: none;
 }
 
 header {
     width: 100%;
-    height: 92.5vh;
+    height: 70vh;
+
+    text-align: center;
+}
+
+header .background-banner, header .wave {
+    position: absolute;
+    left: 0;
+
+    width: 100%;
+
+    background-size: cover;
+    background-position: center;
+}
+
+header .background-banner {
+    top: 0;
+
+    height: 60vmin;
+
+    filter: blur(5px);
+
+    background-image: url("/resource/img/banner.jpg");
+}
+
+header .wave {
+    top: 50vmin;
+
+    height: 15vmin;
+
+    background-image: url("/resource/img/wave.svg");
 }
 
 header h1 {
-    font-size: 7.5vmin;
+    top: 15vmin;
+
+    font-family: "edo_sz";
+    font-size: 5vw;
+    color: #d9d9d9;
+
+    background-color: #1c1c1c;
 }
 
 header h2 {
-    font-size: 2.5vmin;
+    top: 15vmin;
+
+    padding: 0.5vh;
+
+    font-size: 1.5vw;
+
+    background-color: #d9d9d9;
+}
+
+main > h1 {
+    width: 100%;
+
+    text-align: center;
+}
+
+.planning {
+    height: 115vh;
+}
+
+.planning .controls {
+    display: flex;
+
+    justify-content: flex-end;
+    column-gap: 0.5vh;
+
+    position: absolute;
+    top: 2%;
+    right: 50%;
+
+    width: calc(70vw + 20vmin);
+    
+    padding: 1vh;
+
+    border-radius: 1vh;
+
+    background-color: #1c1c1c;
+
+    transform: translateX(50%);
+}
+
+.planning .controls > * {
+    display: inline-block;
+    
+    height: 3vh;
+    
+    padding: 1vh;
+
+    vertical-align: middle;
+
+    border-radius: 0.5vh;
+
+    background-color: #2e2e2e;
+}
+
+.planning .reload {
+    height: 5vh;
+
+    font-family: "louis_george_cafe";
+    font-size: 2vh;
+    color: #d9d9d9;
+
+    appearance: none;
+
+    outline: none;
+
+    border: 0;
+}
+
+.planning .hour-grid {
+    display: grid;
+
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: 3fr repeat(48, 1fr);
+
+    column-gap: 0.5vh;
+
+    position: absolute;
+    top: 10%;
+    right: 50%;
+
+    height: 95vh;
+    width: calc(70vw + 20vmin);
+
+    padding: 1vh;
+
+    border-radius: 1vh;
+
+    background-color: #1c1c1c;
+
+    transform: translateX(50%);
+}
+
+.planning .hour-grid > * {
+    border-radius: 0.5vh;
+}
+
+.planning .date {
+    background-color: #2e2e2e;
 }
