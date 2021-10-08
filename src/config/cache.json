@@ -1,7 +1,7 @@
 {
     "defaultConfig": {
         "no-cache, private": { "file": "\\.(htm|js|css|ico|woff|woff2)$" },
-        "max-age=604800, private": { "file": "\\.(png|jpg|webp)$" }
+        "max-age=604800, private": { "file": "\\.(png|jpg|webp|svg|webmanifest)$" }
     },
     "subDomain": {
         "www": {}
