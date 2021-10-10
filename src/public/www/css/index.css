@@ -106,14 +106,14 @@ header h2 {
     background-color: #d9d9d9;
 }
 
-main > h1 {
+article > h1 {
     width: 100%;
 
     text-align: center;
 }
 
 .planning {
-    height: 115vh;
+    height: 100vh;
 }
 
 .planning .controls {
@@ -123,7 +123,7 @@ main > h1 {
     column-gap: 0.5vh;
 
     position: absolute;
-    top: 2%;
+    top: 3%;
     right: 50%;
 
     width: calc(70vw + 20vmin);
@@ -140,7 +140,7 @@ main > h1 {
 .planning .controls > * {
     display: inline-block;
     
-    height: 3vh;
+    height: 2vh;
     
     padding: 1vh;
 
@@ -152,7 +152,7 @@ main > h1 {
 }
 
 .planning .reload {
-    height: 5vh;
+    height: 4vh;
 
     font-family: "louis_george_cafe";
     font-size: 2vh;
@@ -177,7 +177,7 @@ main > h1 {
     top: 10%;
     right: 50%;
 
-    height: 95vh;
+    height: 80vh;
     width: calc(70vw + 20vmin);
 
     padding: 1vh;
