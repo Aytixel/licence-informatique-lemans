@@ -53,7 +53,7 @@ body {
 
 header {
     width: 100%;
-    height: 70vh;
+    height: 70vmin;
 
     text-align: center;
 }
@@ -101,7 +101,7 @@ header h2 {
 
     padding: 0.5vh;
 
-    font-size: 1.5vw;
+    font-size: calc(1.2vmax + 0.8vh);
 
     background-color: #d9d9d9;
 }
@@ -195,4 +195,13 @@ article > h1 {
 
 .planning .date {
     background-color: #2e2e2e;
+}
+
+footer {
+    padding: 1vh;
+
+    font-size: 2vh;
+    text-align: end;
+
+    border-top: solid #2e2e2e 1vh;
 }
