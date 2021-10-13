@@ -115,6 +115,15 @@ export default class {
               planningData[key].forEach((data, index) => {
                 const newCourcesData = {};
 
+                for (let i = 0; i < 15; i++) {
+                  const date = new Date(Date.now() + 1000 * 3600 * 24 * i);
+
+                  newCourcesData[
+                    `${date.getFullYear()}/${date.getMonth() +
+                      1}/${date.getDate()}`
+                  ] = [];
+                }
+
                 parse(data).rss.channel.item.forEach(
                   (courseData) => {
                     const parsedCourseData = courseData.description.replace(
@@ -139,10 +148,6 @@ export default class {
                     const startOfComment = parsedCourseData.lastIndexOf(
                       "Comment",
                     );
-
-                    if (newCourcesData[dateString] === undefined) {
-                      newCourcesData[dateString] = [];
-                    }
 
                     newCourcesData[dateString].push({
                       title: courseData.title.replace(/ +/g, " "),
@@ -182,8 +187,10 @@ export default class {
         } catch (error) {
           console.error(error);
         }
-      }, 20000);
+      }, 5000);
     };
+
+    update();
 
     setInterval(update, 1000 * 60 * 60 * 2);
   }
