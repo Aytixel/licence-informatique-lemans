@@ -5,11 +5,11 @@ import { join, resolve } from "https://deno.land/std@0.110.0/path/mod.ts";
 class Runner {
   private runnablePath: string;
   private app: any;
+  private env: DotenvConfig;
 
   constructor(env: DotenvConfig) {
+    this.env = env;
     this.runnablePath = env.RUNNABLE_PATH;
-
-    this.runApp(env);
   }
 
   private getRunnablePath(path: string) {
@@ -24,10 +24,12 @@ class Runner {
     return null;
   }
 
-  private async runApp(env: DotenvConfig) {
+  async runApp() {
     const runnablePath = this.getRunnablePath("app");
 
-    if (runnablePath) this.app = new (await import(runnablePath)).default(env);
+    if (runnablePath) {
+      this.app = (new (await import(runnablePath)).default(this.env)).init();
+    }
   }
 
   async run(request: Request, routerData: any, headers: any) {
