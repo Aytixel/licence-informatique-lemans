@@ -119,7 +119,9 @@ export default class {
                 const newCourcesData = {};
 
                 for (let i = 0; i < 15; i++) {
-                  const date = new Date(Date.now() + 1000 * 3600 * 24 * i);
+                  const date = new Date(
+                    Date.now() + 1000 * 3600 * 24 * i - 1000 * 3600 * 24 * 2,
+                  );
 
                   newCourcesData[
                     `${date.getFullYear()}/${date.getMonth() +
