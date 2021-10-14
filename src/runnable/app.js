@@ -168,14 +168,18 @@ export default class {
                   },
                 );
 
-                for (const dateKey in newCourcesData) {
+                for (const dateKeyString in newCourcesData) {
+                  const dateKey = new Date(
+                    `${dateKeyString} GMT+00:00`,
+                  );
+
                   this.planningDB.db.collection(key).updateOne(
                     { date: dateKey, group: index },
                     {
                       $set: {
                         date: dateKey,
                         group: index,
-                        cources: newCourcesData[dateKey],
+                        cources: newCourcesData[dateKeyString],
                       },
                     },
                     { upsert: true },
