@@ -119,22 +119,20 @@ article > h1 {
 .planning .controls {
     display: flex;
 
-    justify-content: flex-end;
+    justify-content: center;
     column-gap: 0.5vh;
 
     position: absolute;
     top: 3%;
-    right: 50%;
+    left: 1.75vw;
 
-    width: calc(70vw + 20vmin);
+    width: calc(100vmax - 10vh);
     
     padding: 1vh;
 
     border-radius: 1vh;
 
     background-color: #1c1c1c;
-
-    transform: translateX(50%);
 }
 
 .planning .controls > * {
@@ -151,7 +149,7 @@ article > h1 {
     background-color: #2e2e2e;
 }
 
-.planning .reload {
+.planning .switch {
     height: 4vh;
 
     font-family: "louis_george_cafe";
@@ -165,36 +163,104 @@ article > h1 {
     border: 0;
 }
 
-.planning .hour-grid {
+.planning :is(.hour-grid, .date-grid) {
     display: grid;
 
     grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: 3fr repeat(48, 1fr);
 
     column-gap: 0.5vh;
 
     position: absolute;
     top: 10%;
-    right: 50%;
+    left: 1.75vw;
 
-    height: 80vh;
-    width: calc(70vw + 20vmin);
+    width: calc(100vmax - 10vh);
 
     padding: 1vh;
 
     border-radius: 1vh;
 
+    color: #d9d9d9;
+
     background-color: #1c1c1c;
+}
+
+.planning :is(.hour-grid, .date-grid) > * {
+    border-radius: 0.5vh;
+}
+
+.planning .date-grid {
+    height: 5vh;
+}
+
+.planning .date {
+    box-sizing: border-box;
+
+    height: 5vh;
+
+    padding: calc(0.5vmax);
+
+    font-size: calc(0.5vmax + 1vh);
+    text-align: center;
+
+    background-color: #2e2e2e;
+}
+
+.planning .hour-grid {
+    grid-template-rows: repeat(48, 1.5vh);
+
+    top: calc(10% + 8vh);
+
+    height: 72vh;
+}
+
+.planning .cource {
+    box-sizing: border-box;
+
+    padding: calc(0.5vmax);
+
+    width: calc((100vmax - 15vh) / 7);
+
+    background-color: #2e2e2e;
+}
+
+.planning .cource h2 {
+    overflow: hidden;
+
+    font-size: calc(0.6vmax + 1vh);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.planning .cource div:first-of-type {
+    font-size: calc(1vmax + 2vh);
+
+    transform: translateY(-1vh);
+}
+
+.planning .time {
+    position: absolute;
+
+    bottom: 1vh;
+    right: 50%;
 
     transform: translateX(50%);
 }
 
-.planning .hour-grid > * {
-    border-radius: 0.5vh;
+.planning .class {
+    background-color: rgba(184, 134, 11, 0.55);
 }
 
-.planning .date {
-    background-color: #2e2e2e;
+.planning .exam {
+    background-color: rgba(220, 20, 60, 0.55);
+}
+
+.planning .practical {
+    background-color: rgba(0, 139, 139, 0.55);
+}
+
+.planning .directed {
+    background-color: rgba(46, 139, 87, 0.55);
 }
 
 footer {

@@ -199,7 +199,7 @@ export default class {
       }, 5000);
     };
 
-    update();
+    //update();
 
     setInterval(update, 1000 * 60 * 60 * 2);
   }

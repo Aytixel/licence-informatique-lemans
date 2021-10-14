@@ -38,35 +38,28 @@
                     <h1>Planning</h1>
 
                     <div class="planning">
-                        <div class="controls">
+                        <form class="controls" action="#planning" method="get">
                             <span class="study-level-selector">
-                                <select>
+                                <select name="level">
                                     <option value="l1">L1</option>
                                     <option value="l2">L2</option>
                                     <option value="l3">L3</option>
                                 </select>
                             </span>
                             <span class="work-group-selector">
-                                <select>
-                                    <option value="1">TPGr1</option>
-                                    <option value="2">TPGr2</option>
-                                    <option value="3">TPGr3</option>
-                                    <option value="4">TPGr4</option>
-                                    <option value="5">TPGr5</option>
-                                    <option value="6">TPGr6</option>
+                                <select name="group">
+                                    <option value="0">TPGr1</option>
+                                    <option value="1">TPGr2</option>
+                                    <option value="2">TPGr3</option>
+                                    <option value="3">TPGr4</option>
+                                    <option value="4">TPGr5</option>
+                                    <option value="5">TPGr6</option>
                                 </select>
                             </span>
-                            <input class="reload" type="button" value="Recharger"/>
-                        </div>
-                        <div class="hour-grid">
-                            <div class="date"></div>
-                            <div class="date"></div>
-                            <div class="date"></div>
-                            <div class="date"></div>
-                            <div class="date"></div>
-                            <div class="date"></div>
-                            <div class="date"></div>
-                        </div>
+                            <input class="switch" type="submit" value="Switch"/>
+                        </form>
+                        <div class="date-grid"></div>
+                        <div class="hour-grid"></div>
                     </div>
                 </article>
             </main>
