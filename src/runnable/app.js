@@ -1,6 +1,7 @@
 import puppeteer from "https://deno.land/x/puppeteer@9.0.2/mod.ts";
 import { MongoClient } from "https://deno.land/x/mongo@v0.27.0/mod.ts";
 import { parse } from "https://deno.land/x/xml@v1.0.3/mod.ts";
+import { getJson } from "../utils.ts";
 
 export default class {
   constructor(env) {
@@ -39,6 +40,9 @@ export default class {
 
   async init() {
     this.planningDB = await this.connectDB("planning");
+    this.resourcesId = await getJson(
+      this.env.RUNNABLE_PATH + "/planning-resources-id.json",
+    );
 
     await this.scrapePlanningData();
   }
@@ -81,35 +85,34 @@ export default class {
 
             page2.close();
 
-            const planningData = await page.evaluate(async (clientId) => {
-              const resourcesId = {
-                "l1": [620, 629, 641, 644, 647, 771],
-                "l2": [889, 1070, 1543, 237, 3072],
-                "l3": [405, 406, 4525, 5121],
-              };
-              const promises = [];
+            const planningData = await page.evaluate(
+              async (clientId, resourcesId) => {
+                const promises = [];
 
-              for (const key in resourcesId) {
-                resourcesId[key].forEach((resourceId, index) => {
-                  promises.push(
-                    fetch(
-                      "http://planning.univ-lemans.fr/direct/gwtdirectplanning/rss?projectId=1&resources=" +
-                        resourceId + "&cliendId=" + clientId +
-                        "&nbDays=15&since=0",
-                    ).then((response) => response.text()).then((data) =>
-                      new Promise((resolve) => {
-                        resourcesId[key][index] = data;
-                        resolve();
-                      })
-                    ),
-                  );
-                });
-              }
+                for (const key in resourcesId) {
+                  resourcesId[key].forEach((resourceId, index) => {
+                    promises.push(
+                      fetch(
+                        "http://planning.univ-lemans.fr/direct/gwtdirectplanning/rss?projectId=1&resources=" +
+                          resourceId + "&cliendId=" + clientId +
+                          "&nbDays=15&since=0",
+                      ).then((response) => response.text()).then((data) =>
+                        new Promise((resolve) => {
+                          resourcesId[key][index] = data;
+                          resolve();
+                        })
+                      ),
+                    );
+                  });
+                }
 
-              await Promise.all(promises);
+                await Promise.all(promises);
 
-              return resourcesId;
-            }, clientId);
+                return resourcesId;
+              },
+              clientId,
+              this.resourcesId,
+            );
 
             for (const key in planningData) {
               planningData[key].forEach((data, index) => {
