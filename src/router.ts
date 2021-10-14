@@ -16,10 +16,12 @@ class Router {
   route(request: Request) {
     const routerData: any = {
       url: new URL(request.url),
-      searchParams: new URLSearchParams(request.url),
     };
     let subDomainFound = true;
 
+    routerData.searchParams = new URLSearchParams(
+      routerData.url.search.substring(1),
+    );
     routerData.subDomain = routerData.url.hostname.split(".").slice(0, -2).join(
       ".",
     );
