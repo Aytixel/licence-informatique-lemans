@@ -124,6 +124,7 @@ export default class {
                   ] = [];
                 }
 
+                // parse and pre-format data
                 parse(data).rss.channel.item.forEach(
                   (courseData) => {
                     const parsedCourseData = courseData.description.replace(
@@ -168,6 +169,7 @@ export default class {
                   },
                 );
 
+                // final data formatting
                 for (const dateKeyString in newCourcesData) {
                   const dateKey = new Date(
                     `${dateKeyString} GMT+00:00`,
