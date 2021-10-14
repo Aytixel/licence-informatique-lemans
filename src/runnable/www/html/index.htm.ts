@@ -95,14 +95,14 @@ export default async function (
 
       if (cource.title.match(/cour|cm/i)) courceType = "class";
       else if (cource.title.match(/exam|qcm/i)) courceType = "exam";
-      else if (cource.title.match(/td/i)) courceType = "directed";
-      else if (cource.title.match(/tp/i)) courceType = "practical";
+      else if (cource.title.match(/td|gr[ ]*[a-c]/i)) courceType = "directed";
+      else if (cource.title.match(/tp|gr[ ]*[1-6]/i)) courceType = "practical";
 
       return `<div class="cource ${courceType}" style="grid-column: ${dayPosition +
         1}; grid-row: ${hourStartPosition +
         1} / ${hourEndPosition +
         1};" data-resources="${cource.resources}" data-comment="${cource.comment}"><h2>${cource.title}</h2>
-        <div>...</div><div class="time">${cource.startDate.getUTCHours()}:${cource.startDate.getUTCMinutes()} - ${cource.endDate.getUTCHours()}:${cource.endDate.getUTCMinutes()}</div></div>`;
+        <div class="time">${cource.startDate.getUTCHours()}:${cource.startDate.getUTCMinutes()} - ${cource.endDate.getUTCHours()}:${cource.endDate.getUTCMinutes()}</div></div>`;
     });
   });
 

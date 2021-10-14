@@ -234,12 +234,6 @@ article > h1 {
     white-space: nowrap;
 }
 
-.planning .cource div:first-of-type {
-    font-size: calc(1vmax + 2vh);
-
-    transform: translateY(-2vh);
-}
-
 .planning .time {
     position: absolute;
 
