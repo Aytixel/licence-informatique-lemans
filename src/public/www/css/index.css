@@ -220,6 +220,8 @@ article > h1 {
     padding: calc(0.5vmax);
 
     width: calc((100vmax - 15vh) / 7);
+    
+    overflow: hidden;
 
     background-color: #2e2e2e;
 }
@@ -235,13 +237,13 @@ article > h1 {
 .planning .cource div:first-of-type {
     font-size: calc(1vmax + 2vh);
 
-    transform: translateY(-1vh);
+    transform: translateY(-2vh);
 }
 
 .planning .time {
     position: absolute;
 
-    bottom: 1vh;
+    bottom: 0.5vh;
     right: 50%;
 
     transform: translateX(50%);
