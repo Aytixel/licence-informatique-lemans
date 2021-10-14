@@ -28,7 +28,9 @@ class Runner {
     const runnablePath = this.getRunnablePath("app");
 
     if (runnablePath) {
-      this.app = (new (await import(runnablePath)).default(this.env)).init();
+      this.app = new (await import(runnablePath)).default(this.env);
+
+      await this.app.init();
     }
   }
 
