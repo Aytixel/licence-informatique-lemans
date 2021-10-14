@@ -16,6 +16,7 @@ class Router {
   route(request: Request) {
     const routerData: any = {
       url: new URL(request.url),
+      searchParams: new URLSearchParams(request.url),
     };
     let subDomainFound = true;
 
