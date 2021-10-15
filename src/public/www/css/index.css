@@ -106,7 +106,7 @@ header h2 {
     background-color: #d9d9d9;
 }
 
-article > h1 {
+article > h2 {
     width: 100%;
 
     text-align: center;
@@ -186,9 +186,7 @@ article > h1 {
     transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
 }
 
-.planning .cource-viewer[hidden] {
-    display: block;
-
+.planning .cource-viewer[aria-hidden="true"] {
     visibility: hidden;
 
     opacity: 0;
