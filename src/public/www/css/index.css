@@ -202,6 +202,8 @@ article > h2 {
 
     vertical-align: middle;
 
+    cursor: pointer;
+
     border-radius: 0.5vh;
 
     background-color: #2e2e2e;
@@ -273,6 +275,8 @@ article > h2 {
     font-size: 0;
 
     border: 0;
+
+    cursor: pointer;
 
     background-color: transparent;
 }
@@ -361,6 +365,8 @@ article > h2 {
     width: calc((100vmax - 15vh) / 7);
     
     overflow: hidden;
+
+    cursor: pointer;
 
     background-color: #2e2e2e;
 }
