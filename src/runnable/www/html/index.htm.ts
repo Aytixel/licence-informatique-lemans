@@ -75,8 +75,8 @@ export default async function (
       group: 1,
       cources: 1,
     },
-  }).toArray();
-  const htmlFormatedPlanningData = planningData.map((dayData: any) => {
+  });
+  const htmlFormatedPlanningData = await planningData.map((dayData: any) => {
     return dayData.cources.map((cource: any) => {
       const startHour: any = new Date(dayData.date);
 
