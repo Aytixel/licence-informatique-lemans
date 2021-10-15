@@ -158,9 +158,92 @@ article > h1 {
 
     appearance: none;
 
-    outline: none;
+    border: 0;
+}
+
+.planning .cource-viewer {
+    display: grid;
+
+    grid-template: "a d" auto
+                   "b b" auto
+                   "c c" auto / auto 20pt;
+
+    position: fixed;
+    top: 50%;
+    right: 50%;
+    z-index: 1;
+
+    padding: 1vh;
+
+    width: calc(30vmax + 10vw);
+
+    border-radius: 1vh;
+
+    background-color: #d9d9d9;
+
+    transform: translate(50%, -50%);
+
+    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+}
+
+.planning .cource-viewer[hidden] {
+    display: block;
+
+    visibility: hidden;
+
+    opacity: 0;
+}
+
+.planning .cource-viewer .resources {
+    grid-area: b;
+}
+
+.planning .cource-viewer .comment {
+    grid-area: c;
+    
+    margin-top: 1em;
+}
+
+.planning .cource-viewer .close {
+    position: absolute;
+    top: 1vh;
+    right: 1vh;
+
+    width: 20pt;
+    height: 20pt;
+
+    appearance: none;
+
+    font-size: 0;
 
     border: 0;
+
+    background-color: transparent;
+}
+
+.planning .cource-viewer .close::before, .planning .cource-viewer .close::after {
+    display: block;
+
+    position: absolute;
+    top: 50%;
+    right: 50%;
+
+    width: 100%;
+    height: 2pt;
+
+    content: "";
+
+    border-radius: 1pt;
+
+    background-color: #1c1c1c;
+}
+
+.planning .cource-viewer .close::before {
+    transform: translate(50%, -50%) rotate(45deg);
+}
+
+.planning .cource-viewer .close::after {
+    transform: translate(50%, -50%) rotate(-45deg);
 }
 
 .planning :is(.hour-grid, .date-grid) {
@@ -236,11 +319,12 @@ article > h1 {
 
 .planning .time {
     position: absolute;
-
     bottom: 0.5vh;
-    right: 50%;
+    left: 0;
 
-    transform: translateX(50%);
+    width: 100%;
+
+    text-align: center;
 }
 
 .planning .class {
