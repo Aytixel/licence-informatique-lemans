@@ -6,7 +6,7 @@ let is_cource_viewer_visible = false;
 const set_cource_viewer_visibility = (visible) => {
   requestAnimationFrame(() => is_cource_viewer_visible = visible);
 
-  cource_viewer_element.ariaHidden = !visible;
+  cource_viewer_element.setAttribute("aria-hidden", !visible);
 };
 
 document.querySelectorAll(".planning .cource").forEach((cource_element) => {
