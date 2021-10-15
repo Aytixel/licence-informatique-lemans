@@ -21,8 +21,8 @@
         <div class="menu">
             <img class="logo" alt="logo" src="/resource/img/logo.svg" width="100" height="100" />
             <nav>
-                <a href="#planning">Planning</a>
-                <a href="#">Réseaux</a>
+                <a href="#planning" tabindex="1">Planning</a>
+                <a href="#" tabindex="1">Réseaux</a>
             </nav>
         </div>
 
@@ -39,22 +39,22 @@
                     <h2>Planning</h2>
 
                     <div class="planning">
-                        <div class="cource-viewer" aria-hidden="true">
+                        <div class="cource-viewer" aria-hidden="true" tabindex="2">
                             <h2></h2>
                             <p class="resources"></p>
                             <p class="comment"></p>
-                            <button class="close" type="button">Fermer</button>
+                            <button class="close" type="button" tabindex="2">Fermer</button>
                         </div>
                         <form class="controls" action="#planning" method="get">
                             <span class="study-level-selector">
-                                <select name="level">
+                                <select name="level" tabindex="1">
                                     <option value="l1">L1</option>
                                     <option value="l2">L2</option>
                                     <option value="l3">L3</option>
                                 </select>
                             </span>
                             <span class="work-group-selector">
-                                <select name="group">
+                                <select name="group" tabindex="1">
                                     <option value="0">TPGr1</option>
                                     <option value="1">TPGr2</option>
                                     <option value="2">TPGr3</option>
@@ -63,7 +63,7 @@
                                     <option value="5">TPGr6</option>
                                 </select>
                             </span>
-                            <input class="switch" type="submit" value="Switch"/>
+                            <input class="switch" type="submit" value="Switch" tabindex="1"/>
                         </form>
                         <div class="date-grid"></div>
                         <div class="hour-grid"></div>

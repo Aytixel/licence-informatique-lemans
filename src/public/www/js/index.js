@@ -10,9 +10,7 @@ const set_cource_viewer_visibility = (visible) => {
 };
 
 document.querySelectorAll(".planning .cource").forEach((cource_element) => {
-  cource_element.addEventListener("click", (e) => {
-    e.preventDefault();
-
+  const display = () => {
     set_cource_viewer_visibility(true);
 
     cource_viewer_element.querySelector("h2").textContent =
@@ -21,6 +19,29 @@ document.querySelectorAll(".planning .cource").forEach((cource_element) => {
       .dataset.resources.replaceAll(",", "<br/>");
     cource_viewer_element.querySelector(".comment").innerHTML = cource_element
       .dataset.comment.replaceAll(",", "<br/>");
+  };
+
+  cource_element.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    display();
+  });
+
+  const on_keydown = (e) => {
+    if (e.key == "Enter") {
+      e.preventDefault();
+
+      setTimeout(() => cource_viewer_element.focus(), 200);
+
+      display();
+    }
+  };
+
+  cource_element.addEventListener("focus", (e) => {
+    cource_element.addEventListener("keydown", on_keydown);
+  });
+  cource_element.addEventListener("blur", (e) => {
+    cource_element.removeEventListener("keydown", on_keydown);
   });
 });
 
@@ -28,6 +49,14 @@ document.querySelector(
   ".planning .cource-viewer .close",
 ).addEventListener("click", () => {
   set_cource_viewer_visibility(false);
+});
+
+window.addEventListener("keydown", (e) => {
+  if (e.key == "Escape") {
+    e.preventDefault();
+
+    set_cource_viewer_visibility(false);
+  }
 });
 
 window.addEventListener("click", (e) => {

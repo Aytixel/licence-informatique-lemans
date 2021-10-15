@@ -101,7 +101,7 @@ export default async function (
       return `<div class="cource ${courceType}" style="grid-column: ${dayPosition +
         1}; grid-row: ${hourStartPosition +
         1} / ${hourEndPosition +
-        1};" data-resources="${cource.resources}" data-comment="${cource.comment}"><h2>${cource.title}</h2>
+        1};" data-resources="${cource.resources}" data-comment="${cource.comment}" tabindex="1"><h2>${cource.title}</h2>
         <div class="time">${cource.startDate.getUTCHours()}:${cource.startDate.getUTCMinutes()} - ${cource.endDate.getUTCHours()}:${cource.endDate.getUTCMinutes()}</div></div>`;
     });
   });
