@@ -25,14 +25,14 @@ export default async function (
 
   data = data.replace(
     new RegExp(
-      `(<select name="level">[a-zA-Z0-9 \n\r\t<>="\/]+)<option value="${level}">`,
+      `(<select[a-zA-Z0-9 \n\r\t="\/]+name="level"[a-zA-Z0-9 \n\r\t<>="\/]+)<option value="${level}">`,
       "gm",
     ),
     `$1<option value="${level}" selected>`,
   );
   data = data.replace(
     new RegExp(
-      `(<select name="group">[a-zA-Z0-9 \n\r\t<>="\/]+)<option value="${group}">`,
+      `(<select[a-zA-Z0-9 \n\r\t="\/]+name="group"[a-zA-Z0-9 \n\r\t<>="\/]+)<option value="${group}">`,
       "gm",
     ),
     `$1<option value="${group}" selected>`,
