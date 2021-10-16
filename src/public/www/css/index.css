@@ -1,113 +1,8 @@
-* {
-    position: relative;
-    z-index: 0;
-    padding: 0;
-    margin: 0;
-}
+/*
 
-html {
-    scroll-behavior: smooth;
-}
+    Header
 
-body {
-    background-color: #d9d9d9;
-
-    font-family: "louis_george_cafe";
-    color: #1c1c1c;
-}
-
-.menu {
-    z-index: 1;
-
-    width: 100%;
-    height: 6vmin;
-
-    border-bottom: solid #2e2e2e 3vmin;
-
-    background-color: #1c1c1c;
-}
-
-.menu .logo {
-    top: 1.5vmin;
-    left: 4.5vmin;
-
-    height: 11vmin;
-}
-
-.menu nav {
-    display: inline-block;
-
-    position: absolute;
-    bottom: -15%;
-    right: 9vmin;
-}
-
-.menu a {
-    margin-left: 7vmin;
-
-    font-family: "edo_sz";
-    font-size: 4vmin;
-    color: #d9d9d9;
-    text-decoration: none;
-}
-
-.menu a > span {
-    display: inline-block;
-
-    position: absolute;
-    top: -0.5vmin;
-    left: -2vmin;
-    z-index: -1;
-
-    width: 100%;
-    height: 2.25vmin;
-
-    padding: 1vmin 2vmin;
-
-    border-top-left-radius: 1vh;
-    border-top-right-radius: 1vh;
-
-    background-color: #2e2e2e;
-
-    transform: scaleY(0);
-    transform-origin: bottom;
-
-    transition: transform 0.2s ease-in-out;
-}
-
-.menu a:hover > span {
-    transform: scaleY(1);
-}
-
-.menu a > span::before, .menu a > span::after {
-    display: block;
-
-    position: absolute;
-    bottom: -1vmin;
-    right: -2.9vmin;
-    z-index: -1;
-
-    width: 2vmin;
-    height: 2vmin;
-
-    content: "";
-
-    border-bottom-left-radius: 1vh;
-
-    box-shadow: -0.5vh 0.5vh 0px #2e2e2e;
-
-    transform: translate(-1vmin, -1vmin);
-}
-
-.menu a > span::after {
-    left: -3vmin;
-
-    border-bottom-right-radius: 1vh;
-
-    box-shadow: 0.5vh 0.5vh 0px #2e2e2e;
-
-    transform: translate(1vmin, -1vmin);
-}
+*/
 
 header {
     width: 100%;
@@ -164,11 +59,11 @@ header h2 {
     background-color: #d9d9d9;
 }
 
-article > h2 {
-    width: 100%;
+/*
 
-    text-align: center;
-}
+    Planning
+
+*/
 
 .planning {
     height: 100vh;
@@ -404,49 +299,4 @@ article > h2 {
 
 .planning .directed {
     background-color: rgba(46, 139, 87, 0.55);
-}
-
-footer {
-    display: grid;
-
-    grid-template-columns: auto 42.5vh;
-
-    padding: 1vh;
-
-    font-size: 2vh;
-    text-align: end;
-
-    border-top: solid #2e2e2e 1vh;
-}
-
-footer > div {
-    top: -1.05vh;
-
-    width: 100%;
-    height: 4vh;
-
-    border-bottom-right-radius: 1vh;
-
-    background-color: #2e2e2e;
-
-    transform: translate(-1vh, 0);
-}
-
-footer > div::before {
-    display: block;
-
-    position: absolute;
-    top: 1vh;
-    right: -3vh;
-
-    width: 2vh;
-    height: 2vh;
-
-    content: "";
-
-    border-top-left-radius: 1vh;
-
-    box-shadow: -0.5vh -0.5vh 0px #2e2e2e;
-
-    transform: translate(-1vh, -1vh);
 }
