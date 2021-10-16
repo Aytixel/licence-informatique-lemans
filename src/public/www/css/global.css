@@ -48,7 +48,7 @@ body {
     right: 9vmin;
 }
 
-.menu a {
+.menu nav a {
     margin-left: 7vmin;
 
     font-family: "edo_sz";
@@ -57,7 +57,7 @@ body {
     text-decoration: none;
 }
 
-.menu a > span {
+.menu nav a > span {
     display: inline-block;
 
     position: absolute;
@@ -81,11 +81,11 @@ body {
     transition: transform 0.2s ease-in-out;
 }
 
-.menu a:hover > span {
+.menu nav a:hover > span {
     transform: scaleY(1);
 }
 
-.menu a > span::before, .menu a > span::after {
+.menu nav a > span::before, .menu nav a > span::after {
     display: block;
 
     position: absolute;
@@ -105,7 +105,7 @@ body {
     transform: translate(-1vmin, -1vmin);
 }
 
-.menu a > span::after {
+.menu nav a > span::after {
     left: -3vmin;
 
     border-bottom-right-radius: 1vh;

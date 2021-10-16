@@ -1,6 +1,18 @@
+/*
+
+    Article
+
+*/
+
 article {
     padding: 2vh;
 }
+
+/*
+
+    Socials
+
+*/
 
 .socials {
     display: flex;
