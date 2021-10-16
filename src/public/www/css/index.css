@@ -200,25 +200,26 @@ article > h2 {
     
     padding: 1vh;
 
+    font-family: "louis_george_cafe";
+    font-size: 2vh;
+    color: #d9d9d9;
     vertical-align: middle;
 
     cursor: pointer;
 
-    border-radius: 0.5vh;
+    border: none;
 
     background-color: #2e2e2e;
+}
+
+.planning .controls > select {
+    box-sizing: content-box;
 }
 
 .planning .switch {
     height: 4vh;
 
-    font-family: "louis_george_cafe";
-    font-size: 2vh;
-    color: #d9d9d9;
-
     appearance: none;
-
-    border: 0;
 }
 
 .planning .cource-viewer {
@@ -328,7 +329,7 @@ article > h2 {
     background-color: #1c1c1c;
 }
 
-.planning :is(.hour-grid, .date-grid) > * {
+.planning :is(.controls, .hour-grid, .date-grid) > * {
     border-radius: 0.5vh;
 }
 
