@@ -48,7 +48,7 @@ export default class {
   }
 
   async scrapePlanningData() {
-    const browser = await puppeteer.launch({ headless: false });
+    const browser = await puppeteer.launch();
     const page = (await browser.pages())[0];
     const waitToClick = async (selector) => {
       await page.waitForSelector(selector);
@@ -201,7 +201,7 @@ export default class {
       }, 5000);
     };
 
-    //update();
+    update();
 
     setInterval(update, 1000 * 60 * 60 * 2);
   }
