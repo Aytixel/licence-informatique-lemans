@@ -48,7 +48,7 @@ export default class {
   }
 
   async scrapePlanningData() {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ headless: false });
     const page = (await browser.pages())[0];
     const waitToClick = async (selector) => {
       await page.waitForSelector(selector);
