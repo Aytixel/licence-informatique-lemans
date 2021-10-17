@@ -12,9 +12,11 @@ const env = config({ safe: true });
 const router = new Router(env);
 const cache = new Cache();
 const runner = new Runner(env);
-const server = Deno.listen({
+const server = Deno.listenTls({
   port: Number(env.PORT),
   hostname: env.HOSTNAME,
+  certFile: env.SSL_CERT_PATH,
+  keyFile: env.SSL_PRIVATE_KEY_PATH,
 });
 
 async function readFile(
