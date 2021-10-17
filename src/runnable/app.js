@@ -48,22 +48,16 @@ export default class {
   }
 
   async scrapePlanningData() {
-    const browser = await puppeteer.launch({ headless: false });
+    const browser = await puppeteer.launch({
+      headless: true,
+      "args": ["--no-sandbox", "--disable-dev-shm-usage"],
+    });
     const page = (await browser.pages())[0];
     const waitToClick = async (selector) => {
       await page.waitForSelector(selector);
       await page.click(selector);
     };
-    const update = async () => {
-      await page.goto("http://planning.univ-lemans.fr/direct/myplanning.jsp");
-
-      if (new URL(page.url()).pathname == "/cas/login") {
-        await page.type("#username", this.studentUsername);
-        await page.type("#password", this.studentPassword);
-        await page.click("#fm1 > div:nth-child(3) > div > div > button");
-        await page.waitForNavigation();
-      }
-
+    const getData = () => {
       setTimeout(async () => {
         try {
           await waitToClick(
@@ -81,7 +75,9 @@ export default class {
           )).page();
 
           if (page2) {
-            const clientId = new URL(page2.url()).searchParams.get("cliendId");
+            const clientId = new URL(page2.url()).searchParams.get(
+              "cliendId",
+            );
 
             page2.close();
 
@@ -174,6 +170,8 @@ export default class {
                   },
                 );
 
+                console.log(newCourcesData);
+
                 // final data formatting
                 for (const dateKeyString in newCourcesData) {
                   const dateKey = new Date(
@@ -199,6 +197,16 @@ export default class {
           console.error(error);
         }
       }, 5000);
+    };
+    const update = async () => {
+      await page.goto("http://planning.univ-lemans.fr/direct/myplanning.jsp");
+
+      if (new URL(page.url()).pathname == "/cas/login") {
+        await page.type("#username", this.studentUsername);
+        await page.type("#password", this.studentPassword);
+        await page.click("#fm1 > div:nth-child(3) > div > div > button");
+        page.on("load", getData);
+      } else getData();
     };
 
     update();
