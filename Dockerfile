@@ -52,8 +52,6 @@ ENV PATH="${DENO_INSTALL}/bin:${PATH}"
 
 WORKDIR /app
 
-ADD . .
-
 ENV PUPPETEER_PRODUCT=chrome
 
 RUN deno run -A --unstable https://deno.land/x/puppeteer@9.0.2/install.ts \

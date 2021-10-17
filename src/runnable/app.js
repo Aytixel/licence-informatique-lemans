@@ -170,8 +170,6 @@ export default class {
                   },
                 );
 
-                console.log(newCourcesData);
-
                 // final data formatting
                 for (const dateKeyString in newCourcesData) {
                   const dateKey = new Date(
