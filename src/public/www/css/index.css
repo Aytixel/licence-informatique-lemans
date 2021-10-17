@@ -67,6 +67,8 @@ header h2 {
 
 .planning {
     height: 100vh;
+
+    overflow-x: auto;
 }
 
 .planning .controls {
