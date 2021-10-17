@@ -107,4 +107,4 @@ async function handle(conn: Deno.Conn) {
 
 await runner.runApp();
 
-for await (const conn of server) handle(conn);
+for await (const conn of server) handle(conn).catch(console.error);
