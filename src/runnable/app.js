@@ -113,15 +113,24 @@ export default class {
             for (const key in planningData) {
               planningData[key].forEach((data, index) => {
                 const newCourcesData = {};
+                const addZero = (number) => {
+                  if (number < 10) return "0" + number;
 
-                for (let i = 0; i < 15; i++) {
+                  return number.toString();
+                };
+
+                for (let i = 0; i < 16; i++) {
                   const date = new Date(
-                    Date.now() + 1000 * 3600 * 24 * i - 1000 * 3600 * 24 * 2,
+                    Date.now() + 1000 * 3600 * 24 * i + 1000 * 3600 * 2,
                   );
 
                   newCourcesData[
-                    `${date.getFullYear()}/${date.getMonth() +
-                      1}/${date.getDate()}`
+                    `${date.getUTCFullYear()}/${
+                      addZero(
+                        date.getUTCMonth() +
+                          1,
+                      )
+                    }/${addZero(date.getUTCDate())}`
                   ] = [];
                 }
 
