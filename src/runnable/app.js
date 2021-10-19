@@ -19,12 +19,10 @@ export default class {
     await dbConnection.client.connect({
       db: db,
       tls: true,
-      servers: [
-        {
-          host: this.env.MONGO_DB_HOST,
-          port: this.env.MONGO_DB_PORT,
-        },
-      ],
+      servers: this.env.MONGO_DB_HOSTS.split(",").map((host) => ({
+        host: host,
+        port: this.env.MONGO_DB_PORT,
+      })),
       credential: {
         username: this.env.MONGO_DB_USERNAME,
         password: this.env.MONGO_DB_PASSWORD,
