@@ -119,7 +119,7 @@ export default class {
 
                 for (let i = 0; i < 16; i++) {
                   const date = new Date(
-                    Date.now() + 1000 * 3600 * 24 * i + 1000 * 3600 * 2,
+                    Date.now() + 1000 * 3600 * 24 * i,
                   );
 
                   newCourcesData[
