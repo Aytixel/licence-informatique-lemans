@@ -201,7 +201,7 @@ export default class {
         } catch (error) {
           console.error(error);
         }
-      }, 5000);
+      }, 1000 * 3600);
     };
     const update = async () => {
       await page.goto("http://planning.univ-lemans.fr/direct/myplanning.jsp");
