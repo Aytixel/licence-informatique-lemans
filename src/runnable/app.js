@@ -51,12 +51,13 @@ export default class {
       "args": ["--no-sandbox", "--disable-dev-shm-usage"],
     });
     const page = (await browser.pages())[0];
-    const waitToClick = async (selector) => {
-      await page.waitForSelector(selector);
-      await page.click(selector);
-    };
     const getData = () => {
       setTimeout(async () => {
+        const waitToClick = async (selector) => {
+          await page.waitForSelector(selector);
+          await page.click(selector);
+        };
+
         try {
           await waitToClick(
             "#x-auto-35 > tbody > tr:nth-child(2) > td.x-btn-mc > em > button",
