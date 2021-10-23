@@ -54,7 +54,7 @@ export default class {
     const getData = () => {
       setTimeout(async () => {
         const waitToClick = async (selector) => {
-          await page.waitForSelector(selector);
+          await page.waitForSelector(selector, { visible: true });
           await page.evaluate((selector) => {
             document.querySelector(selector).click();
           }, selector);
