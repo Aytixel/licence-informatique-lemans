@@ -55,7 +55,9 @@ export default class {
       setTimeout(async () => {
         const waitToClick = async (selector) => {
           await page.waitForSelector(selector);
-          await page.click(selector);
+          await page.evaluate((selector) => {
+            document.querySelector(selector).click();
+          }, selector);
         };
 
         try {
