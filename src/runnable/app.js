@@ -48,11 +48,15 @@ export default class {
   async scrapePlanningData() {
     const getData = async (browser, page) => {
       const waitToClick = async (selector) => {
-        await page.waitForSelector(selector, { visible: true });
-        await page.waitForTimeout(1000);
-        await page.click(selector);
+        try {
+          await page.waitForSelector(selector, { visible: true });
+          await page.waitForTimeout(1000);
+          await page.click(selector);
 
-        console.log(`click on ${selector}`);
+          console.log(`click on ${selector}`);
+
+          break;
+        } catch (error) {}
       };
 
       try {
