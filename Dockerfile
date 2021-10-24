@@ -56,4 +56,4 @@ ENV PUPPETEER_PRODUCT=chrome
 
 RUN deno run -A --unstable https://deno.land/x/puppeteer@9.0.2/install.ts
 
-CMD ["deno", "run", "--allow-net", "--allow-env", "--allow-read", "--allow-write", "--allow-run", "--unstable", "src/app.ts"]
+CMD ["deno", "run", "--allow-net", "--allow-env", "--allow-read", "--allow-write", "--allow-run", "--unstable", "src/runnable/data-retriever.js"]

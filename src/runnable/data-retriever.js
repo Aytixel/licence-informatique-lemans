@@ -1,14 +1,17 @@
+import { config } from "https://deno.land/x/dotenv@v3.0.0/mod.ts";
 import puppeteer from "https://deno.land/x/puppeteer@9.0.2/mod.ts";
 import { MongoClient } from "https://deno.land/x/mongo@v0.28.0/mod.ts";
 import { parse } from "https://deno.land/x/xml@2.0.0/mod.ts";
 import { getJson } from "../utils.ts";
 
-export default class {
+class DataRetriever {
   constructor(env) {
     this.env = env;
     this.planningDB = null;
     this.studentUsername = env.STUDENT_USERNAME;
     this.studentPassword = env.STUDENT_PASSWORD;
+
+    this.init();
   }
 
   async connectDB(db) {
@@ -54,8 +57,6 @@ export default class {
           await page.click(selector);
 
           console.log(`click on ${selector}`);
-
-          break;
         } catch (error) {}
       };
 
@@ -253,3 +254,5 @@ export default class {
     setInterval(update, 1000 * 60 * 60 * 2);
   }
 }
+
+new DataRetriever(config({ safe: true }));
