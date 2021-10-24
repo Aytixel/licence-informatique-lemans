@@ -85,6 +85,7 @@ export default class {
           );
 
           page2.close();
+          console.log("start retrieving planning data with the browser");
 
           const planningData = await page.evaluate(
             async (clientId, resourcesId) => {
@@ -115,8 +116,12 @@ export default class {
             this.resourcesId,
           );
 
+          console.log("end retrieving planning data with the browser\n");
+
           for (const key in planningData) {
-            if (planningData[key]) {
+            try {
+              console.log(`start uploading planning data for : ${key}`);
+
               planningData[key].forEach((data, index) => {
                 const newCourcesData = {};
                 const addZero = (number) => {
@@ -205,15 +210,19 @@ export default class {
                 }
               });
 
-              console.error(`get planning data for : ${key}`);
-            } else console.error(`counldn't get planning data for : ${key}`);
+              console.log(`end uploading planning data for : ${key}\n`);
+            } catch (error) {
+              console.error(
+                `counldn't upload planning data for : ${key}\n${error}\n`,
+              );
+            }
           }
         }
       } catch (error) {
         console.error(error);
       }
 
-      console.log("end gathering planning data");
+      console.log("end gathering planning data\n");
     };
     const update = async () => {
       const browser = await puppeteer.launch({
