@@ -64,7 +64,7 @@ export default async function (
     `<div class="date-grid">${htmlFormatedPlanningDate.join("")}</div>`,
   );
 
-  const planningData = await app.planningDB.db.collection(level).find({
+  const planningDataCursor = app.planningDB.db.collection(level).find({
     date: { $gte: startDate, $lt: endDate },
     group: group,
   }, {
@@ -75,9 +75,14 @@ export default async function (
       group: 1,
       cources: 1,
     },
+    batchSize: 7,
   });
-  const htmlFormatedPlanningData = await planningData.map((dayData: any) => {
-    return dayData.cources.map((cource: any) => {
+  const htmlFormatedPlanningData: any = [];
+
+  for (let i = 0; i < 7; i++) {
+    const dayData = await planningDataCursor.next();
+
+    htmlFormatedPlanningData.push(dayData.cources.map((cource: any) => {
       const startHour: any = new Date(dayData.date);
 
       startHour.setUTCHours(8);
@@ -98,13 +103,19 @@ export default async function (
       else if (cource.title.match(/td|gr[ ]*[a-c]/i)) courceType = "directed";
       else if (cource.title.match(/tp|gr[ ]*[1-6]/i)) courceType = "practical";
 
-      return `<div class="cource ${courceType}" style="grid-column: ${dayPosition +
-        1}; grid-row: ${hourStartPosition +
-        1} / ${hourEndPosition +
-        1};" data-resources="${cource.resources}" data-comment="${cource.comment}" tabindex="1"><h2>${cource.title}</h2>
+      return `<div class="cource ${courceType}" style="grid-column: ${
+        dayPosition +
+        1
+      }; grid-row: ${
+        hourStartPosition +
+        1
+      } / ${
+        hourEndPosition +
+        1
+      };" data-resources="${cource.resources}" data-comment="${cource.comment}" tabindex="1"><h2>${cource.title}</h2>
         <div class="time">${cource.startDate.getUTCHours()}:${cource.startDate.getUTCMinutes()} - ${cource.endDate.getUTCHours()}:${cource.endDate.getUTCMinutes()}</div></div>`;
-    });
-  });
+    }));
+  }
 
   return data.replace(
     /<div class="hour-grid"><\/div>/,
