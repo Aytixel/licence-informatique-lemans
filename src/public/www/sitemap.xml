@@ -4,11 +4,13 @@
     <url>
         <loc>https://licence-informatique-lemans.tk/</loc>
         <lastmod>2021-11-02T07:20:50+00:00</lastmod>
+        <changefreq>hourly</changefreq>
         <priority>1.00</priority>
     </url>
     <url>
         <loc>https://licence-informatique-lemans.tk/socials.htm</loc>
         <lastmod>2021-11-02T07:20:50+00:00</lastmod>
+        <changefreq>never</changefreq>
         <priority>0.80</priority>
     </url>
 </urlset>
