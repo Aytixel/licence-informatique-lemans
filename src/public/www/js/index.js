@@ -37,10 +37,10 @@ document.querySelectorAll(".planning .cource").forEach((cource_element) => {
     }
   };
 
-  cource_element.addEventListener("focus", (e) => {
+  cource_element.addEventListener("focus", () => {
     cource_element.addEventListener("keydown", on_keydown);
   });
-  cource_element.addEventListener("blur", (e) => {
+  cource_element.addEventListener("blur", () => {
     cource_element.removeEventListener("keydown", on_keydown);
   });
 });
