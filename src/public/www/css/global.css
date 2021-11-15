@@ -136,7 +136,7 @@ article > h2 {
 footer {
     display: grid;
 
-    grid-template-columns: auto 42.5vh;
+    grid-template-columns: auto 45vh;
 
     padding: 1vh;
 
