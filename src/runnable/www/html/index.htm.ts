@@ -98,9 +98,11 @@ export default async function (
       );
       let courceType = "";
 
-      if (cource.title.match(/exam|qcm/i)) courceType = "exam";
-      else if (cource.title.match(/cour|cm/i)) courceType = "class";
-      else if (cource.title.match(/td|gr[ ]*[a-c]/i)) courceType = "directed";
+      if (cource.title.match(/exam|qcm|contrôle continu/i)) {
+        courceType = "exam";
+      } else if (cource.title.match(/cour|cm|conférence métier/i)) {
+        courceType = "class";
+      } else if (cource.title.match(/td|gr[ ]*[a-c]/i)) courceType = "directed";
       else if (cource.title.match(/tp|gr[ ]*[1-6]/i)) courceType = "practical";
 
       return `<div class="cource ${courceType}" style="grid-column: ${
