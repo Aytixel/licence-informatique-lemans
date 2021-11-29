@@ -34,6 +34,8 @@ class CookiePanelElement extends HTMLElement {
         img {
             height: 100%;
             width: 100%;
+
+            cursor: pointer;
         }
 
         .panel {
@@ -64,7 +66,11 @@ class CookiePanelElement extends HTMLElement {
 
         ul {list-style: none;}
 
-        summary {margin-bottom: 1vh;}
+        summary {
+          margin-bottom: 1vh;
+
+          cursor: pointer;
+        }
 
         summary::marker {color: #1c1c1c;}
 
