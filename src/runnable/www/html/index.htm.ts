@@ -1,3 +1,5 @@
+import { inject } from "../../../utils.ts";
+
 export default async function (
   app: any,
   request: Request,
@@ -59,9 +61,10 @@ export default async function (
     );
   }
 
-  data = data.replace(
-    /<div class="date-grid"><\/div>/,
-    `<div class="date-grid">${htmlFormatedPlanningDate.join("")}</div>`,
+  data = inject(
+    data,
+    "date-grid",
+    htmlFormatedPlanningDate.join(""),
   );
 
   const planningDataCursor = app.planningDB.db.collection(level).find({
@@ -119,8 +122,9 @@ export default async function (
     }));
   }
 
-  return data.replace(
-    /<div class="hour-grid"><\/div>/,
-    `<div class="hour-grid">${htmlFormatedPlanningData.flat().join("")}</div>`,
+  return inject(
+    data,
+    "hour-grid",
+    htmlFormatedPlanningData.flat().join(""),
   );
 }
