@@ -17,6 +17,7 @@ const server = Deno.listenTls({
   hostname: env.HOSTNAME,
   certFile: env.SSL_CERT_PATH,
   keyFile: env.SSL_PRIVATE_KEY_PATH,
+  alpnProtocols: ["h2", "http/1.1"],
 });
 
 async function readFile(
