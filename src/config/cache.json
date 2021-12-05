@@ -1,9 +1,13 @@
 {
     "defaultConfig": {
-        "no-cache, private": { "file": "\\.(htm|js|css|ico|woff|woff2)$" },
-        "max-age=604800, private": { "file": "\\.(png|jpg|webp|svg|webmanifest)$" }
+        "no-cache, public": { "file": "\\.(htm|js|css|ico|woff|woff2)$" },
+        "max-age=604800, public": { "file": "\\.(png|jpg|webp|svg|webmanifest)$" }
     },
     "subDomain": {
-        "www": {}
+        "www": {},
+        "api": {
+            "no-store": { "file": ".*" },
+            "no-cache, public": { "file": "\\.ico$" }
+        }
     }
 }
