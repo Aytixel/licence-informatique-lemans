@@ -85,7 +85,7 @@ export default async function (
   for (let i = 0; i < 7; i++) {
     const dayData = await planningDataCursor.next();
 
-    htmlFormatedPlanningData.push(dayData.courses.map((cource: any) => {
+    htmlFormatedPlanningData.push(dayData.courses.map((course: any) => {
       const startHour: any = new Date(dayData.date);
 
       startHour.setUTCHours(8);
@@ -94,21 +94,21 @@ export default async function (
         (dayData.date - startDate) / dayInMs,
       );
       const hourStartPosition = Math.floor(
-        (cource.startDate - startHour) / fifteenMinutesInMs,
+        (course.startDate - startHour) / fifteenMinutesInMs,
       );
       const hourEndPosition = Math.floor(
-        (cource.endDate - startHour) / fifteenMinutesInMs,
+        (course.endDate - startHour) / fifteenMinutesInMs,
       );
-      let courceType = "";
+      let courseType = "";
 
-      if (cource.title.match(/exam|qcm|contrôle continu/i)) {
-        courceType = "exam";
-      } else if (cource.title.match(/cour|cm|conférence métier/i)) {
-        courceType = "class";
-      } else if (cource.title.match(/td|gr[ ]*[a-c]/i)) courceType = "directed";
-      else if (cource.title.match(/tp|gr[ ]*[1-6]/i)) courceType = "practical";
+      if (course.title.match(/exam|qcm|contrôle continu/i)) {
+        courseType = "exam";
+      } else if (course.title.match(/cour|cm|conférence métier/i)) {
+        courseType = "class";
+      } else if (course.title.match(/td|gr[ ]*[a-c]/i)) courseType = "directed";
+      else if (course.title.match(/tp|gr[ ]*[1-6]/i)) courseType = "practical";
 
-      return `<div class="cource ${courceType}" style="grid-column: ${
+      return `<div class="course ${courseType}" style="grid-column: ${
         dayPosition +
         1
       }; grid-row: ${
@@ -117,8 +117,8 @@ export default async function (
       } / ${
         hourEndPosition +
         1
-      };" data-resources="${cource.resources}" data-comment="${cource.comment}" tabindex="1"><h2>${cource.title}</h2>
-        <div class="time">${cource.startDate.getUTCHours()}:${cource.startDate.getUTCMinutes()} - ${cource.endDate.getUTCHours()}:${cource.endDate.getUTCMinutes()}</div></div>`;
+      };" data-resources="${course.resources}" data-comment="${course.comment}" tabindex="1"><h2>${course.title}</h2>
+        <div class="time">${course.startDate.getUTCHours()}:${course.startDate.getUTCMinutes()} - ${course.endDate.getUTCHours()}:${course.endDate.getUTCMinutes()}</div></div>`;
     }));
   }
 

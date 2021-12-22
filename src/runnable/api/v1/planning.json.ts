@@ -51,7 +51,7 @@ export default async function (
   ) {
     const dayData = await planningDataCursor.next();
 
-    for (const cource of dayData.courses) parsedData.courses.push(cource);
+    for (const course of dayData.courses) parsedData.courses.push(course);
   }
 
   return JSON.stringify(parsedData, null, 2);
