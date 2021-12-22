@@ -38,7 +38,7 @@ export default async function (
         _id: 0,
         date: 1,
         group: 1,
-        cources: 1,
+        courses: 1,
       },
       batchSize: 7,
     });
@@ -51,7 +51,7 @@ export default async function (
   ) {
     const dayData = await planningDataCursor.next();
 
-    for (const cource of dayData.cources) parsedData.cources.push(cource);
+    for (const cource of dayData.courses) parsedData.courses.push(cource);
   }
 
   return JSON.stringify(parsedData, null, 2);

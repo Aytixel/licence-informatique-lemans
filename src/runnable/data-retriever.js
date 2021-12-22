@@ -122,7 +122,7 @@ class DataRetriever {
               console.log(`start uploading planning data for : ${key}`);
 
               planningData[key].forEach((data, index) => {
-                const newCourcesData = {};
+                const newCoursesData = {};
                 const addZero = (number) => {
                   if (number < 10) return "0" + number;
 
@@ -134,7 +134,7 @@ class DataRetriever {
                     Date.now() + 1000 * 3600 * 24 * i,
                   );
 
-                  newCourcesData[
+                  newCoursesData[
                     `${date.getUTCFullYear()}/${
                       addZero(
                         date.getUTCMonth() +
@@ -170,7 +170,7 @@ class DataRetriever {
                       "Comment",
                     );
 
-                    newCourcesData[dateString].push({
+                    newCoursesData[dateString].push({
                       title: courseData.title.replace(/ +/g, " "),
                       startDate: new Date(
                         `${dateString} ${parsedDate[1]} GMT+00:00`,
@@ -190,7 +190,7 @@ class DataRetriever {
                 );
 
                 // final data formatting
-                for (const dateKeyString in newCourcesData) {
+                for (const dateKeyString in newCoursesData) {
                   const dateKey = new Date(
                     `${dateKeyString} GMT+00:00`,
                   );
@@ -201,7 +201,7 @@ class DataRetriever {
                       $set: {
                         date: dateKey,
                         group: index,
-                        cources: newCourcesData[dateKeyString],
+                        courses: newCoursesData[dateKeyString],
                       },
                     },
                     { upsert: true },

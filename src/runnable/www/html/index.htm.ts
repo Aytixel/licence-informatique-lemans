@@ -76,7 +76,7 @@ export default async function (
       _id: 0,
       date: 1,
       group: 1,
-      cources: 1,
+      courses: 1,
     },
     batchSize: 7,
   });
@@ -85,7 +85,7 @@ export default async function (
   for (let i = 0; i < 7; i++) {
     const dayData = await planningDataCursor.next();
 
-    htmlFormatedPlanningData.push(dayData.cources.map((cource: any) => {
+    htmlFormatedPlanningData.push(dayData.courses.map((cource: any) => {
       const startHour: any = new Date(dayData.date);
 
       startHour.setUTCHours(8);
