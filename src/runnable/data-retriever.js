@@ -96,7 +96,7 @@ class DataRetriever {
                     fetch(
                       "http://planning.univ-lemans.fr/direct/gwtdirectplanning/rss?projectId=1&resources=" +
                         resourceId + "&cliendId=" + clientId +
-                        "&nbDays=30&since=0",
+                        "&nbDays=15&since=0",
                     ).then((response) => response.text()).then((data) =>
                       new Promise((resolve) => {
                         resourcesId[key][index] = data;
