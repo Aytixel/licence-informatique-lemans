@@ -127,7 +127,7 @@ header h2 {
     appearance: none;
 }
 
-.planning .cource-viewer {
+.planning .course-viewer {
     display: grid;
 
     grid-template: "a d" auto
@@ -152,23 +152,23 @@ header h2 {
     transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
 }
 
-.planning .cource-viewer[aria-hidden="true"] {
+.planning .course-viewer[aria-hidden="true"] {
     visibility: hidden;
 
     opacity: 0;
 }
 
-.planning .cource-viewer .resources {
+.planning .course-viewer .resources {
     grid-area: b;
 }
 
-.planning .cource-viewer .comment {
+.planning .course-viewer .comment {
     grid-area: c;
     
     margin-top: 1em;
 }
 
-.planning .cource-viewer .close {
+.planning .course-viewer .close {
     position: absolute;
     top: 1vh;
     right: 1vh;
@@ -187,7 +187,7 @@ header h2 {
     background-color: transparent;
 }
 
-.planning .cource-viewer .close::before, .planning .cource-viewer .close::after {
+.planning .course-viewer .close::before, .planning .course-viewer .close::after {
     display: block;
 
     position: absolute;
@@ -204,11 +204,11 @@ header h2 {
     background-color: #1c1c1c;
 }
 
-.planning .cource-viewer .close::before {
+.planning .course-viewer .close::before {
     transform: translate(50%, -50%) rotate(45deg);
 }
 
-.planning .cource-viewer .close::after {
+.planning .course-viewer .close::after {
     transform: translate(50%, -50%) rotate(-45deg);
 }
 
@@ -263,7 +263,7 @@ header h2 {
     height: 72vh;
 }
 
-.planning .cource {
+.planning .course {
     box-sizing: border-box;
 
     padding: calc(0.5vmax);
@@ -277,7 +277,7 @@ header h2 {
     background-color: #2e2e2e;
 }
 
-.planning .cource h2 {
+.planning .course h2 {
     overflow: hidden;
 
     font-size: calc(0.6vmax + 1vh);
