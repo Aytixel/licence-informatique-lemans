@@ -96,7 +96,7 @@ class DataRetriever {
                     fetch(
                       "http://planning.univ-lemans.fr/direct/gwtdirectplanning/rss?projectId=1&resources=" +
                         resourceId + "&cliendId=" + clientId +
-                        "&nbDays=15&since=0",
+                        "&nbDays=120&since=0",
                     ).then((response) => response.text()).then((data) =>
                       new Promise((resolve) => {
                         resourcesId[key][index] = data;
@@ -129,7 +129,7 @@ class DataRetriever {
                   return number.toString();
                 };
 
-                for (let i = 0; i < 16; i++) {
+                for (let i = 0; i < 121; i++) {
                   const date = new Date(
                     Date.now() + 1000 * 3600 * 24 * i,
                   );
