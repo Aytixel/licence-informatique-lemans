@@ -65,6 +65,39 @@ header h2 {
 
 */
 
+#planning > h2 a {
+    display: inline-block;
+
+    height: 1.5em;
+    width: 1.5em;
+
+    margin-left: 1em;
+
+    border-radius: 0.75em;
+
+    transform: translateY(-5%) scale(1.75);
+
+    transition: background-color 0.2s ease-in-out;
+}
+
+#planning > h2 a:hover {
+    background-color: #1c1c1c;
+}
+
+#planning > h2 svg {
+    height: 1em;
+
+    fill: #1c1c1c;
+
+    transform: translateY(25%) scale(0.75);
+
+    transition: fill 0.2s ease-in-out;
+}
+
+#planning > h2 a:hover svg {
+    fill: #a4c639;
+}
+
 .planning {
     height: 100vh;
 
