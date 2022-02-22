@@ -1,5 +1,5 @@
-import { DotenvConfig } from "https://deno.land/x/dotenv@v3.0.0/mod.ts";
-import { join, parse } from "https://deno.land/std@0.107.0/path/mod.ts";
+import { DotenvConfig } from "https://deno.land/x/dotenv@v3.2.0/mod.ts";
+import { join, parse } from "https://deno.land/std@0.126.0/path/mod.ts";
 import { createSubDomainConfig, getJsonSync } from "./utils.ts";
 
 class Router {

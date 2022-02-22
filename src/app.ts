@@ -1,5 +1,5 @@
-import { config } from "https://deno.land/x/dotenv@v3.0.0/mod.ts";
-import { exists } from "https://deno.land/std@0.107.0/fs/mod.ts";
+import { config } from "https://deno.land/x/dotenv@v3.2.0/mod.ts";
+import { exists } from "https://deno.land/std@0.126.0/fs/mod.ts";
 import { Router } from "./router.ts";
 import { Mime } from "./mime.ts";
 import { stream } from "./stream.ts";

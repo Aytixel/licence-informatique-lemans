@@ -1,5 +1,5 @@
-import { DotenvConfig } from "https://deno.land/x/dotenv@v3.0.0/mod.ts";
-import { MongoClient } from "https://deno.land/x/mongo@v0.28.0/mod.ts";
+import { DotenvConfig } from "https://deno.land/x/dotenv@v3.2.0/mod.ts";
+import { MongoClient } from "https://deno.land/x/mongo@v0.29.2/mod.ts";
 import { getJson } from "../utils.ts";
 
 export default class {

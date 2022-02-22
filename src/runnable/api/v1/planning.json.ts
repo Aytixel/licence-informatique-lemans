@@ -33,7 +33,6 @@ export default async function (
       date: { $gte: parsedData.startDate, $lt: parsedData.endDate },
       group: parsedData.group,
     }, {
-      noCursorTimeout: false,
       projection: {
         _id: 0,
         date: 1,

@@ -1,7 +1,7 @@
-import { config } from "https://deno.land/x/dotenv@v3.0.0/mod.ts";
+import { config } from "https://deno.land/x/dotenv@v3.2.0/mod.ts";
 import puppeteer from "https://deno.land/x/puppeteer@9.0.2/mod.ts";
-import { MongoClient } from "https://deno.land/x/mongo@v0.28.0/mod.ts";
-import { parse } from "https://deno.land/x/xml@2.0.0/mod.ts";
+import { MongoClient } from "https://deno.land/x/mongo@v0.29.2/mod.ts";
+import { parse } from "https://deno.land/x/xml@2.0.4/mod.ts";
 import { getJson } from "../utils.ts";
 
 class DataRetriever {

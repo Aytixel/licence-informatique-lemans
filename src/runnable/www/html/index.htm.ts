@@ -71,7 +71,6 @@ export default async function (
     date: { $gte: startDate, $lt: endDate },
     group: group,
   }, {
-    noCursorTimeout: false,
     projection: {
       _id: 0,
       date: 1,
