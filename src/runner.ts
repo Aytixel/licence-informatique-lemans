@@ -1,5 +1,4 @@
 import { DotenvConfig } from "https://deno.land/x/dotenv@v3.2.0/mod.ts";
-import { existsSync } from "https://deno.land/std@0.126.0/fs/mod.ts";
 import { join, resolve } from "https://deno.land/std@0.126.0/path/mod.ts";
 
 class Runner {
@@ -18,7 +17,11 @@ class Runner {
         join(this.runnablePath, path + "." + extension),
       );
 
-      if (existsSync(runnablePath)) return "file://" + runnablePath;
+      try {
+        Deno.close(Deno.openSync(runnablePath).rid);
+
+        return "file://" + runnablePath;
+      } catch (_) {}
     }
 
     return null;
