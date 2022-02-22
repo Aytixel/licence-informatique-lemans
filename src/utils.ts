@@ -35,4 +35,29 @@ function inject(
   );
 }
 
-export { createSubDomainConfig, getJson, getJsonSync, inject };
+async function exists(path: string) {
+  try {
+    Deno.close((await Deno.open(path)).rid);
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
+function existsSync(path: string) {
+  try {
+    Deno.close(Deno.openSync(path).rid);
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
+export {
+  createSubDomainConfig,
+  exists,
+  existsSync,
+  getJson,
+  getJsonSync,
+  inject,
+};

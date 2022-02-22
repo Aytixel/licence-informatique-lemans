@@ -1,5 +1,4 @@
 import { config } from "https://deno.land/x/dotenv@v3.2.0/mod.ts";
-import { exists } from "https://deno.land/std@0.126.0/fs/mod.ts";
 import { Router } from "./router.ts";
 import { Mime } from "./mime.ts";
 import { stream } from "./stream.ts";
@@ -7,6 +6,7 @@ import { compress } from "./compress.ts";
 import { Cache } from "./cache.ts";
 import { Error404, Error500, NotModified304 } from "./status.ts";
 import { Runner } from "./runner.ts";
+import { exists } from "./utils.ts";
 
 const env = config({ safe: true });
 const router = new Router(env);
