@@ -177,3 +177,14 @@ footer > div::before {
 
     transform: translate(-1vh, -1vh);
 }
+
+/*
+
+    Arc.io widget
+
+*/
+
+#arc-widget-launcher-iframe {
+    left: 6vh !important;
+    bottom: 2vh !important;
+}
