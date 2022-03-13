@@ -70,3 +70,7 @@ window.addEventListener("click", (e) => {
     set_course_viewer_visibility(false);
   }
 });
+
+window.addEventListener("load", () => {
+  if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js");
+});
