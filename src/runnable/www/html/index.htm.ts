@@ -100,23 +100,17 @@ export default async function (
       );
       let courseType = "";
 
-      if (course.title.match(/exam|qcm|contrôle/i)) {
+      if (course.title.match(/exam|qcm|contrôle|partiel/i)) {
         courseType = "exam";
       } else if (course.title.match(/cour|cm|conférence/i)) {
         courseType = "class";
       } else if (course.title.match(/td|gr[ ]*[a-c]/i)) courseType = "directed";
       else if (course.title.match(/tp|gr[ ]*[1-6]/i)) courseType = "practical";
 
-      return `<div class="course ${courseType}" style="grid-column: ${
-        dayPosition +
-        1
-      }; grid-row: ${
-        hourStartPosition +
-        1
-      } / ${
-        hourEndPosition +
-        1
-      };" data-resources="${course.resources}" data-comment="${course.comment}" tabindex="1"><h2>${course.title}</h2>
+      return `<div class="course ${courseType}" style="grid-column: ${dayPosition +
+        1}; grid-row: ${hourStartPosition +
+        1} / ${hourEndPosition +
+        1};" data-resources="${course.resources}" data-comment="${course.comment}" tabindex="1"><h2>${course.title}</h2>
         <div class="time">${course.startDate.getUTCHours()}:${course.startDate.getUTCMinutes()} - ${course.endDate.getUTCHours()}:${course.endDate.getUTCMinutes()}</div></div>`;
     }));
   }
