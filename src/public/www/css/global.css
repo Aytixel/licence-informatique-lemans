@@ -187,4 +187,10 @@ footer > div::before {
 #arc-widget-launcher-iframe {
     left: 6vh !important;
     bottom: 2vh !important;
+    
+    pointer-events: auto;
+}
+
+#arc-widget-container {
+    pointer-events: none;
 }
