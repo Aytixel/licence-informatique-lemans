@@ -94,7 +94,7 @@ class DataRetriever {
                 resourcesId[key].forEach((resourceId, index) => {
                   promises.push(
                     fetch(
-                      "http://planning.univ-lemans.fr/direct/gwtdirectplanning/rss?projectId=1&resources=" +
+                      "http://planning.univ-lemans.fr/direct/gwtdirectplanning/rss?projectId=5&resources=" +
                         resourceId + "&cliendId=" + clientId +
                         "&nbDays=120&since=0",
                     ).then((response) => response.text()).then((data) =>
