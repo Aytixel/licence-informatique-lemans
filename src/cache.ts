@@ -1,8 +1,21 @@
-import etag from "https://cdn.skypack.dev/etag";
+import { etag } from "./deps.ts";
+import { RouterData } from "./router.ts";
 import { createSubDomainConfig, getJsonSync } from "./utils.ts";
 
+interface SubDomainConfig {
+  all?: string;
+  file?: string;
+  path?: string;
+}
+
+interface CacheConfig {
+  defaultSubDomain: string;
+  defaultConfig: Record<string, Record<string, SubDomainConfig>>;
+  subDomain: Record<string, Record<string, SubDomainConfig>>;
+}
+
 class Cache {
-  private config: any;
+  private config: CacheConfig;
 
   constructor() {
     this.config = createSubDomainConfig(getJsonSync("./src/config/cache.json"));
@@ -11,8 +24,8 @@ class Cache {
   addCacheHeader(
     request: Request,
     data: Uint8Array,
-    routerData: any,
-    headers: any,
+    routerData: RouterData,
+    headers: Record<string, string>,
   ) {
     const subDomainConfig = this.config
       .subDomain[

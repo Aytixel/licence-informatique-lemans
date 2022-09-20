@@ -1,10 +1,10 @@
-import { readRange } from "https://deno.land/std@0.126.0/io/files.ts";
+import { readRange } from "./deps.ts";
 
 async function stream(
   request: Request,
   pathname: string,
-  headers: any,
-): Promise<{ data: any; status: number }> {
+  headers: Record<string, string>,
+): Promise<{ data: Uint8Array; status: number }> {
   const file = await Deno.open(pathname, { read: true });
   const fileSize = (await file.stat()).size;
   const range = request.headers.get("range");
@@ -25,7 +25,7 @@ async function stream(
     return { data: data, status: 206 };
   }
 
-  headers["content-length"] = fileSize;
+  headers["content-length"] = fileSize.toString(10);
 
   return { data: new Uint8Array(), status: 200 };
 }

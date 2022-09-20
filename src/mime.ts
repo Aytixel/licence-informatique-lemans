@@ -1,4 +1,7 @@
-const extensions: any = {
+type Types = Record<string, string>;
+type Categories = Record<string, string[]>;
+
+const extensions: Types = {
   "html": "html",
   "htm": "html",
   "xhtml": "xhtml",
@@ -39,7 +42,7 @@ const extensions: any = {
   "weba": "weba",
 };
 const defaultMimeType = "text/plain";
-const mimeTypes: any = {
+const mimeTypes: Types = {
   "html": "text/html; charset=UTF-8",
   "xhtml": "application/xhtml+xml",
   "xml": "application/xml",
@@ -72,7 +75,7 @@ const mimeTypes: any = {
   "weba": "audio/weba",
 };
 const defaultMimeTypeCategory = "unknown";
-const mimeTypeCategorys: any = {
+const mimeTypeCategories: Categories = {
   "document": ["html", "xhtml"],
   "file": ["xml", "pdf"],
   "style": ["css"],
@@ -84,7 +87,7 @@ const mimeTypeCategorys: any = {
   "audio": ["m4a", "mp3", "aac", "oga", "wav", "weba"],
 };
 const defaultReturnDataType = "binary";
-const returnDataTypes: any = {
+const returnDataTypes: Categories = {
   "text": [
     "html",
     "xhtml",
@@ -139,9 +142,9 @@ class Mime {
   static getMimeTypeCategory(extension: string): string {
     const fileType = Mime.extensionToFileType(extension);
 
-    for (const mimeTypeCategory in mimeTypeCategorys) {
+    for (const mimeTypeCategory in mimeTypeCategories) {
       if (
-        mimeTypeCategorys[mimeTypeCategory].find((fileType_: any) =>
+        mimeTypeCategories[mimeTypeCategory].find((fileType_: string) =>
           fileType_ == fileType
         )
       ) {
@@ -157,7 +160,7 @@ class Mime {
 
     for (const returnDataType in returnDataTypes) {
       if (
-        returnDataTypes[returnDataType].find((fileType_: any) =>
+        returnDataTypes[returnDataType].find((fileType_: string) =>
           fileType_ == fileType
         )
       ) {

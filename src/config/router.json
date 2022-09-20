@@ -5,7 +5,6 @@
         "/html/": { "path": "^\/$", "file": "\\.htm$" }
     },
     "subDomain": {
-        "www": {},
-        "api": {}
+        "www": {}
     }
 }
