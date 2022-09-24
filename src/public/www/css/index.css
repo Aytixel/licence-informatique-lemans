@@ -16,8 +16,26 @@ body {
     color: var(--color-light-0);
 }
 
+@keyframes header_appear {
+    0% {
+        clip-path: inset(50% 45% 50% 45%);
+    }
+
+    40% {
+        clip-path: inset(21.65% 45% 21.65% 45%);
+    }
+
+    100% {
+        clip-path: inset(21.65% 0% 21.65% 0%);
+    }
+}
+
 header {
     height: 100vmin;
+
+    overflow: hidden;
+
+    animation: 1.5s ease-in-out 0s header_appear;
 }
 
 #header-banner {
@@ -38,6 +56,28 @@ header {
     object-fit: cover;
 }
 
+@keyframes header_title_appear {
+    0% {
+        opacity: 0;
+
+        translate: 50vw -80%;
+    }
+
+    30% {
+        opacity: 1;
+    }
+
+    40% {
+        opacity: 1;
+
+        translate: 50vw -50%;
+    }
+
+    100% {
+        translate: 0 -50%;
+    }
+}
+
 #header-title {
     position: absolute;
     top: 50%;
@@ -49,6 +89,8 @@ header {
     white-space: nowrap;
 
     translate: 0 -50%;
+
+    animation: 1.9s ease-in-out 0s header_title_appear;
 }
 
 h1 {
