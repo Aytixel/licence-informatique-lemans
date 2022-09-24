@@ -9,7 +9,7 @@ import { Runner } from "./runner.ts";
 import { exists } from "./utils.ts";
 import { WebSocketServer } from "./websocket.ts";
 
-const env = config({ safe: true });
+const env = await config({ safe: true });
 const router = new Router(env);
 const cache = new Cache();
 const runner = new Runner(env);
