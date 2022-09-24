@@ -38,7 +38,8 @@ class WebSocketServer {
     respondWith: (r: Response | Promise<Response>) => Promise<void>,
   ): boolean {
     if (
-      this.message_callback && request.headers.get("upgrade") != "websocket"
+      this.message_callback && request.headers.get("upgrade") != "websocket" ||
+      this.message_callback === undefined
     ) return false;
 
     const { socket, response } = Deno.upgradeWebSocket(request);
@@ -63,7 +64,9 @@ class WebSocketServer {
       "close",
       () =>
         this.runner.app.connections.splice(
-          this.runner.app.connections.findIndex((connection) => connection.id == id),
+          this.runner.app.connections.findIndex((connection) =>
+            connection.id == id
+          ),
           1,
         ),
     );
