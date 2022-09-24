@@ -1,7 +1,7 @@
 {
     "defaultConfig": {
-        "no-cache, public": { "file": "\\.(htm|js|css|ico|woff|woff2)$" },
-        "max-age=604800, public": { "file": "\\.(png|jpg|webp|svg|webmanifest)$" }
+        "no-cache, public": { "file": "\\.(htm|js|css)$" },
+        "max-age=604800, public": { "file": "\\.(png|jpg|ico|webp|svg|webmanifest|woff|woff2)$" }
     },
     "subDomain": {
         "www": {}
