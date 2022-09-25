@@ -13,9 +13,82 @@ body {
     background-color: var(--color-light-0);
 
     font-family: "Marianne";
-    color: var(--color-light-0);
+    color: var(--color-dark-0);
 }
 
+a {
+    color: var(--color-dark-0);
+    text-decoration: none;
+}
+
+/*
+    Nav
+*/
+@keyframes nav_appear {
+    0% {
+        translate: 0 calc(-5vmin - 3em);
+        scale: 0.2;
+    }
+
+    45% {
+        translate: 0 calc(-5vmin - 3em);
+        scale: 0.2;
+    }
+
+    70% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+
+        translate: 0;
+        scale: 1;
+    }
+}
+
+nav {
+    position: fixed;
+    z-index: 1;
+    top: 5vmin;
+
+    width: 100%;
+}
+
+nav a {
+    float: right;
+
+    margin-right: 1em;
+
+    padding: 0.4em 2em;
+
+    border-radius: 2em;
+
+    background-color: var(--color-light-1);
+
+    animation: 1.7s ease-in-out 0s nav_appear;
+}
+
+nav a:first-child {
+    animation: 1.9s ease-in-out 0s nav_appear;
+}
+
+nav span {
+    display: none;
+
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+nav svg {
+    height: 1.15em;
+
+    fill: var(--color-dark-0);
+}
+
+/*
+    Header
+*/
 @keyframes header_appear {
     0% {
         clip-path: inset(50% 45% 50% 45%);
@@ -103,6 +176,19 @@ header h2 {
     color: var(--color-light-1);
     font-size: 2.499vmax;
     text-shadow: 0.283vmax 0.283vmax 0 var(--color-accent-1);
+}
+
+/*
+    Media queries
+*/
+@media screen and (min-aspect-ratio: 1/1) {
+    nav span {
+        display: inline;
+    }
+
+    nav svg {
+        display: none;
+    }
 }
 
 @media screen and (min-aspect-ratio: 8/13) {
