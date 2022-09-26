@@ -23,16 +23,16 @@ function throttle(callback, delay) {
 const header_banner = document.querySelector("#header-banner");
 
 window.addEventListener("deviceorientation", (e) => {
-  header_banner.style.translate = `${e.gamma / 180 * -20}px calc(-50% + ${
-    e.beta / 180 * -20
-  }px)`;
+  header_banner.style.translate = `${e.gamma / 180 * -2}% calc(-50% + ${
+    e.beta / 180 * -2
+  }%)`;
 });
 
 window.addEventListener(
   "mousemove",
   throttle((e) => {
     header_banner.style.translate = `${
-      e.clientX / window.innerWidth * -20
-    }px calc(-50% + ${e.clientY / window.innerHeight * -20}px)`;
+      e.clientX / window.innerWidth * -2
+    }% calc(-50% + ${e.clientY / window.innerHeight * -2}%)`;
   }, 50),
 );
