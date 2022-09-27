@@ -302,6 +302,7 @@ header h2 {
 
 #app-android img {
     height: 20em;
+    width: 9.875em;
 }
 
 /*
@@ -335,6 +336,7 @@ footer {
 
     #app-android img {
         height: 30em;
+        width: 14.8125em;
     }
 }
 
