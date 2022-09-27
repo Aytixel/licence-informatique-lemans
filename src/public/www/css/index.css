@@ -66,6 +66,9 @@ a {
 }
 
 nav {
+    display: inline-flex;
+    justify-content: flex-end;
+
     position: fixed;
     z-index: 1;
     top: 5vmin;
@@ -74,8 +77,6 @@ nav {
 }
 
 nav a {
-    float: right;
-
     margin-right: 1em;
 
     padding: 0.4em 2em;
@@ -92,10 +93,10 @@ nav a {
 nav a:hover {
     background-color: var(--color-accent-0);
 
-    translate: 0.1em 0.2em;
+    translate: 0.2em 0.3em;
 }
 
-nav a:first-child {
+nav a:last-child {
     animation: 1.9s ease-in-out 0s nav_appear;
 }
 
@@ -216,6 +217,10 @@ header h2 {
     padding: 1.5em;
 
     text-align: center;
+}
+
+#app p {
+    text-align: left;
 }
 
 #app .title {
