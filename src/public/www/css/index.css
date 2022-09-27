@@ -257,6 +257,54 @@ header h2 {
 }
 
 /*
+    App android
+*/
+#android-preview {
+    display: inline-block;
+
+    width: fit-content;
+
+    border: 0.4em solid #1c1c1c;
+    border-radius: 1.2em;
+
+    background-color: #1c1c1c;
+}
+
+#android-preview::before {
+    display: block;
+
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 50%;
+
+    height: 0.25em;
+    width: 0.75em;
+
+    content: "";
+
+    background-color: #1c1c1c;
+
+    clip-path: path("M 0 0 C 2 0 3 2 4 3 C 5 4 7 4 8 3 C 9 2 10 0 12 0 L 0 0");
+
+    transform: translate(-50%, 110%) scale(3.2);
+}
+
+#android-preview div {
+    width: fit-content;
+
+    border-top: 0.8em solid #018785;
+    border-bottom: 0.8em solid #FFF;
+    border-radius: 0.8em;
+
+    background-color: #d9d9d9;
+}
+
+#app-android img {
+    height: 20em;
+}
+
+/*
     Footer
 */
 footer {
@@ -266,6 +314,30 @@ footer {
 /*
     Media queries
 */
+@media screen and (min-width: 400px) {
+    #android-preview {
+        border-width: 0.6em;
+        border-radius: 1.8em;
+    }
+
+    #android-preview::before {
+        height: 0.25em;
+        width: 0.75em;
+
+        transform: translate(-50%, 200%) scale(5);
+    }
+
+    #android-preview div {
+        border-top-width: 1.2em;
+        border-bottom-width: 1.2em;
+        border-radius: 1.2em;
+    }
+
+    #app-android img {
+        height: 30em;
+    }
+}
+
 @media screen and (min-aspect-ratio: 1/1) {
     nav span {
         display: inline;
