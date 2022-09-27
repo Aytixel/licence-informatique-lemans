@@ -169,6 +169,40 @@ header h2 {
 }
 
 /*
+    App
+*/
+#app {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+
+    width: 100%;
+}
+
+#app section {
+    padding: 1.5em;
+
+    text-align: center;
+}
+
+#app .title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    min-height: 4em;
+
+    padding-bottom: 3em;
+}
+
+#app .title-highlight {
+    color: var(--color-dark-1);
+    font-family: "EdoSZ";
+    font-size: 1em;
+    text-shadow: 0.1em 0.1em 0 var(--color-accent-1);
+}
+
+/*
     Media queries
 */
 @media screen and (min-aspect-ratio: 1/1) {
