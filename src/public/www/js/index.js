@@ -55,7 +55,7 @@ if (mobile_tablet_check()) {
 }
 
 // appear on hover element
-const intersection_ratio = 0.5;
+const intersection_ratio = 0.3;
 const observer = new IntersectionObserver((entries) => {
   for (entry of entries) {
     if (entry.intersectionRatio > intersection_ratio) {
