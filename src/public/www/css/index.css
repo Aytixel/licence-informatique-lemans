@@ -203,6 +203,13 @@ header h2 {
 }
 
 /*
+    Footer
+*/
+footer {
+    height: 10em;
+}
+
+/*
     Media queries
 */
 @media screen and (min-aspect-ratio: 1/1) {
