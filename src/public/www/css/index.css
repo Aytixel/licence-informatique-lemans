@@ -191,8 +191,6 @@ header h2 {
     justify-content: center;
 
     min-height: 4em;
-
-    padding-bottom: 3em;
 }
 
 #app .title-highlight {
@@ -200,6 +198,29 @@ header h2 {
     font-family: "EdoSZ";
     font-size: 1em;
     text-shadow: 0.1em 0.1em 0 var(--color-accent-1);
+}
+
+#app a {
+    display: inline-block;
+
+    padding: 1em 2em;
+
+    border-radius: 2em;
+
+    color: var(--color-dark-0);
+    font-weight: bold;
+
+    background-color: var(--color-accent-0);
+
+    transition: 0.2s ease-in-out scale, 0.2s ease-in-out color, 0.2s ease-in-out background-color;
+}
+
+#app a:hover {
+    color: var(--color-dark-1);
+
+    background-color: var(--color-accent-1);
+
+    scale: 1.1;
 }
 
 /*
