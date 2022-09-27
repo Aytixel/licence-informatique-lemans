@@ -60,6 +60,14 @@ nav a {
     background-color: var(--color-light-1);
 
     animation: 1.7s ease-in-out 0s nav_appear;
+
+    transition: 0.2s ease-in-out translate, 0.2s ease-in-out background-color;
+}
+
+nav a:hover {
+    background-color: var(--color-accent-0);
+
+    translate: 0.1em 0.2em;
 }
 
 nav a:first-child {
@@ -218,7 +226,7 @@ header h2 {
 #app a:hover {
     color: var(--color-dark-1);
 
-    background-color: var(--color-accent-1);
+    background-color: var(--color-light-1);
 
     scale: 1.1;
 }
