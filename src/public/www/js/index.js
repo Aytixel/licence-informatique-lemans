@@ -34,6 +34,7 @@ const mobile_tablet_check = function () {
   return check;
 };
 
+// banner animation on mouse move or device orientation
 const header_banner = document.querySelector("#header-banner");
 
 if (mobile_tablet_check()) {
@@ -51,4 +52,23 @@ if (mobile_tablet_check()) {
       }% calc(-50% + ${e.clientY / window.innerHeight * -2}%)`;
     }, 50),
   );
+}
+
+// appear on hover element
+const intersection_ratio = 0.5;
+const observer = new IntersectionObserver((entries) => {
+  for (entry of entries) {
+    if (entry.intersectionRatio > intersection_ratio) {
+      console.log(entry);
+      entry.target.dataset.appearOnHover = "hover";
+
+      observer.unobserve(entry.target);
+    }
+  }
+}, {
+  threshold: intersection_ratio,
+});
+
+for (element of document.querySelectorAll("* [data-appear-on-hover]")) {
+  observer.observe(element);
 }
