@@ -59,7 +59,6 @@ const intersection_ratio = 0.5;
 const observer = new IntersectionObserver((entries) => {
   for (entry of entries) {
     if (entry.intersectionRatio > intersection_ratio) {
-      console.log(entry);
       entry.target.dataset.appearOnHover = "hover";
 
       observer.unobserve(entry.target);
