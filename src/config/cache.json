@@ -4,6 +4,7 @@
         "max-age=604800, public": { "file": "\\.(png|jpg|ico|webp|svg|webmanifest|woff|woff2)$" }
     },
     "subDomain": {
-        "www": {}
+        "www": {},
+        "api": {}
     }
 }
