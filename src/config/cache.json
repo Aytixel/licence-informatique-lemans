@@ -5,6 +5,8 @@
     },
     "subDomain": {
         "www": {},
-        "api": {}
+        "api": {
+            "no-store": { "file": ".*" }
+        }
     }
 }

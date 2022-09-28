@@ -1,6 +1,5 @@
-import { compress } from "../../../compress.ts";
 import { RouterData } from "../../../router.ts";
-import { Ok200 } from "../../../status.ts";
+import { RespondWith } from "../../../runner.ts";
 import App from "../../app.ts";
 import planningResourcesId from "../../planning-resources-id.json" assert {
   type: "json",
@@ -8,9 +7,10 @@ import planningResourcesId from "../../planning-resources-id.json" assert {
 
 export default async function (
   app: App,
-  request: Request,
+  _request: Request,
   routerData: RouterData,
-  headers: Record<string, string>,
+  _headers: Record<string, string>,
+  respondWith: RespondWith,
 ) {
   const parsedData: {
     level?: string;
@@ -73,14 +73,5 @@ export default async function (
     }
   }
 
-  return new Ok200(
-    compress(
-      request,
-      new TextEncoder().encode(JSON.stringify(parsedData)),
-      headers,
-    ),
-    {
-      headers,
-    },
-  );
+  respondWith(JSON.stringify(parsedData));
 }

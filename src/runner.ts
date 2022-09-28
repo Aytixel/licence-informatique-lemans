@@ -2,7 +2,6 @@ import { DotenvConfig, join, resolve } from "./deps.ts";
 import { existsSync } from "./utils.ts";
 import { RouterData } from "./router.ts";
 import { WebSocketConnectionInfo } from "./websocket.ts";
-import { Error404 } from "./status.ts";
 
 class AppRunner {
   public env: DotenvConfig;
@@ -15,6 +14,8 @@ class AppRunner {
 
   async init() {}
 }
+
+type RespondWith = (data?: Uint8Array | string) => void;
 
 class Runner {
   public app: AppRunner;
@@ -90,24 +91,44 @@ class Runner {
     return new TextEncoder().encode(data);
   }
 
-  async runWithNothing(
+  runWithNothing(
     request: Request,
     routerData: RouterData,
     headers: Record<string, string>,
-  ): Promise<Response> {
+  ): Promise<{ data: Uint8Array; status: number }> {
     const runnablePath = this.getRunnablePath(routerData.domainFilePath);
 
-    if (runnablePath) {
-      return await (await import(runnablePath)).default(
-        this.app,
-        request,
-        routerData,
-        headers,
-      );
-    }
+    return new Promise((resolve) => {
+      if (runnablePath) {
+        import(runnablePath).then((importedRunner) => {
+          let hasResolved = false;
+          const respondWith = (data: Uint8Array | string) => {
+            if (!hasResolved) {
+              hasResolved = true;
 
-    return new Error404();
+              resolve({
+                data: data === undefined
+                  ? new Uint8Array()
+                  : typeof data === "string"
+                  ? new TextEncoder().encode(data)
+                  : data,
+                status: 200,
+              });
+            }
+          };
+
+          importedRunner.default(
+            this.app,
+            request,
+            routerData,
+            headers,
+            respondWith,
+          ).catch(() => resolve({ data: new Uint8Array(), status: 404 }));
+        }).catch(() => resolve({ data: new Uint8Array(), status: 404 }));
+      } else resolve({ data: new Uint8Array(), status: 404 });
+    });
   }
 }
 
 export { AppRunner, Runner };
+export type { RespondWith };

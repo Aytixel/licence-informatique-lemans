@@ -89,35 +89,30 @@ async function handle(conn: Deno.Conn) {
         const headers = {
           "content-type": Mime.getMimeType(routerData.parsedPath.ext),
         };
-
-        if (await exists(routerData.filePath)) {
-          const { data, status } = await readFile(
+        const { data, status } = await exists(routerData.filePath)
+          ? await readFile(
             request,
             Mime.getReturnDataType(routerData.parsedPath.ext),
             routerData,
             headers,
-          );
-          const body = compress(
+          )
+          : await runner.runWithNothing(
             request,
-            data,
+            routerData,
             headers,
           );
+        const body = compress(
+          request,
+          data,
+          headers,
+        );
 
-          if (cache.addCacheHeader(request, body, routerData, headers)) {
-            respondWith(new NotModified304()).catch(console.error);
-          } else {
-            respondWith(new Response(body, { headers, status })).catch(
-              console.error,
-            );
-          }
+        if (cache.addCacheHeader(request, body, routerData, headers)) {
+          respondWith(new NotModified304()).catch(console.error);
         } else {
-          respondWith(
-            await runner.runWithNothing(
-              request,
-              routerData,
-              headers,
-            ),
-          ).catch(console.error);
+          respondWith(new Response(body, { headers, status })).catch(
+            console.error,
+          );
         }
       } else respondWith(new Error404()).catch(console.error);
     } catch (error) {
