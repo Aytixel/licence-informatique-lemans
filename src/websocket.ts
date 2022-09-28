@@ -10,7 +10,7 @@ type WebSocketConnectionInfo = {
 
 class WebSocketServer {
   private runner: Runner;
-  private message_callback?: (
+  private messageCallback?: (
     message: MessageEvent,
     connection: WebSocketConnectionInfo,
     app?: AppRunner,
@@ -27,7 +27,7 @@ class WebSocketServer {
 
       if (existsSync(runnablePath)) {
         import("file://" + runnablePath).then((imports) =>
-          this.message_callback = imports.default
+          this.messageCallback = imports.default
         );
       }
     }
@@ -38,8 +38,8 @@ class WebSocketServer {
     respondWith: (r: Response | Promise<Response>) => Promise<void>,
   ): boolean {
     if (
-      this.message_callback && request.headers.get("upgrade") != "websocket" ||
-      this.message_callback === undefined
+      this.messageCallback && request.headers.get("upgrade") != "websocket" ||
+      this.messageCallback === undefined
     ) return false;
 
     const { socket, response } = Deno.upgradeWebSocket(request);
@@ -56,8 +56,8 @@ class WebSocketServer {
     socket.addEventListener(
       "message",
       (message) =>
-        this.message_callback &&
-        this.message_callback(message, connection, this.runner.app),
+        this.messageCallback &&
+        this.messageCallback(message, connection, this.runner.app),
     );
     socket.addEventListener("error", console.error);
     socket.addEventListener(
