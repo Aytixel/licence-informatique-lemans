@@ -1,24 +1,40 @@
 class Ok200 extends Response {
-  constructor(body?: BodyInit) {
-    super(body, { status: 200 });
+  constructor(body?: BodyInit, init?: ResponseInit) {
+    if (init === undefined) init = {};
+
+    init.status = 200;
+
+    super(body, init);
   }
 }
 
 class NotModified304 extends Response {
-  constructor() {
-    super(null, { status: 304 });
+  constructor(body?: BodyInit, init?: ResponseInit) {
+    if (init === undefined) init = {};
+
+    init.status = 304;
+
+    super(body, init);
   }
 }
 
 class Error404 extends Response {
-  constructor() {
-    super(null, { status: 404 });
+  constructor(body?: BodyInit, init?: ResponseInit) {
+    if (init === undefined) init = {};
+
+    init.status = 404;
+
+    super(body, init);
   }
 }
 
 class Error500 extends Response {
-  constructor() {
-    super(null, { status: 500 });
+  constructor(body?: BodyInit, init?: ResponseInit) {
+    if (init === undefined) init = {};
+
+    init.status = 500;
+
+    super(body, init);
   }
 }
 
