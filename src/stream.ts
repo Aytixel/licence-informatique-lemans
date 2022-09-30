@@ -1,10 +1,11 @@
+import { ResponseData } from "./app.ts";
 import { readRange } from "./deps.ts";
 
 async function stream(
   request: Request,
   pathname: string,
   headers: Record<string, string>,
-): Promise<{ data: Uint8Array; status: number }> {
+): Promise<ResponseData> {
   const file = await Deno.open(pathname, { read: true });
   const fileSize = (await file.stat()).size;
   const range = request.headers.get("range");

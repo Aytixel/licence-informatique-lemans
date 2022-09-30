@@ -9,6 +9,11 @@ import { Runner } from "./runner.ts";
 import { exists } from "./utils.ts";
 import { WebSocketServer } from "./websocket.ts";
 
+interface ResponseData {
+  data: Uint8Array;
+  status: number;
+}
+
 const env = await config({ safe: true });
 const router = new Router(env);
 const cache = new Cache();
@@ -35,14 +40,16 @@ async function readFile(
   returnDataType: string,
   routerData: RouterData,
   headers: Record<string, string>,
-): Promise<{ data: Uint8Array; status: number }> {
-  let data = new Uint8Array();
-  let status = 200;
+): Promise<ResponseData> {
+  let responseData = {
+    data: new Uint8Array(),
+    status: 200,
+  };
 
   try {
     switch (returnDataType) {
       case "text":
-        data = await runner.runWithTextData(
+        responseData = await runner.runWithTextData(
           request,
           routerData,
           headers,
@@ -50,32 +57,38 @@ async function readFile(
         );
         break;
       case "stream": {
-        const streamData = await stream(request, routerData.filePath, headers);
-
-        data = streamData.data;
-        status = streamData.status;
-
-        await runner.run(request, routerData, headers);
+        responseData = await runner.runWithData(
+          request,
+          routerData,
+          headers,
+          await stream(request, routerData.filePath, headers),
+        );
         break;
       }
       case "binary":
-        data = await Deno.readFile(routerData.filePath);
-
-        await runner.run(request, routerData, headers);
+        responseData = await runner.runWithData(
+          request,
+          routerData,
+          headers,
+          {
+            data: await Deno.readFile(routerData.filePath),
+            status: 200,
+          },
+        );
     }
   } catch (error) {
     switch (error.name) {
       case "NotFound":
       case "PermissionDenied":
-        status = 404;
+        responseData.status = 404;
         break;
       default:
-        status = 500;
+        responseData.status = 500;
         console.error(error);
     }
   }
 
-  return { data, status };
+  return responseData;
 }
 
 async function handle(conn: Deno.Conn) {
@@ -131,3 +144,5 @@ async function handle(conn: Deno.Conn) {
 }
 
 for await (const conn of server) handle(conn).catch(console.error);
+
+export type { ResponseData };

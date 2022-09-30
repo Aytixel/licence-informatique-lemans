@@ -2,6 +2,7 @@ import { DotenvConfig, join, resolve } from "./deps.ts";
 import { existsSync } from "./utils.ts";
 import { RouterData } from "./router.ts";
 import { WebSocketConnectionInfo } from "./websocket.ts";
+import { ResponseData } from "./app.ts";
 
 class AppRunner {
   public env: DotenvConfig;
@@ -15,8 +16,48 @@ class AppRunner {
   async init() {}
 }
 
-type RespondWith = (data?: Uint8Array | string) => void;
-type RedirectTo = (url: URL | string, status?: number) => void;
+interface RunnerResponseData {
+  data?: Uint8Array;
+  status: number;
+}
+
+class RunnerResponse {
+  private hasResolved = false;
+  private headers: Record<string, string>;
+  private resolve?: (value: RunnerResponseData) => void;
+  promise: Promise<RunnerResponseData> = new Promise((resolve) =>
+    this.resolve = resolve
+  );
+
+  constructor(headers: Record<string, string>) {
+    this.headers = headers;
+  }
+
+  respondWith(data?: Uint8Array | string) {
+    if (this.resolve !== undefined && !this.hasResolved) {
+      this.hasResolved = true;
+
+      this.resolve({
+        data: typeof data === "string" ? new TextEncoder().encode(data) : data,
+        status: 200,
+      } as unknown as RunnerResponseData);
+    }
+  }
+
+  redirectTo(url: URL | string, status?: number) {
+    if (this.resolve !== undefined && !this.hasResolved) {
+      this.hasResolved = true;
+      this.headers.location = url.toString();
+
+      delete this.headers["content-type"];
+
+      this.resolve({
+        data: new Uint8Array(),
+        status: status || 302,
+      } as unknown as RunnerResponseData);
+    }
+  }
+}
 
 class Runner {
   public app: AppRunner;
@@ -52,21 +93,35 @@ class Runner {
     }
   }
 
-  async run(
+  async runWithData(
     request: Request,
     routerData: RouterData,
     headers: Record<string, string>,
-  ) {
+    responseData: ResponseData,
+  ): Promise<ResponseData> {
     const runnablePath = this.getRunnablePath(routerData.domainFilePath);
 
     if (runnablePath) {
-      (await import(runnablePath)).default(
+      const runnerResponse: RunnerResponse = new RunnerResponse(headers);
+
+      await (await import(runnablePath)).default(
         this.app,
         request,
         routerData,
         headers,
+        runnerResponse,
+        responseData,
       );
+
+      const runnerResponseData = await runnerResponse.promise;
+
+      return {
+        data: runnerResponseData.data || responseData.data,
+        status: runnerResponseData.status,
+      };
     }
+
+    return responseData;
   }
 
   async runWithTextData(
@@ -74,76 +129,66 @@ class Runner {
     routerData: RouterData,
     headers: Record<string, string>,
     data: string,
-  ): Promise<Uint8Array> {
+  ): Promise<ResponseData> {
     const runnablePath = this.getRunnablePath(routerData.domainFilePath);
 
     if (runnablePath) {
-      return new TextEncoder().encode(
-        await (await import(runnablePath)).default(
-          this.app,
-          request,
-          routerData,
-          headers,
-          data,
-        ) || data,
+      const runnerResponse: RunnerResponse = new RunnerResponse(headers);
+
+      await (await import(runnablePath)).default(
+        this.app,
+        request,
+        routerData,
+        headers,
+        runnerResponse,
+        data,
       );
+
+      const runnerResponseData = await runnerResponse.promise;
+
+      return {
+        data: runnerResponseData.data || new TextEncoder().encode(data),
+        status: runnerResponseData.status,
+      };
     }
 
-    return new TextEncoder().encode(data);
+    return {
+      data: new TextEncoder().encode(data),
+      status: 200,
+    };
   }
 
-  runWithNothing(
+  async runWithNothing(
     request: Request,
     routerData: RouterData,
     headers: Record<string, string>,
-  ): Promise<{ data: Uint8Array; status: number }> {
+  ): Promise<ResponseData> {
     const runnablePath = this.getRunnablePath(routerData.domainFilePath);
 
-    return new Promise((resolve) => {
-      if (runnablePath) {
-        import(runnablePath).then((importedRunner) => {
-          let hasResolved = false;
-          const respondWith = (data: Uint8Array | string) => {
-            if (!hasResolved) {
-              hasResolved = true;
+    if (runnablePath) {
+      const runnerResponse: RunnerResponse = new RunnerResponse(headers);
 
-              resolve({
-                data: data === undefined
-                  ? new Uint8Array()
-                  : typeof data === "string"
-                  ? new TextEncoder().encode(data)
-                  : data,
-                status: 200,
-              });
-            }
-          };
-          const redirectTo = (url: URL | string, status?: number) => {
-            if (!hasResolved) {
-              hasResolved = true;
-              headers.location = url.toString();
+      await (await import(runnablePath)).default(
+        this.app,
+        request,
+        routerData,
+        headers,
+        runnerResponse,
+      );
 
-              delete headers["content-type"];
+      const runnerResponseData = await runnerResponse.promise;
 
-              resolve({
-                data: new Uint8Array(),
-                status: status || 302,
-              });
-            }
-          };
+      return {
+        data: runnerResponseData.data || new Uint8Array(),
+        status: runnerResponseData.status,
+      };
+    }
 
-          importedRunner.default(
-            this.app,
-            request,
-            routerData,
-            headers,
-            respondWith,
-            redirectTo,
-          ).catch(() => resolve({ data: new Uint8Array(), status: 404 }));
-        }).catch(() => resolve({ data: new Uint8Array(), status: 404 }));
-      } else resolve({ data: new Uint8Array(), status: 404 });
-    });
+    return {
+      data: new Uint8Array(),
+      status: 404,
+    };
   }
 }
 
-export { AppRunner, Runner };
-export type { RedirectTo, RespondWith };
+export { AppRunner, Runner, RunnerResponse };

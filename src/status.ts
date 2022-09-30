@@ -1,13 +1,3 @@
-class Ok200 extends Response {
-  constructor(body?: BodyInit, init?: ResponseInit) {
-    if (init === undefined) init = {};
-
-    init.status = 200;
-
-    super(body, init);
-  }
-}
-
 class NotModified304 extends Response {
   constructor(body?: BodyInit, init?: ResponseInit) {
     if (init === undefined) init = {};
@@ -38,4 +28,4 @@ class Error500 extends Response {
   }
 }
 
-export { Error404, Error500, NotModified304, Ok200 };
+export { Error404, Error500, NotModified304 };
