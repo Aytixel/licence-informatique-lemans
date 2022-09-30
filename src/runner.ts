@@ -16,6 +16,7 @@ class AppRunner {
 }
 
 type RespondWith = (data?: Uint8Array | string) => void;
+type RedirectTo = (url: URL | string, status?: number) => void;
 
 class Runner {
   public app: AppRunner;
@@ -116,6 +117,19 @@ class Runner {
               });
             }
           };
+          const redirectTo = (url: URL | string, status?: number) => {
+            if (!hasResolved) {
+              hasResolved = true;
+              headers.location = url.toString();
+
+              delete headers["content-type"];
+
+              resolve({
+                data: new Uint8Array(),
+                status: status || 302,
+              });
+            }
+          };
 
           importedRunner.default(
             this.app,
@@ -123,6 +137,7 @@ class Runner {
             routerData,
             headers,
             respondWith,
+            redirectTo,
           ).catch(() => resolve({ data: new Uint8Array(), status: 404 }));
         }).catch(() => resolve({ data: new Uint8Array(), status: 404 }));
       } else resolve({ data: new Uint8Array(), status: 404 });
@@ -131,4 +146,4 @@ class Runner {
 }
 
 export { AppRunner, Runner };
-export type { RespondWith };
+export type { RedirectTo, RespondWith };

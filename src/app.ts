@@ -101,16 +101,23 @@ async function handle(conn: Deno.Conn) {
             routerData,
             headers,
           );
-        const body = compress(
-          request,
-          data,
-          headers,
-        );
 
-        if (cache.addCacheHeader(request, body, routerData, headers)) {
-          respondWith(new NotModified304()).catch(console.error);
+        if (status != 301 && status != 302) {
+          const body = compress(
+            request,
+            data,
+            headers,
+          );
+
+          if (cache.addCacheHeader(request, body, routerData, headers)) {
+            respondWith(new NotModified304()).catch(console.error);
+          } else {
+            respondWith(new Response(body, { headers, status })).catch(
+              console.error,
+            );
+          }
         } else {
-          respondWith(new Response(body, { headers, status })).catch(
+          respondWith(new Response(null, { headers, status })).catch(
             console.error,
           );
         }
