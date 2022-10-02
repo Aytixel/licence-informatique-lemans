@@ -5,6 +5,14 @@ import planningResourcesId from "../../planning-resources-id.json" assert {
   type: "json",
 };
 
+interface Course {
+  title: string;
+  start_date: Date;
+  end_date: Date;
+  resources: string[];
+  comment: string[];
+}
+
 export default async function (
   app: App,
   _request: Request,
@@ -17,7 +25,7 @@ export default async function (
     group?: number;
     startDate?: Date;
     endDate?: Date;
-    courses: number[];
+    courses: Course[];
   } = { courses: [] };
 
   parsedData.level = routerData.searchParams.get("level") || "l1";
