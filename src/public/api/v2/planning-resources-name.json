@@ -1,0 +1,26 @@
+{
+    "l1": {
+        "name": "Licence 1",
+        "name_list": ["TPGr 1", "TPGr 2", "TPGr 3", "TPGr 4", "TPGr 5", "TPGr 6"]
+    },
+    "l2": {
+        "name": "Licence 2",
+        "name_list": ["TPGr 1", "TPGr 2", "TPGr 3", "TPGr 4", "Tout TP confondu"]
+    },
+    "l3": {
+        "name": "Licence 3",
+        "name_list": ["TPGr 1", "TPGr 2", "TPGr 3", "TPGr 4"]
+    },
+    "m1": {
+        "name": "Master 1",
+        "name_list": ["Alternants", "Initiaux"]
+    },
+    "m2": {
+        "name": "Master 2",
+        "name_list": ["Gr A", "Gr B"]
+    },
+    "room_ic2": {
+        "name": "IC2",
+        "name_list": ["Salle de cours", "TD1-010", "TD2-012", "TD3-020", "TD4-022", "TP-110-Robots", "TP-112-Robots", "TP-114", "TP-120", "TP-122-FEDER", "TP-124", "TP-130"]
+    }
+}

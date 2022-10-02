@@ -1,7 +1,7 @@
 import { RouterData } from "../../../router.ts";
 import { RunnerResponse } from "../../../runner.ts";
 import App from "../../app.ts";
-import planningResourcesId from "../../planning-resources-id.json" assert {
+import planningResourcesCount from "../../planning-resources-count.json" assert {
   type: "json",
 };
 
@@ -53,7 +53,7 @@ export default async function (
   }
   if (
     isNaN(parsedData.group) ||
-    parsedData.group >= (planningResourcesId as any)[parsedData.level].length
+    parsedData.group >= (planningResourcesCount as any)[parsedData.level]
   ) {
     errors.push("group");
   }
@@ -70,6 +70,7 @@ export default async function (
     }
   }
 
+  // return errors if some
   if (errors.length) {
     runnerResponse.respondWith(JSON.stringify({ errors }));
 

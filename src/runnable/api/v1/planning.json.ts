@@ -1,7 +1,7 @@
 import { RouterData } from "../../../router.ts";
 import { RunnerResponse } from "../../../runner.ts";
 import App from "../../app.ts";
-import planningResourcesId from "../../planning-resources-id.json" assert {
+import planningResourcesCount from "../../planning-resources-count.json" assert {
   type: "json",
 };
 
@@ -36,9 +36,9 @@ export default async function (
 
   if (parsedData.level.match(/l[1-3]/) == null) parsedData.level = "l1";
   if (
-    parsedData.group >= (planningResourcesId as any)[parsedData.level].length
+    parsedData.group >= (planningResourcesCount as any)[parsedData.level]
   ) {
-    parsedData.group = (planningResourcesId as any)[parsedData.level].length -
+    parsedData.group = (planningResourcesCount as any)[parsedData.level] -
       1;
   }
   if (isNaN(parsedData.startDate.getTime())) parsedData.startDate = new Date();
