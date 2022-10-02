@@ -1,5 +1,5 @@
 import { RouterData } from "../../../router.ts";
-import { RespondWith } from "../../../runner.ts";
+import { RunnerResponse } from "../../../runner.ts";
 import App from "../../app.ts";
 import planningResourcesId from "../../planning-resources-id.json" assert {
   type: "json",
@@ -10,7 +10,7 @@ export default async function (
   _request: Request,
   routerData: RouterData,
   _headers: Record<string, string>,
-  respondWith: RespondWith,
+  runnerResponse: RunnerResponse,
 ) {
   const parsedData: {
     level?: string;
@@ -73,5 +73,5 @@ export default async function (
     }
   }
 
-  respondWith(JSON.stringify(parsedData));
+  runnerResponse.respondWith(JSON.stringify(parsedData));
 }
