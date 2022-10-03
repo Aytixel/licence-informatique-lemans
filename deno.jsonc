@@ -1,0 +1,10 @@
+{
+    "lint": {
+        "files": {
+            "exclude": [
+                "src/public/",
+                "src/runnable/"
+            ]
+        }
+    }
+}
