@@ -3,7 +3,7 @@
   "name": "Licence Informatique LeMans",
   "short_name": "Licence Info LeMans",
   "lang": "fr-FR",
-  "start_url": "/sw.js",
+  "start_url": "/",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
