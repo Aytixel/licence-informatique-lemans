@@ -30,7 +30,7 @@ addEventListener("fetch", (event) => {
       const response = await fetch(event.request);
 
       if (await cache.delete(event.request)) {
-        await cache.add(event.request);
+        await cache.put(event.request, response.clone());
       }
 
       return response;
