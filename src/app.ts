@@ -99,7 +99,7 @@ async function handle(conn: Deno.Conn) {
       const { routerData, subDomainFound } = router.route(request);
 
       if (subDomainFound) {
-        const headers = {
+        const headers: Record<string, string> = {
           "content-type": Mime.getMimeType(routerData.parsedPath.ext),
         };
         const { data, status } = await exists(routerData.filePath)
@@ -121,6 +121,8 @@ async function handle(conn: Deno.Conn) {
             data,
             headers,
           );
+
+          headers["access-control-allow-origin"] = "*";
 
           if (cache.addCacheHeader(request, body, routerData, headers)) {
             respondWith(new NotModified304()).catch(console.error);
