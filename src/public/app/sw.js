@@ -34,7 +34,7 @@ addEventListener("fetch", (event) => {
       }
 
       return response;
-    } catch (_) {
+    } catch {
       return await cache.match(
         event.request,
       ) || new Response(null, { status: 404 });

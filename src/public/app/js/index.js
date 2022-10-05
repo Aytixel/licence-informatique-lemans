@@ -13,7 +13,7 @@ window.addEventListener("load", async () => {
         console.log("Service worker active");
       }
     } catch (error) {
-      console.error(`Registration failed with ${error}`);
+      console.error(`Service worker registration failed with ${error}`);
     }
   }
 });
