@@ -5,8 +5,6 @@ import planning_resources_type from "https://api.licence-informatique-lemans.tk/
   type: "json",
 };
 
-console.log(planning_resources_name, planning_resources_type);
-
 if (window.indexedDB) {
   const planning_database = window.indexedDB.open("planning", 2);
   const keep_only_date = (date) =>
@@ -23,10 +21,10 @@ if (window.indexedDB) {
     if (favorites) {
       favorites = JSON.parse(favorites);
 
-      for (favorite of favorites) {
+      for (const favorite of favorites) {
         console.log(
           await (await fetch(
-            `https://app.licence-informatique-lemans.tk/v2/planning.json?level=${favorite.level}&group=${favorite.group}&start=${start_date.toISOString()}&end=${end_date.toISOString()}`,
+            `https://api.licence-informatique-lemans.tk/v2/planning.json?level=${favorite.level}&group=${favorite.group}&start=${start_date.toISOString()}&end=${end_date.toISOString()}`,
           )).json(),
         );
       }
