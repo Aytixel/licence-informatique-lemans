@@ -6,15 +6,10 @@ import planning_resources_type from "https://api.licence-informatique-lemans.tk/
 };
 
 if (window.indexedDB) {
+  const planning_element = document.querySelector("planning-viewer");
   const planning_database = window.indexedDB.open("planning", 2);
-  const keep_only_date = (date) =>
-    new Date(date.getTime() - (date.getTime() % (1000 * 60 * 60 * 24)));
-  const start_date = keep_only_date(
-    new Date(Date.now() - new Date(0).setDate(8)),
-  );
-  const end_date = keep_only_date(
-    new Date(Date.now() + new Date(0).setDate(8)),
-  );
+  const start_date = keep_only_date(add_days(new Date(), -7));
+  const end_date = keep_only_date(add_days(new Date(), 7));
   const update_planning = async () => {
     let favorites = localStorage.getItem("favorites");
 
@@ -22,11 +17,11 @@ if (window.indexedDB) {
       favorites = JSON.parse(favorites);
 
       for (const favorite of favorites) {
-        console.log(
-          await (await fetch(
-            `https://api.licence-informatique-lemans.tk/v2/planning.json?level=${favorite.level}&group=${favorite.group}&start=${start_date.toISOString()}&end=${end_date.toISOString()}`,
-          )).json(),
-        );
+        const planning_data = await (await fetch(
+          `https://api.licence-informatique-lemans.tk/v2/planning.json?level=${favorite.level}&group=${favorite.group}&start=${start_date.toISOString()}&end=${end_date.toISOString()}`,
+        )).json();
+
+        planning_element.load(planning_data);
       }
     }
   };

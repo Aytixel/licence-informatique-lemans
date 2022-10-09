@@ -1,0 +1,22 @@
+* {
+    position: relative;
+    z-index: 0;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--color-light-0);
+
+    font-family: "Marianne";
+    color: var(--color-dark-0);
+}
+
+a {
+    color: var(--color-dark-0);
+    text-decoration: none;
+}
