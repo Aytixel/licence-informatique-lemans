@@ -24,6 +24,8 @@ addEventListener("install", (event) => {
       "/resource/font/Marianne-Bold.woff2",
       "/resource/font/Marianne-Regular.woff",
       "/resource/font/Marianne-Regular.woff2",
+      "https://api.licence-informatique-lemans.tk/v2/planning-resources-name.json",
+      "https://api.licence-informatique-lemans.tk/v2/planning-resources-type.json",
     ]);
   })());
 });
