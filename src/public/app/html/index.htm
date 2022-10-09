@@ -17,10 +17,13 @@
     <link rel="preload stylesheet" as="style" type="text/css" href="/css/palette.css">
     <link rel="preload stylesheet" as="style" type="text/css" href="/css/index.css">
     <script type="application/javascript">
-        const keep_only_date = (date) =>
-            new Date(date.getTime() - (date.getTime() % (1000 * 60 * 60 * 24)));
-        const compare_date = (date1, date2) => date2.getTime() - date1.getTime()
-        const add_days = (date, day) => new Date(date.getTime() + (day * 1000 * 60 * 60 * 24));
+        const keep_only_date = (date) => {
+            time = new Date(date).getTime();
+
+            return new Date(time - (time % (1000 * 60 * 60 * 24)));
+        }
+        const compare_date = (date1, date2) => new Date(date2).getTime() - new Date(date1).getTime()
+        const add_days = (date, day) => new Date(new Date(date).getTime() + (day * 1000 * 60 * 60 * 24));
     </script>
     <script src="/js/component.js" type="module" async></script>
     <script src="/js/index.js" type="module" async defer></script>
