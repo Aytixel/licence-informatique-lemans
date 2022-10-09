@@ -8,6 +8,7 @@ addEventListener("install", (event) => {
       "/css/font.css",
       "/css/palette.css",
       "/css/index.css",
+      "/js/component.js",
       "/js/index.js",
       "/site.webmanifest",
       "/android-chrome-192x192.png",
