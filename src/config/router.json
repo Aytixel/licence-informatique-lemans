@@ -7,8 +7,9 @@
     "subDomain": {
         "www": {},
         "app": {
-            "../www/": {"path": "^\/$", "file": "^(favicon(-\\d\\dx\\d\\d|)|(maskable-|)android-chrome-\\d\\d\\dx\\d\\d\\d|apple-touch-icon).(ico|png)$"},
-            "../www/css/": {"path": "^\/css$", "file": "^(font|palette).css$"}
+            "../www/": { "path": "^\/$", "file": "^(favicon(-\\d\\dx\\d\\d|)|(maskable-|)android-chrome-\\d\\d\\dx\\d\\d\\d|apple-touch-icon).(ico|png)$" },
+            "../www/css/": { "path": "^\/css$", "file": "^(font|palette).css$" },
+            "../www/resource/font/": {"path": "^\/resource\/font$" }
         },
         "api": {}
     }

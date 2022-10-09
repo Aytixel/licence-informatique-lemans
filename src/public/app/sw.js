@@ -18,6 +18,12 @@ addEventListener("install", (event) => {
       "/favicon-16x16.png",
       "/favicon-32x32.png",
       "/favicon.ico",
+      "/resource/font/edosz.woff",
+      "/resource/font/edosz.woff2",
+      "/resource/font/Marianne-Bold.woff",
+      "/resource/font/Marianne-Bold.woff2",
+      "/resource/font/Marianne-Regular.woff",
+      "/resource/font/Marianne-Regular.woff2",
     ]);
   })());
 });
