@@ -1,7 +1,3 @@
-import planning_resources_name from "https://api.licence-informatique-lemans.tk/v2/planning-resources-name.json" assert {
-  type: "json",
-};
-
 class PlanningViewer extends HTMLElement {
   #days_element = {};
   #start_date;
@@ -303,6 +299,7 @@ class CourseViewer extends HTMLElement {
   }
 
   init() {
+    let update_background_position_interval;
     const update_background_position = () => {
       window.requestAnimationFrame(() => {
         if (
@@ -312,6 +309,8 @@ class CourseViewer extends HTMLElement {
           ) >= 0
         ) {
           this.style.backgroundPositionY = "0%";
+
+          clearInterval(update_background_position_interval);
         } else if (
           compare_date(
             this.dataset.start_date,
@@ -329,7 +328,10 @@ class CourseViewer extends HTMLElement {
       });
     };
 
-    setInterval(update_background_position, 1000 * 60 * 2);
+    update_background_position_interval = setInterval(
+      update_background_position,
+      1000 * 60 * 2,
+    );
 
     update_background_position();
   }

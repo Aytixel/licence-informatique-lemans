@@ -1,10 +1,3 @@
-import planning_resources_name from "https://api.licence-informatique-lemans.tk/v2/planning-resources-name.json" assert {
-  type: "json",
-};
-import planning_resources_type from "https://api.licence-informatique-lemans.tk/v2/planning-resources-type.json" assert {
-  type: "json",
-};
-
 if (window.indexedDB) {
   const planning_element = document.querySelector("planning-viewer");
   const planning_database = window.indexedDB.open("planning", 2);

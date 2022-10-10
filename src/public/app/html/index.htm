@@ -22,11 +22,18 @@
 
             return new Date(time - (time % (1000 * 60 * 60 * 24)));
         }
-        const compare_date = (date1, date2) => new Date(date2).getTime() - new Date(date1).getTime()
+        const compare_date = (date1, date2) => new Date(date2).getTime() - new Date(date1).getTime();
         const add_days = (date, day) => new Date(new Date(date).getTime() + (day * 1000 * 60 * 60 * 24));
+        let planning_resources_name;
+        let planning_resources_type;
+
+        (async () => {
+            planning_resources_name = await (await fetch("https://api.licence-informatique-lemans.tk/v2/planning-resources-name.json")).json();
+            planning_resources_type = await (await fetch("https://api.licence-informatique-lemans.tk/v2/planning-resources-type.json")).json();
+        })();
     </script>
-    <script src="/js/component.js" type="module" async></script>
-    <script src="/js/index.js" type="module" async defer></script>
+    <script src="/js/component.js" async></script>
+    <script src="/js/index.js" async defer></script>
 </head>
 
 <body>
