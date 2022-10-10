@@ -168,8 +168,8 @@ class DayViewer extends HTMLElement {
         }
       }
     } else {
-      for (const child of this.shadowRoot.children) {
-        child.remove();
+      for (const child of [...this.shadowRoot.children]) {
+        if (child.tagName.toLowerCase() == "course-viewer") child.remove();
       }
     }
   }
