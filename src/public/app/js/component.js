@@ -97,7 +97,7 @@ class PlanningViewer extends HTMLElement {
 }
 
 class DayViewer extends HTMLElement {
-  #courses_element = {};
+  #lessons_element = {};
   #date_element = document.createElement("h2");
   #container = document.createElement("div");
 
@@ -152,64 +152,64 @@ class DayViewer extends HTMLElement {
       .format(new Date(date));
 
     if (
-      day_data?.courses?.length &&
-      day_data.courses.every((course) =>
-        new Date(course.start_date).toJSON() &&
-        new Date(course.end_date).toJSON()
+      day_data?.lessons?.length &&
+      day_data.lessons.every((lesson) =>
+        new Date(lesson.start_date).toJSON() &&
+        new Date(lesson.end_date).toJSON()
       )
     ) {
-      const new_course_id = [];
+      const new_lesson_id = [];
 
-      for (const course of day_data.courses) {
-        const course_id = course.start_date + course.end_date;
+      for (const lesson of day_data.lessons) {
+        const lesson_id = lesson.start_date + lesson.end_date;
 
-        new_course_id.push(course_id);
+        new_lesson_id.push(lesson_id);
 
-        // add new courses if needed
-        if (!this.#courses_element[course_id]) {
-          this.#courses_element[course_id] = document.createElement(
-            "course-viewer",
+        // add new lessons if needed
+        if (!this.#lessons_element[lesson_id]) {
+          this.#lessons_element[lesson_id] = document.createElement(
+            "lesson-viewer",
           );
-          this.#courses_element[course_id].dataset.start_date =
-            course.start_date;
-          this.#courses_element[course_id].dataset.end_date = course.end_date;
-          this.#courses_element[course_id].init();
+          this.#lessons_element[lesson_id].dataset.start_date =
+            lesson.start_date;
+          this.#lessons_element[lesson_id].dataset.end_date = lesson.end_date;
+          this.#lessons_element[lesson_id].init();
 
-          const courses_element = Array.from(this.#container.children);
+          const lessons_element = Array.from(this.#container.children);
 
-          let course_element = courses_element.findLast((course_element) =>
-            compare_date(course_element.dataset.end_date, course.start_date) >=
+          let lesson_element = lessons_element.findLast((lesson_element) =>
+            compare_date(lesson_element.dataset.end_date, lesson.start_date) >=
               0
           );
 
-          if (course_element) {
-            course_element.after(this.#courses_element[course_id]);
+          if (lesson_element) {
+            lesson_element.after(this.#lessons_element[lesson_id]);
           } else {
-            course_element = courses_element.find((course_element) =>
+            lesson_element = lessons_element.find((lesson_element) =>
               compare_date(
-                course.end_date,
-                course_element.dataset.start_date,
+                lesson.end_date,
+                lesson_element.dataset.start_date,
               ) >= 0
             );
 
-            if (course_element) {
-              course_element.before(this.#courses_element[course_id]);
+            if (lesson_element) {
+              lesson_element.before(this.#lessons_element[lesson_id]);
             } else {
-              this.#container.append(this.#courses_element[course_id]);
+              this.#container.append(this.#lessons_element[lesson_id]);
             }
           }
         }
 
         // update cources data
-        this.#courses_element[course_id].load(course);
+        this.#lessons_element[lesson_id].load(lesson);
       }
 
-      for (const course_id_key in this.#courses_element) {
-        if (!new_course_id.includes(course_id_key)) {
-          // remove courses if needed
-          this.#courses_element[course_id_key].remove();
+      for (const lesson_id_key in this.#lessons_element) {
+        if (!new_lesson_id.includes(lesson_id_key)) {
+          // remove lessons if needed
+          this.#lessons_element[lesson_id_key].remove();
 
-          delete this.#courses_element[course_id_key];
+          delete this.#lessons_element[lesson_id_key];
         }
       }
     } else {
@@ -220,7 +220,7 @@ class DayViewer extends HTMLElement {
   }
 }
 
-class CourseViewer extends HTMLElement {
+class LessonViewer extends HTMLElement {
   #title_element = document.createElement("h3");
   #start_date_element = document.createElement("time");
   #end_date_element = document.createElement("time");
@@ -336,45 +336,45 @@ class CourseViewer extends HTMLElement {
     update_background_position();
   }
 
-  load(course_data) {
+  load(lesson_data) {
     if (
-      typeof course_data?.title === "string" &&
-      course_data?.description?.length &&
-      course_data.description.every((part) => typeof part === "string") &&
-      course_data?.rooms?.length &&
-      course_data.rooms.every((part) => typeof part === "string") &&
-      new Date(course_data.start_date).toJSON() &&
-      new Date(course_data.end_date).toJSON()
+      typeof lesson_data?.title === "string" &&
+      lesson_data?.description?.length &&
+      lesson_data.description.every((part) => typeof part === "string") &&
+      lesson_data?.rooms?.length &&
+      lesson_data.rooms.every((part) => typeof part === "string") &&
+      new Date(lesson_data.start_date).toJSON() &&
+      new Date(lesson_data.end_date).toJSON()
     ) {
       const date_to_time_intl = new Intl.DateTimeFormat("default", {
         timeStyle: "short",
       });
 
-      if (course_data.title.match(/exam|qcm|contrôle|partiel|soutenance/i)) {
+      if (lesson_data.title.match(/exam|qcm|contrôle|partiel|soutenance/i)) {
         this.style.backgroundImage =
           "linear-gradient(0deg, #f9d2d9 0%, #f9d2d9 50%, #f9335f 50%, #f9335f 100%)";
-      } else if (course_data.title.match(/cour|cm|conférence/i)) {
+      } else if (lesson_data.title.match(/cour|cm|conférence/i)) {
         this.style.backgroundImage =
           "linear-gradient(0deg, #faefce 0%, #faefce 50%, #fcd570 50%, #fcd570 100%)";
-      } else if (course_data.title.match(/td|gr[ ]*[a-c]/i)) {
+      } else if (lesson_data.title.match(/td|gr[ ]*[a-c]/i)) {
         this.style.backgroundImage =
           "linear-gradient(0deg, #ddf8e8 0%, #ddf8e8 50%, #74eca8 50%, #74eca8 100%)";
-      } else if (course_data.title.match(/tp|gr[ ]*[1-6]/i)) {
+      } else if (lesson_data.title.match(/tp|gr[ ]*[1-6]/i)) {
         this.style.backgroundImage =
           "linear-gradient(0deg, #dcf9f6 0%, #dcf9f6 50%, #70f0ee 50%, #70f0ee 100%)";
       }
 
-      this.#title_element.textContent = course_data.title;
+      this.#title_element.textContent = lesson_data.title;
       this.#start_date_element.textContent = date_to_time_intl.format(
-        new Date(course_data.start_date),
+        new Date(lesson_data.start_date),
       );
-      this.#start_date_element.dateTime = course_data.start_date;
+      this.#start_date_element.dateTime = lesson_data.start_date;
       this.#end_date_element.textContent = date_to_time_intl.format(
-        new Date(course_data.end_date),
+        new Date(lesson_data.end_date),
       );
-      this.#end_date_element.dateTime = course_data.end_date;
-      this.#rooms_element.textContent = course_data.rooms.join(", ");
-      this.data = course_data;
+      this.#end_date_element.dateTime = lesson_data.end_date;
+      this.#rooms_element.textContent = lesson_data.rooms.join(", ");
+      this.data = lesson_data;
     } else {
       this.#title_element.textContent = "";
       this.#start_date_element.textContent = "";
@@ -389,4 +389,4 @@ class CourseViewer extends HTMLElement {
 
 customElements.define("planning-viewer", PlanningViewer);
 customElements.define("day-viewer", DayViewer);
-customElements.define("course-viewer", CourseViewer);
+customElements.define("lesson-viewer", LessonViewer);

@@ -8,7 +8,7 @@ import planningResourcesCount from "../../planning-resources-count.json" assert 
 const keepOnlyDate = (date: Date) =>
   new Date(date.getTime() - (date.getTime() % (1000 * 60 * 60 * 24)));
 
-interface Course {
+interface Lesson {
   title: string;
   start_date: Date;
   end_date: Date;
@@ -18,7 +18,7 @@ interface Course {
 
 interface Day {
   date: Date;
-  courses: Course[];
+  lessons: Lesson[];
 }
 
 export default async function (
@@ -88,7 +88,7 @@ export default async function (
         _id: 0,
         date: 1,
         group: 1,
-        courses: 1,
+        lessons: 1,
       },
       sort: {
         date: 1,
