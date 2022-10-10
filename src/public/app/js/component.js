@@ -23,10 +23,14 @@ class PlanningViewer extends HTMLElement {
     }
     
     :host {
-      display: block;
+      display: flex;
 
       height: 100%;
-      width: 100%;
+
+      overflow-y: hidden;
+      overflow-x: auto;
+
+      white-space: nowrap;
     }
     `;
 
@@ -80,6 +84,7 @@ class PlanningViewer extends HTMLElement {
           // update days data
           this.#days_element[date_key].load(
             planning_data.days.find((x) => x.date == date_key),
+            date_key,
           );
         } else {
           // remove days if needed
@@ -121,33 +126,42 @@ class DayViewer extends HTMLElement {
     :host {
       display: inline-block;
 
+      flex-shrink: 0;
+
       height: 100%;
-      width: 80vmin;
+      width: 95vmin;
+
+      padding: 0 2.5vmin !important;
     }
 
     h2 {
       text-align: center;
       padding: 1em;
     }
+
+    div {
+      height: calc(100% - 5em - 2.5vmin);
+
+      overflow-y: auto;
+    }
     `;
 
     this.shadowRoot.append(style, time_element, this.#container);
   }
 
-  load(day_data) {
+  load(day_data, date) {
+    this.#date_element.textContent = new Intl.DateTimeFormat("default", {
+      dateStyle: "long",
+    })
+      .format(new Date(date));
+
     if (
-      new Date(day_data?.date).toJSON() &&
       day_data?.courses?.length &&
       day_data.courses.every((course) =>
         new Date(course.start_date).toJSON() &&
         new Date(course.end_date).toJSON()
       )
     ) {
-      this.#date_element.textContent = new Intl.DateTimeFormat("default", {
-        dateStyle: "long",
-      })
-        .format(new Date(day_data.date));
-
       const new_course_id = [];
 
       for (const course of day_data.courses) {
@@ -233,10 +247,45 @@ class CourseViewer extends HTMLElement {
       
     :host {
       display: block;
+
+      margin-top: 2em !important;
+
+      width: 100%;
+
+      box-sizing: border-box;
+
+      padding: 0.5em !important;
+
+      border-radius: 0.5em;
+
+      color: var(--color-dark-1);
+
+      background-color: var(--color-light-1);
     }
 
     h3 {
-      margin: 1em 0;
+      margin-bottom: 1em;
+      
+      width: 100%;
+
+      overflow: hidden;
+
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    span {
+      display: inline-block;
+
+      float: right;
+      
+      width: 45%;
+
+      overflow: hidden;
+
+      text-align: right;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     `;
 
@@ -273,7 +322,7 @@ class CourseViewer extends HTMLElement {
         new Date(course_data.end_date),
       );
       this.#end_time_element.dateTime = course_data.end_date;
-      this.#rooms_element.textContent = course_data.rooms.join(" ");
+      this.#rooms_element.textContent = course_data.rooms.join(", ");
       this.data = course_data;
     } else {
       this.#title_element.textContent = "";
