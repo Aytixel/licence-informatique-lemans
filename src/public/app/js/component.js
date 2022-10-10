@@ -3,8 +3,6 @@ import planning_resources_name from "https://api.licence-informatique-lemans.tk/
 };
 
 class PlanningViewer extends HTMLElement {
-  #title_;
-  #day_container;
   #days_element = {};
   #start_date;
   #end_date;
@@ -13,9 +11,6 @@ class PlanningViewer extends HTMLElement {
     super();
 
     this.attachShadow({ mode: "open" });
-    this.#title_ = document.createElement("h1");
-    this.#day_container = document.createElement("div");
-    this.#day_container.id = "day-container";
 
     const style = document.createElement("style");
 
@@ -25,7 +20,7 @@ class PlanningViewer extends HTMLElement {
         }
     `;
 
-    this.shadowRoot.append(style, this.#title_, this.#day_container);
+    this.shadowRoot.append(style);
   }
 
   load(planning_data) {
@@ -36,20 +31,14 @@ class PlanningViewer extends HTMLElement {
       planning_resources_name[planning_data?.level]
         ?.name_list[planning_data?.group] &&
       start_date.toJSON() && end_date.toJSON() &&
-      compare_date(start_date, end_date) > 0 && planning_data?.days?.length
+      compare_date(start_date, end_date) > 0 && planning_data?.days?.length &&
+      planning_data.days.every((day) => new Date(day.date).toJSON())
     ) {
       start_date = keep_only_date(start_date);
       end_date = keep_only_date(end_date);
 
       if (!this.#start_date) this.#start_date = start_date;
       if (!this.#end_date) this.#end_date = end_date;
-
-      this.#title_.textContent = `${
-        planning_resources_name[planning_data?.level].name
-      } : ${
-        planning_resources_name[planning_data?.level]
-          .name_list[planning_data?.group]
-      }`;
 
       const days_date = [];
       let date = new Date(start_date);
@@ -71,7 +60,7 @@ class PlanningViewer extends HTMLElement {
               this.#days_element[day_date],
             );
           } else {
-            this.#day_container.append(this.#days_element[day_date]);
+            this.shadowRoot.append(this.#days_element[day_date]);
           }
         }
       }
@@ -97,12 +86,13 @@ class PlanningViewer extends HTMLElement {
 }
 
 class DayViewer extends HTMLElement {
+  #courses_element = {};
+
   constructor() {
     super();
 
     this.attachShadow({ mode: "open" });
 
-    const wrapper = document.createElement("div");
     const style = document.createElement("style");
 
     style.textContent = `
@@ -111,11 +101,77 @@ class DayViewer extends HTMLElement {
         }
     `;
 
-    this.shadowRoot.append(style, wrapper);
+    this.shadowRoot.append(style);
   }
 
   load(day_data) {
-    console.log(day_data);
+    if (
+      day_data?.courses?.length &&
+      day_data.courses.every((course) =>
+        new Date(course.start_date).toJSON() &&
+        new Date(course.end_date).toJSON()
+      )
+    ) {
+      const new_course_id = [];
+
+      for (const course of day_data.courses) {
+        const course_id = course.start_date + course.end_date;
+
+        new_course_id.push(course_id);
+
+        // add new courses if needed
+        if (!this.#courses_element[course_id]) {
+          this.#courses_element[course_id] = document.createElement(
+            "course-viewer",
+          );
+          this.#courses_element[course_id].dataset.start_date =
+            course.start_date;
+          this.#courses_element[course_id].dataset.end_date = course.end_date;
+
+          const courses_element = Array.from(this.shadowRoot.children);
+
+          let course_element = courses_element.findLast((course_element) =>
+            course_element.tagName.toLowerCase() == "course-viewer" &&
+            compare_date(course_element.dataset.end_date, course.start_date) >=
+              0
+          );
+
+          if (course_element) {
+            course_element.after(this.#courses_element[course_id]);
+          } else {
+            course_element = courses_element.find((course_element) =>
+              course_element.tagName.toLowerCase() == "course-viewer" &&
+              compare_date(
+                  course.end_date,
+                  course_element.dataset.start_date,
+                ) >= 0
+            );
+
+            if (course_element) {
+              course_element.before(this.#courses_element[course_id]);
+            } else {
+              this.shadowRoot.append(this.#courses_element[course_id]);
+            }
+          }
+        }
+
+        // update cources data
+        this.#courses_element[course_id].load(course);
+      }
+
+      for (const course_id_key in this.#courses_element) {
+        if (!new_course_id.includes(course_id_key)) {
+          // remove courses if needed
+          this.#courses_element[course_id_key].remove();
+
+          delete this.#courses_element[course_id_key];
+        }
+      }
+    } else {
+      for (const child of this.shadowRoot.children) {
+        child.remove();
+      }
+    }
   }
 }
 
@@ -125,7 +181,6 @@ class CourseViewer extends HTMLElement {
 
     this.attachShadow({ mode: "open" });
 
-    const wrapper = document.createElement("div");
     const style = document.createElement("style");
 
     style.textContent = `
@@ -134,11 +189,11 @@ class CourseViewer extends HTMLElement {
           }
       `;
 
-    this.shadowRoot.append(style, wrapper);
+    this.shadowRoot.append(style);
   }
 
-  load(day_data) {
-    console.log(day_data);
+  load(course_data) {
+    console.log(course_data);
   }
 }
 
