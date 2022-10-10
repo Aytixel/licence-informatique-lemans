@@ -176,6 +176,12 @@ class DayViewer extends HTMLElement {
 }
 
 class CourseViewer extends HTMLElement {
+  #title_ = document.createElement("h3");
+  #start_time = document.createElement("time");
+  #end_time = document.createElement("time");
+  #rooms = document.createElement("span");
+  data = null;
+
   constructor() {
     super();
 
@@ -189,11 +195,50 @@ class CourseViewer extends HTMLElement {
           }
       `;
 
-    this.shadowRoot.append(style);
+    this.shadowRoot.append(
+      style,
+      this.#title_,
+      this.#start_time,
+      " - ",
+      this.#end_time,
+      this.#rooms,
+    );
   }
 
   load(course_data) {
-    console.log(course_data);
+    if (
+      typeof course_data?.title === "string" &&
+      course_data?.description?.length &&
+      course_data.description.every((part) => typeof part === "string") &&
+      course_data?.rooms?.length &&
+      course_data.rooms.every((part) => typeof part === "string") &&
+      new Date(course_data.start_date).toJSON() &&
+      new Date(course_data.end_date).toJSON()
+    ) {
+      const date_to_time_intl = new Intl.DateTimeFormat("default", {
+        timeStyle: "short",
+      });
+
+      this.#title_.textContent = course_data.title;
+      this.#start_time.textContent = date_to_time_intl.format(
+        new Date(course_data.start_date),
+      );
+      this.#start_time.dateTime = course_data.start_date;
+      this.#end_time.textContent = date_to_time_intl.format(
+        new Date(course_data.end_date),
+      );
+      this.#end_time.dateTime = course_data.end_date;
+      this.#rooms.textContent = course_data.rooms.join(" ");
+      this.data = course_data;
+    } else {
+      this.#title_.textContent = "";
+      this.#start_time.textContent = "";
+      this.#start_time.dateTime = "";
+      this.#end_time.textContent = "";
+      this.#end_time.dateTime = "";
+      this.#rooms.textContent = "";
+      this.data = null;
+    }
   }
 }
 
