@@ -177,6 +177,7 @@ class DayViewer extends HTMLElement {
           this.#courses_element[course_id].dataset.start_date =
             course.start_date;
           this.#courses_element[course_id].dataset.end_date = course.end_date;
+          this.#courses_element[course_id].init();
 
           const courses_element = Array.from(this.#container.children);
 
@@ -225,8 +226,8 @@ class DayViewer extends HTMLElement {
 
 class CourseViewer extends HTMLElement {
   #title_element = document.createElement("h3");
-  #start_time_element = document.createElement("time");
-  #end_time_element = document.createElement("time");
+  #start_date_element = document.createElement("time");
+  #end_date_element = document.createElement("time");
   #rooms_element = document.createElement("span");
   data = null;
 
@@ -248,7 +249,7 @@ class CourseViewer extends HTMLElement {
     :host {
       display: block;
 
-      margin-top: 2em !important;
+      margin-top: 1.5em !important;
 
       width: 100%;
 
@@ -260,7 +261,9 @@ class CourseViewer extends HTMLElement {
 
       color: var(--color-dark-1);
 
-      background-color: var(--color-light-1);
+      background: linear-gradient(0deg, var(--color-light-1) 0%, var(--color-light-1) 50%, var(--color-accent-1) 50%, var(--color-accent-1) 100%);
+      background-size: 100% 201%;
+      background-position-y: 100%;
     }
 
     h3 {
@@ -292,11 +295,43 @@ class CourseViewer extends HTMLElement {
     this.shadowRoot.append(
       style,
       this.#title_element,
-      this.#start_time_element,
+      this.#start_date_element,
       " - ",
-      this.#end_time_element,
+      this.#end_date_element,
       this.#rooms_element,
     );
+  }
+
+  init() {
+    const update_background_position = () => {
+      window.requestAnimationFrame(() => {
+        if (
+          compare_date(
+            this.dataset.end_date,
+            new Date(),
+          ) >= 0
+        ) {
+          this.style.backgroundPositionY = "0%";
+        } else if (
+          compare_date(
+            this.dataset.start_date,
+            new Date(),
+          ) >= 0
+        ) {
+          const total_time = new Date(this.dataset.end_date).getTime() -
+            new Date(this.dataset.start_date).getTime();
+          const current_time = new Date(this.dataset.end_date).getTime() -
+            new Date();
+
+          this.style.backgroundPositionY = (current_time / total_time * 100) +
+            "%";
+        }
+      });
+    };
+
+    setInterval(update_background_position, 1000 * 60 * 2);
+
+    update_background_position();
   }
 
   load(course_data) {
@@ -313,23 +348,37 @@ class CourseViewer extends HTMLElement {
         timeStyle: "short",
       });
 
+      if (course_data.title.match(/exam|qcm|contrôle|partiel|soutenance/i)) {
+        this.style.backgroundImage =
+          "linear-gradient(0deg, var(--color-light-1) 0%, var(--color-light-1) 50%, #dc143c8c 50%, #dc143c8c 100%)";
+      } else if (course_data.title.match(/cour|cm|conférence/i)) {
+        this.style.backgroundImage =
+          "linear-gradient(0deg, var(--color-light-1) 0%, var(--color-light-1) 50%, #ffb5008c 50%, #ffb5008c 100%)";
+      } else if (course_data.title.match(/td|gr[ ]*[a-c]/i)) {
+        this.style.backgroundImage =
+          "linear-gradient(0deg, var(--color-light-1) 0%, var(--color-light-1) 50%, #08df668c 50%, #08df668c 100%)";
+      } else if (course_data.title.match(/tp|gr[ ]*[1-6]/i)) {
+        this.style.backgroundImage =
+          "linear-gradient(0deg, var(--color-light-1) 0%, var(--color-light-1) 50%, #00e5e58c 50%, #00e5e58c 100%)";
+      }
+
       this.#title_element.textContent = course_data.title;
-      this.#start_time_element.textContent = date_to_time_intl.format(
+      this.#start_date_element.textContent = date_to_time_intl.format(
         new Date(course_data.start_date),
       );
-      this.#start_time_element.dateTime = course_data.start_date;
-      this.#end_time_element.textContent = date_to_time_intl.format(
+      this.#start_date_element.dateTime = course_data.start_date;
+      this.#end_date_element.textContent = date_to_time_intl.format(
         new Date(course_data.end_date),
       );
-      this.#end_time_element.dateTime = course_data.end_date;
+      this.#end_date_element.dateTime = course_data.end_date;
       this.#rooms_element.textContent = course_data.rooms.join(", ");
       this.data = course_data;
     } else {
       this.#title_element.textContent = "";
-      this.#start_time_element.textContent = "";
-      this.#start_time_element.dateTime = "";
-      this.#end_time_element.textContent = "";
-      this.#end_time_element.dateTime = "";
+      this.#start_date_element.textContent = "";
+      this.#start_date_element.dateTime = "";
+      this.#end_date_element.textContent = "";
+      this.#end_date_element.dateTime = "";
       this.#rooms_element.textContent = "";
       this.data = null;
     }
