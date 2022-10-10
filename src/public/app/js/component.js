@@ -352,16 +352,16 @@ class CourseViewer extends HTMLElement {
 
       if (course_data.title.match(/exam|qcm|contrôle|partiel|soutenance/i)) {
         this.style.backgroundImage =
-          "linear-gradient(0deg, var(--color-light-1) 0%, var(--color-light-1) 50%, #dc143c8c 50%, #dc143c8c 100%)";
+          "linear-gradient(0deg, #f9d2d9 0%, #f9d2d9 50%, #f9335f 50%, #f9335f 100%)";
       } else if (course_data.title.match(/cour|cm|conférence/i)) {
         this.style.backgroundImage =
-          "linear-gradient(0deg, var(--color-light-1) 0%, var(--color-light-1) 50%, #ffb5008c 50%, #ffb5008c 100%)";
+          "linear-gradient(0deg, #faefce 0%, #faefce 50%, #fcd570 50%, #fcd570 100%)";
       } else if (course_data.title.match(/td|gr[ ]*[a-c]/i)) {
         this.style.backgroundImage =
-          "linear-gradient(0deg, var(--color-light-1) 0%, var(--color-light-1) 50%, #08df668c 50%, #08df668c 100%)";
+          "linear-gradient(0deg, #ddf8e8 0%, #ddf8e8 50%, #74eca8 50%, #74eca8 100%)";
       } else if (course_data.title.match(/tp|gr[ ]*[1-6]/i)) {
         this.style.backgroundImage =
-          "linear-gradient(0deg, var(--color-light-1) 0%, var(--color-light-1) 50%, #00e5e58c 50%, #00e5e58c 100%)";
+          "linear-gradient(0deg, #dcf9f6 0%, #dcf9f6 50%, #70f0ee 50%, #70f0ee 100%)";
       }
 
       this.#title_element.textContent = course_data.title;
