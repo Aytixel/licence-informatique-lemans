@@ -15,9 +15,19 @@ class PlanningViewer extends HTMLElement {
     const style = document.createElement("style");
 
     style.textContent = `
-        :host {
-            display: block;
-        }
+    * {
+      position: relative;
+      z-index: 0;
+      margin: 0;
+      padding: 0;
+    }
+    
+    :host {
+      display: block;
+
+      height: 100%;
+      width: 100%;
+    }
     `;
 
     this.shadowRoot.append(style);
@@ -87,6 +97,8 @@ class PlanningViewer extends HTMLElement {
 
 class DayViewer extends HTMLElement {
   #courses_element = {};
+  #date_element = document.createElement("h2");
+  #container = document.createElement("div");
 
   constructor() {
     super();
@@ -94,24 +106,48 @@ class DayViewer extends HTMLElement {
     this.attachShadow({ mode: "open" });
 
     const style = document.createElement("style");
+    const time_element = document.createElement("time");
+
+    time_element.append(this.#date_element);
 
     style.textContent = `
-        :host {
-            display: block;
-        }
+    * {
+      position: relative;
+      z-index: 0;
+      margin: 0;
+      padding: 0;
+    }
+    
+    :host {
+      display: inline-block;
+
+      height: 100%;
+      width: 80vmin;
+    }
+
+    h2 {
+      text-align: center;
+      padding: 1em;
+    }
     `;
 
-    this.shadowRoot.append(style);
+    this.shadowRoot.append(style, time_element, this.#container);
   }
 
   load(day_data) {
     if (
+      new Date(day_data?.date).toJSON() &&
       day_data?.courses?.length &&
       day_data.courses.every((course) =>
         new Date(course.start_date).toJSON() &&
         new Date(course.end_date).toJSON()
       )
     ) {
+      this.#date_element.textContent = new Intl.DateTimeFormat("default", {
+        dateStyle: "long",
+      })
+        .format(new Date(day_data.date));
+
       const new_course_id = [];
 
       for (const course of day_data.courses) {
@@ -128,10 +164,9 @@ class DayViewer extends HTMLElement {
             course.start_date;
           this.#courses_element[course_id].dataset.end_date = course.end_date;
 
-          const courses_element = Array.from(this.shadowRoot.children);
+          const courses_element = Array.from(this.#container.children);
 
           let course_element = courses_element.findLast((course_element) =>
-            course_element.tagName.toLowerCase() == "course-viewer" &&
             compare_date(course_element.dataset.end_date, course.start_date) >=
               0
           );
@@ -140,17 +175,16 @@ class DayViewer extends HTMLElement {
             course_element.after(this.#courses_element[course_id]);
           } else {
             course_element = courses_element.find((course_element) =>
-              course_element.tagName.toLowerCase() == "course-viewer" &&
               compare_date(
-                  course.end_date,
-                  course_element.dataset.start_date,
-                ) >= 0
+                course.end_date,
+                course_element.dataset.start_date,
+              ) >= 0
             );
 
             if (course_element) {
               course_element.before(this.#courses_element[course_id]);
             } else {
-              this.shadowRoot.append(this.#courses_element[course_id]);
+              this.#container.append(this.#courses_element[course_id]);
             }
           }
         }
@@ -168,18 +202,18 @@ class DayViewer extends HTMLElement {
         }
       }
     } else {
-      for (const child of [...this.shadowRoot.children]) {
-        if (child.tagName.toLowerCase() == "course-viewer") child.remove();
+      for (const child of [...this.#container.children]) {
+        child.remove();
       }
     }
   }
 }
 
 class CourseViewer extends HTMLElement {
-  #title_ = document.createElement("h3");
-  #start_time = document.createElement("time");
-  #end_time = document.createElement("time");
-  #rooms = document.createElement("span");
+  #title_element = document.createElement("h3");
+  #start_time_element = document.createElement("time");
+  #end_time_element = document.createElement("time");
+  #rooms_element = document.createElement("span");
   data = null;
 
   constructor() {
@@ -190,18 +224,29 @@ class CourseViewer extends HTMLElement {
     const style = document.createElement("style");
 
     style.textContent = `
-          :host {
-              display: block;
-          }
-      `;
+    * {
+      position: relative;
+      z-index: 0;
+      margin: 0;
+      padding: 0;
+    }
+      
+    :host {
+      display: block;
+    }
+
+    h3 {
+      margin: 1em 0;
+    }
+    `;
 
     this.shadowRoot.append(
       style,
-      this.#title_,
-      this.#start_time,
+      this.#title_element,
+      this.#start_time_element,
       " - ",
-      this.#end_time,
-      this.#rooms,
+      this.#end_time_element,
+      this.#rooms_element,
     );
   }
 
@@ -219,24 +264,24 @@ class CourseViewer extends HTMLElement {
         timeStyle: "short",
       });
 
-      this.#title_.textContent = course_data.title;
-      this.#start_time.textContent = date_to_time_intl.format(
+      this.#title_element.textContent = course_data.title;
+      this.#start_time_element.textContent = date_to_time_intl.format(
         new Date(course_data.start_date),
       );
-      this.#start_time.dateTime = course_data.start_date;
-      this.#end_time.textContent = date_to_time_intl.format(
+      this.#start_time_element.dateTime = course_data.start_date;
+      this.#end_time_element.textContent = date_to_time_intl.format(
         new Date(course_data.end_date),
       );
-      this.#end_time.dateTime = course_data.end_date;
-      this.#rooms.textContent = course_data.rooms.join(" ");
+      this.#end_time_element.dateTime = course_data.end_date;
+      this.#rooms_element.textContent = course_data.rooms.join(" ");
       this.data = course_data;
     } else {
-      this.#title_.textContent = "";
-      this.#start_time.textContent = "";
-      this.#start_time.dateTime = "";
-      this.#end_time.textContent = "";
-      this.#end_time.dateTime = "";
-      this.#rooms.textContent = "";
+      this.#title_element.textContent = "";
+      this.#start_time_element.textContent = "";
+      this.#start_time_element.dateTime = "";
+      this.#end_time_element.textContent = "";
+      this.#end_time_element.dateTime = "";
+      this.#rooms_element.textContent = "";
       this.data = null;
     }
   }
