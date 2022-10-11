@@ -328,7 +328,7 @@ class LessonViewer extends HTMLElement {
 
       color: var(--color-dark-1);
 
-      background: linear-gradient(0deg, var(--color-light-1) 0%, var(--color-light-1) 50%, var(--color-accent-1) 50%, var(--color-accent-1) 100%);
+      background: linear-gradient(180deg, var(--color-light-1) 0%, var(--color-light-1) 50%, var(--color-accent-1) 50%, var(--color-accent-1) 100%);
       background-size: 100% 201%;
       background-position-y: 100%;
     }
@@ -497,19 +497,19 @@ class LessonViewer extends HTMLElement {
       if (lesson_data.title.match(/exam|qcm|contrôle|partiel|soutenance/i)) {
         //exam
         this.style.backgroundImage =
-          "linear-gradient(0deg, #f9d2d9 0%, #f9d2d9 50%, #f9335f 50%, #f9335f 100%)";
+          "linear-gradient(180deg, #f9d2d9 0%, #f9d2d9 50%, #f9335f 50%, #f9335f 100%)";
       } else if (lesson_data.title.match(/cour|cm|conférence/i)) {
         //lecture
         this.style.backgroundImage =
-          "linear-gradient(0deg, #faefce 0%, #faefce 50%, #fcd570 50%, #fcd570 100%)";
+          "linear-gradient(180deg, #faefce 0%, #faefce 50%, #fcd570 50%, #fcd570 100%)";
       } else if (lesson_data.title.match(/td|gr[ ]*[a-c]/i)) {
         //tutorial work
         this.style.backgroundImage =
-          "linear-gradient(0deg, #ddf8e8 0%, #ddf8e8 50%, #74eca8 50%, #74eca8 100%)";
+          "linear-gradient(180deg, #ddf8e8 0%, #ddf8e8 50%, #74eca8 50%, #74eca8 100%)";
       } else if (lesson_data.title.match(/tp|gr[ ]*[1-6]/i)) {
         //practical work
         this.style.backgroundImage =
-          "linear-gradient(0deg, #dcf9f6 0%, #dcf9f6 50%, #70f0ee 50%, #70f0ee 100%)";
+          "linear-gradient(180deg, #dcf9f6 0%, #dcf9f6 50%, #70f0ee 50%, #70f0ee 100%)";
       }
 
       this.#title_element.textContent = lesson_data.title;
