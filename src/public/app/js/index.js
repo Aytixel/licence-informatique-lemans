@@ -10,6 +10,7 @@ if (window.indexedDB) {
         ?.name_list[planning_data?.group]
     ) {
       planning_element.load(planning_data);
+      planning_element.focus(keep_only_date(new Date()));
       title_element[0].textContent =
         planning_resources_name[planning_data?.level].name;
       title_element[1].textContent =
