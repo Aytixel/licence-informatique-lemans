@@ -101,6 +101,9 @@ class PlanningViewer extends HTMLElement {
 class DayViewer extends HTMLElement {
   #lessons_element = {};
   #date_element = document.createElement("h2");
+  #top_bar = document.createElement("div");
+  #container = document.createElement("div");
+  #bottom_bar = document.createElement("div");
 
   constructor() {
     super();
@@ -136,17 +139,78 @@ class DayViewer extends HTMLElement {
       padding: 1em;
     }
 
-    div {
+    .container {
       height: calc(100% - 5em - 2.5vmin);
 
       overflow-y: auto;
     }
+
+    .top-bar, .bottom-bar {
+      position: absolute;
+      left: 50%;
+      z-index: 1;
+
+      height: 0.2em;
+      width: 80%;
+
+      opacity: 0.3;
+
+      border-radius: 0.2em;
+
+      translate: -50% 0.2em;
+
+      background-color: var(--color-dark-0);
+    }
+
+    .bottom-bar {
+      translate: -50% -0.4em;
+    }
     `;
+
+    this.#top_bar.classList.add("top-bar");
+    this.#bottom_bar.classList.add("bottom-bar");
 
     const slot = document.createElement("slot");
 
-    this.shadowRoot.append(style, time_element, slot);
+    this.#container.classList.add("container");
+    this.#container.append(slot);
+
+    this.shadowRoot.append(
+      style,
+      time_element,
+      this.#top_bar,
+      this.#container,
+      this.#bottom_bar,
+    );
+    this.update_indicator_bars();
+
+    this.#container.addEventListener("scroll", this.update_indicator_bars);
+
+    window.addEventListener("resize", this.update_indicator_bars);
   }
+
+  update_indicator_bars = () => {
+    const scroll_height_offset = this.#container.scrollHeight -
+      this.#container.clientHeight;
+
+    if (scroll_height_offset) {
+      const progress = this.#container.scrollTop / scroll_height_offset;
+
+      if (progress > 0.95) {
+        this.#top_bar.style.display = "block";
+        this.#bottom_bar.style.display = "none";
+      } else if (progress < 0.05) {
+        this.#top_bar.style.display = "none";
+        this.#bottom_bar.style.display = "block";
+      } else {
+        this.#top_bar.style.display = "block";
+        this.#bottom_bar.style.display = "block";
+      }
+    } else {
+      this.#top_bar.style.display = "none";
+      this.#bottom_bar.style.display = "none";
+    }
+  };
 
   load(day_data, date) {
     this.#date_element.textContent = new Intl.DateTimeFormat("default", {
@@ -176,7 +240,6 @@ class DayViewer extends HTMLElement {
           this.#lessons_element[lesson_id].dataset.start_date =
             lesson.start_date;
           this.#lessons_element[lesson_id].dataset.end_date = lesson.end_date;
-          this.#lessons_element[lesson_id].init();
 
           const lessons_element = Array.from(this.children);
 
@@ -220,6 +283,8 @@ class DayViewer extends HTMLElement {
         child.remove();
       }
     }
+
+    this.update_indicator_bars();
   }
 }
 
@@ -251,7 +316,7 @@ class LessonViewer extends HTMLElement {
     :host {
       display: block;
 
-      margin-top: 1.5em !important;
+      margin: 1.5em 0 !important;
 
       width: 100%;
 
@@ -340,9 +405,54 @@ class LessonViewer extends HTMLElement {
       this.#container,
     );
 
-    window.addEventListener("click", (event) => {
-      if (event.target == this) this.show();
-      else this.hide();
+    this.addEventListener("focusin", () => {
+      this.show();
+      this.scrollIntoView(
+        window.innerWidth < window.innerHeight ? { inline: "center" } : null,
+      );
+    });
+    this.addEventListener("focusout", () => {
+      this.hide();
+    });
+
+    window.requestAnimationFrame(() => {
+      this.tabIndex = 0;
+
+      let update_background_position_interval;
+      const update_background_position = () => {
+        window.requestAnimationFrame(() => {
+          if (
+            compare_date(
+              this.dataset.end_date,
+              new Date(),
+            ) >= 0
+          ) {
+            this.style.backgroundPositionY = "0%";
+
+            clearInterval(update_background_position_interval);
+          } else if (
+            compare_date(
+              this.dataset.start_date,
+              new Date(),
+            ) >= 0
+          ) {
+            const total_time = new Date(this.dataset.end_date).getTime() -
+              new Date(this.dataset.start_date).getTime();
+            const current_time = new Date(this.dataset.end_date).getTime() -
+              new Date();
+
+            this.style.backgroundPositionY = (current_time / total_time * 100) +
+              "%";
+          }
+        });
+      };
+
+      update_background_position_interval = setInterval(
+        update_background_position,
+        1000 * 60 * 2,
+      );
+
+      update_background_position();
     });
   }
 
@@ -368,44 +478,6 @@ class LessonViewer extends HTMLElement {
         );
       this.#show_state = false;
     }
-  }
-
-  init() {
-    let update_background_position_interval;
-    const update_background_position = () => {
-      window.requestAnimationFrame(() => {
-        if (
-          compare_date(
-            this.dataset.end_date,
-            new Date(),
-          ) >= 0
-        ) {
-          this.style.backgroundPositionY = "0%";
-
-          clearInterval(update_background_position_interval);
-        } else if (
-          compare_date(
-            this.dataset.start_date,
-            new Date(),
-          ) >= 0
-        ) {
-          const total_time = new Date(this.dataset.end_date).getTime() -
-            new Date(this.dataset.start_date).getTime();
-          const current_time = new Date(this.dataset.end_date).getTime() -
-            new Date();
-
-          this.style.backgroundPositionY = (current_time / total_time * 100) +
-            "%";
-        }
-      });
-    };
-
-    update_background_position_interval = setInterval(
-      update_background_position,
-      1000 * 60 * 2,
-    );
-
-    update_background_position();
   }
 
   load(lesson_data) {
