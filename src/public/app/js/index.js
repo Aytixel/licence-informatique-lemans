@@ -1,8 +1,22 @@
 if (window.indexedDB) {
   const planning_element = document.querySelector("planning-viewer");
+  const title_element = document.querySelectorAll("#top-bar h1, #top-bar h2");
   const planning_database = window.indexedDB.open("planning", 2);
   const start_date = keep_only_date(add_days(new Date(), -7));
   const end_date = keep_only_date(add_days(new Date(), 7));
+  const load_planning = (planning_data) => {
+    if (
+      planning_resources_name[planning_data?.level]
+        ?.name_list[planning_data?.group]
+    ) {
+      planning_element.load(planning_data);
+      title_element[0].textContent =
+        planning_resources_name[planning_data?.level].name;
+      title_element[1].textContent =
+        planning_resources_name[planning_data?.level]
+          ?.name_list[planning_data?.group];
+    }
+  };
   const update_planning = async () => {
     let favorites = localStorage.getItem("favorites");
 
@@ -10,11 +24,11 @@ if (window.indexedDB) {
       favorites = JSON.parse(favorites);
 
       for (const favorite of favorites) {
-        const planning_data = await (await fetch(
-          `https://api.licence-informatique-lemans.tk/v2/planning.json?level=${favorite.level}&group=${favorite.group}&start=${start_date.toISOString()}&end=${end_date.toISOString()}`,
-        )).json();
-
-        planning_element.load(planning_data);
+        load_planning(
+          await (await fetch(
+            `https://api.licence-informatique-lemans.tk/v2/planning.json?level=${favorite.level}&group=${favorite.group}&start=${start_date.toISOString()}&end=${end_date.toISOString()}`,
+          )).json(),
+        );
       }
     }
   };

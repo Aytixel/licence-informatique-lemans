@@ -24,3 +24,68 @@ a {
     color: var(--color-dark-0);
     text-decoration: none;
 }
+
+#top-bar {
+    display: grid;
+    grid-template-columns: 1fr 3em;
+    grid-template-rows: repeat(2, min-content);
+
+    top: 1em;
+    left: 50%;
+
+    width: 95vmin;
+
+    box-sizing: border-box;
+
+    padding: 0.3em 1em;
+    padding-right: 0;
+
+    border-radius: 0.5em;
+
+    translate: -50% 0;
+
+    color: var(--color-dark-1);
+
+    background-color: var(--color-accent-1);
+}
+
+#top-bar h1 {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+#top-bar h2 {
+    grid-column: 1;
+    grid-row: 2;
+
+    font-size: 0.65rem;
+}
+
+#menu-button {
+    display: block;
+    grid-column: 2;
+    grid-row: 1;
+
+    top: 0.15em;
+
+    height: 3em;
+    width: 3em;
+
+    appearance: none;
+
+    outline: none;
+
+    border: none;
+    border-radius: 2em;
+
+    background-color: var(--color-light-1);
+}
+
+planning-viewer {
+    position: absolute;
+    top: 6.4em;
+    left: 0;
+
+    height: calc(100% - 6.4em);
+    width: 100%;
+}
