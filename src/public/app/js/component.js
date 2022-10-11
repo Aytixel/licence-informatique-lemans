@@ -2,6 +2,9 @@ class PlanningViewer extends HTMLElement {
   #days_element = {};
   #start_date;
   #end_date;
+  #left_bar = document.createElement("div");
+  #container = document.createElement("div");
+  #right_bar = document.createElement("div");
 
   constructor() {
     super();
@@ -28,12 +31,84 @@ class PlanningViewer extends HTMLElement {
 
       white-space: nowrap;
     }
+
+    .container {
+      height: 100%;
+      width: 100%;
+
+      overflow: auto;
+    }
+
+    .left-bar, .right-bar {
+      position: absolute;
+      top: 50%;
+      z-index: 1;
+
+      height: 20%;
+      width: 0.2em;
+
+      opacity: 0.3;
+
+      border-radius: 0.2em;
+
+      translate: 0.2em -50%;
+
+      background-color: var(--color-dark-0);
+    }
+
+    .right-bar {
+      right: 0;
+
+      translate: -0.2em -50%;
+    }
     `;
+
+    this.#left_bar.classList.add("left-bar");
+    this.#right_bar.classList.add("right-bar");
 
     const slot = document.createElement("slot");
 
-    this.shadowRoot.append(style, slot);
+    this.#container.classList.add("container");
+    this.#container.append(slot);
+
+    this.shadowRoot.append(
+      style,
+      this.#left_bar,
+      this.#container,
+      this.#right_bar,
+    );
+    this.update_indicator_bars();
+    this.#container.addEventListener("scroll", this.update_indicator_bars, {
+      passive: true,
+    });
+
+    window.addEventListener("resize", this.update_indicator_bars, {
+      passive: true,
+    });
   }
+
+  update_indicator_bars = () => {
+    const scroll_width_offset = this.#container.scrollWidth -
+      this.#container.clientWidth;
+
+    if (scroll_width_offset) {
+      const progress = this.#container.scrollLeft / scroll_width_offset;
+
+      if (progress >= 1) {
+        this.#left_bar.style.display = "block";
+        this.#right_bar.style.display = "none";
+      } else if (progress <= 0) {
+        this.#left_bar.style.display = "none";
+        this.#right_bar.style.display = "block";
+      } else {
+        this.#left_bar.style.display = "block";
+        this.#right_bar.style.display = "block";
+      }
+    } else {
+      this.#left_bar.style.display = "none";
+      this.#right_bar.style.display = "none";
+    }
+  };
 
   load(planning_data) {
     let start_date = new Date(planning_data?.start_date);
@@ -95,6 +170,8 @@ class PlanningViewer extends HTMLElement {
       this.#start_date = start_date;
       this.#end_date = end_date;
     }
+
+    this.update_indicator_bars();
   }
 }
 
@@ -184,9 +261,13 @@ class DayViewer extends HTMLElement {
     );
     this.update_indicator_bars();
 
-    this.#container.addEventListener("scroll", this.update_indicator_bars);
+    this.#container.addEventListener("scroll", this.update_indicator_bars, {
+      passive: true,
+    });
 
-    window.addEventListener("resize", this.update_indicator_bars);
+    window.addEventListener("resize", this.update_indicator_bars, {
+      passive: true,
+    });
   }
 
   update_indicator_bars = () => {
@@ -196,10 +277,10 @@ class DayViewer extends HTMLElement {
     if (scroll_height_offset) {
       const progress = this.#container.scrollTop / scroll_height_offset;
 
-      if (progress > 0.95) {
+      if (progress >= 1) {
         this.#top_bar.style.display = "block";
         this.#bottom_bar.style.display = "none";
-      } else if (progress < 0.05) {
+      } else if (progress <= 0) {
         this.#top_bar.style.display = "none";
         this.#bottom_bar.style.display = "block";
       } else {
