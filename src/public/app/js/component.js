@@ -30,7 +30,9 @@ class PlanningViewer extends HTMLElement {
     }
     `;
 
-    this.shadowRoot.append(style);
+    const slot = document.createElement("slot");
+
+    this.shadowRoot.append(style, slot);
   }
 
   load(planning_data) {
@@ -70,7 +72,7 @@ class PlanningViewer extends HTMLElement {
               this.#days_element[day_date],
             );
           } else {
-            this.shadowRoot.append(this.#days_element[day_date]);
+            this.append(this.#days_element[day_date]);
           }
         }
       }
@@ -99,7 +101,6 @@ class PlanningViewer extends HTMLElement {
 class DayViewer extends HTMLElement {
   #lessons_element = {};
   #date_element = document.createElement("h2");
-  #container = document.createElement("div");
 
   constructor() {
     super();
@@ -142,7 +143,9 @@ class DayViewer extends HTMLElement {
     }
     `;
 
-    this.shadowRoot.append(style, time_element, this.#container);
+    const slot = document.createElement("slot");
+
+    this.shadowRoot.append(style, time_element, slot);
   }
 
   load(day_data, date) {
@@ -175,7 +178,7 @@ class DayViewer extends HTMLElement {
           this.#lessons_element[lesson_id].dataset.end_date = lesson.end_date;
           this.#lessons_element[lesson_id].init();
 
-          const lessons_element = Array.from(this.#container.children);
+          const lessons_element = Array.from(this.children);
 
           let lesson_element = lessons_element.findLast((lesson_element) =>
             compare_date(lesson_element.dataset.end_date, lesson.start_date) >=
@@ -195,7 +198,7 @@ class DayViewer extends HTMLElement {
             if (lesson_element) {
               lesson_element.before(this.#lessons_element[lesson_id]);
             } else {
-              this.#container.append(this.#lessons_element[lesson_id]);
+              this.appendChild(this.#lessons_element[lesson_id]);
             }
           }
         }
@@ -213,7 +216,7 @@ class DayViewer extends HTMLElement {
         }
       }
     } else {
-      for (const child of [...this.#container.children]) {
+      for (const child of Array.from(this.children)) {
         child.remove();
       }
     }
@@ -221,11 +224,14 @@ class DayViewer extends HTMLElement {
 }
 
 class LessonViewer extends HTMLElement {
+  #container = document.createElement("div");
   #title_element = document.createElement("h3");
+  #description_element = document.createElement("p");
   #start_date_element = document.createElement("time");
   #end_date_element = document.createElement("time");
   #rooms_element = document.createElement("span");
   data = null;
+  #show_state = false;
 
   constructor() {
     super();
@@ -263,8 +269,6 @@ class LessonViewer extends HTMLElement {
     }
 
     h3 {
-      margin-bottom: 1em;
-      
       width: 100%;
 
       overflow: hidden;
@@ -273,7 +277,29 @@ class LessonViewer extends HTMLElement {
       white-space: nowrap;
     }
 
-    span {
+    div.show h3 {
+      white-space: normal;
+    }
+
+    p {
+      display: none;
+
+      margin-top: 1em;
+    }
+
+    div.show p {
+      display: block;
+    }
+
+    .bottom-bar {
+      display: inline-block;
+
+      margin-top: 1em;
+
+      width: 100%;
+    }
+
+    .rooms {
       display: inline-block;
 
       float: right;
@@ -286,16 +312,62 @@ class LessonViewer extends HTMLElement {
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+
+    div.show .rooms {
+      white-space: normal;
+    }
     `;
 
-    this.shadowRoot.append(
-      style,
-      this.#title_element,
+    this.#rooms_element.classList.add("rooms");
+
+    const bottom_bar = document.createElement("span");
+
+    bottom_bar.classList.add("bottom-bar");
+    bottom_bar.append(
       this.#start_date_element,
       " - ",
       this.#end_date_element,
       this.#rooms_element,
     );
+
+    this.#container.append(
+      this.#title_element,
+      this.#description_element,
+      bottom_bar,
+    );
+    this.shadowRoot.append(
+      style,
+      this.#container,
+    );
+
+    window.addEventListener("click", (event) => {
+      if (event.target == this) this.show();
+      else this.hide();
+    });
+  }
+
+  show() {
+    if (this.data && !this.#show_state) {
+      this.#container.classList.add("show");
+      this.#rooms_element.innerHTML = this.#rooms_element.innerHTML
+        .replaceAll(
+          ", ",
+          "<br>",
+        );
+      this.#show_state = true;
+    }
+  }
+
+  hide() {
+    if (this.data && this.#show_state) {
+      this.#container.classList.remove("show");
+      this.#rooms_element.innerHTML = this.#rooms_element.innerHTML
+        .replaceAll(
+          "<br>",
+          ", ",
+        );
+      this.#show_state = false;
+    }
   }
 
   init() {
@@ -369,6 +441,14 @@ class LessonViewer extends HTMLElement {
       }
 
       this.#title_element.textContent = lesson_data.title;
+      this.#description_element.textContent = lesson_data.description.join(
+        "\n",
+      );
+      this.#description_element.innerHTML = this.#description_element.innerHTML
+        .replaceAll(
+          "\n",
+          "<br>",
+        );
       this.#start_date_element.textContent = date_to_time_intl.format(
         new Date(lesson_data.start_date),
       );
