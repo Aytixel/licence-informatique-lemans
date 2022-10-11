@@ -110,6 +110,16 @@ class PlanningViewer extends HTMLElement {
     }
   };
 
+  focus(date) {
+    if (date instanceof Date) date = date.toISOString();
+    if (this.#days_element[date]) {
+      this.#container.scrollLeft =
+        this.#days_element[date].getBoundingClientRect().x -
+        (this.#container.clientWidth / 2) +
+        (this.#days_element[date].clientWidth / 2);
+    }
+  }
+
   load(planning_data) {
     let start_date = new Date(planning_data?.start_date);
     let end_date = new Date(planning_data?.end_date);
