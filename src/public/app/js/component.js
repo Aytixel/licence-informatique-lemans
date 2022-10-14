@@ -44,13 +44,15 @@ class PlanningViewer extends HTMLElement {
       height: 20%;
       width: 0.2em;
 
-      opacity: 0.3;
+      opacity: 0.5;
 
       border-radius: 0.2em;
 
       translate: 0.2em -50%;
 
       background-color: var(--color-dark-0);
+
+      transition: 0.3s ease-in-out opacity;
     }
 
     .right-bar {
@@ -75,6 +77,7 @@ class PlanningViewer extends HTMLElement {
       this.#right_bar,
     );
     this.update_indicator_bars();
+
     this.#container.addEventListener("scroll", this.update_indicator_bars, {
       passive: true,
     });
@@ -86,27 +89,39 @@ class PlanningViewer extends HTMLElement {
     });
   }
 
+  #update_indicator_bars = debounce(() => {
+    this.#left_bar.style.opacity = 0;
+    this.#right_bar.style.opacity = 0;
+  }, 1000);
+
   update_indicator_bars = () => {
     const scroll_width_offset = this.#container.scrollWidth -
       this.#container.clientWidth;
 
-    if (scroll_width_offset) {
-      const progress = this.#container.scrollLeft / scroll_width_offset;
+    this.#update_indicator_bars();
 
-      if (progress >= 1) {
-        this.#left_bar.style.display = "block";
-        this.#right_bar.style.display = "none";
-      } else if (progress <= 0) {
-        this.#left_bar.style.display = "none";
-        this.#right_bar.style.display = "block";
+    requestAnimationFrame(() => {
+      if (scroll_width_offset) {
+        const progress = this.#container.scrollLeft / scroll_width_offset;
+
+        this.#left_bar.style.opacity = 0.5;
+        this.#right_bar.style.opacity = 0.5;
+
+        if (progress >= 1) {
+          this.#left_bar.style.display = "block";
+          this.#right_bar.style.display = "none";
+        } else if (progress <= 0) {
+          this.#left_bar.style.display = "none";
+          this.#right_bar.style.display = "block";
+        } else {
+          this.#left_bar.style.display = "block";
+          this.#right_bar.style.display = "block";
+        }
       } else {
-        this.#left_bar.style.display = "block";
-        this.#right_bar.style.display = "block";
+        this.#left_bar.style.display = "none";
+        this.#right_bar.style.display = "none";
       }
-    } else {
-      this.#left_bar.style.display = "none";
-      this.#right_bar.style.display = "none";
-    }
+    });
   };
 
   focus(date) {
@@ -239,13 +254,15 @@ class DayViewer extends HTMLElement {
       height: 0.2em;
       width: 80%;
 
-      opacity: 0.3;
+      opacity: 0.5;
 
       border-radius: 0.2em;
 
       translate: -50% 0.2em;
 
       background-color: var(--color-dark-0);
+
+      transition: 0.3s ease-in-out opacity;
     }
 
     .bottom-bar {
@@ -281,27 +298,39 @@ class DayViewer extends HTMLElement {
     });
   }
 
+  #update_indicator_bars = debounce(() => {
+    this.#top_bar.style.opacity = 0;
+    this.#bottom_bar.style.opacity = 0;
+  }, 1000);
+
   update_indicator_bars = () => {
     const scroll_height_offset = this.#container.scrollHeight -
       this.#container.clientHeight;
 
-    if (scroll_height_offset) {
-      const progress = this.#container.scrollTop / scroll_height_offset;
+    this.#update_indicator_bars();
 
-      if (progress >= 1) {
-        this.#top_bar.style.display = "block";
-        this.#bottom_bar.style.display = "none";
-      } else if (progress <= 0) {
-        this.#top_bar.style.display = "none";
-        this.#bottom_bar.style.display = "block";
+    requestAnimationFrame(() => {
+      if (scroll_height_offset) {
+        const progress = this.#container.scrollTop / scroll_height_offset;
+
+        this.#top_bar.style.opacity = 0.5;
+        this.#bottom_bar.style.opacity = 0.5;
+
+        if (progress >= 1) {
+          this.#top_bar.style.display = "block";
+          this.#bottom_bar.style.display = "none";
+        } else if (progress <= 0) {
+          this.#top_bar.style.display = "none";
+          this.#bottom_bar.style.display = "block";
+        } else {
+          this.#top_bar.style.display = "block";
+          this.#bottom_bar.style.display = "block";
+        }
       } else {
-        this.#top_bar.style.display = "block";
-        this.#bottom_bar.style.display = "block";
+        this.#top_bar.style.display = "none";
+        this.#bottom_bar.style.display = "none";
       }
-    } else {
-      this.#top_bar.style.display = "none";
-      this.#bottom_bar.style.display = "none";
-    }
+    });
   };
 
   load(day_data, date) {

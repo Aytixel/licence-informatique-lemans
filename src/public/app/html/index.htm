@@ -17,6 +17,18 @@
     <link rel="preload stylesheet" as="style" type="text/css" href="/css/palette.css">
     <link rel="preload stylesheet" as="style" type="text/css" href="/css/index.css">
     <script type="application/javascript">
+        function debounce(callback, delay) {
+            let timer;
+
+            return function () {
+                const args = arguments;
+                const context = this;
+
+                clearTimeout(timer);
+
+                timer = setTimeout(() => callback.apply(context, args), delay)
+            }
+        }
         const keep_only_date = (date) => {
             time = new Date(date).getTime();
 
