@@ -202,6 +202,7 @@ class PlanningViewer extends HTMLElement {
 class DayViewer extends HTMLElement {
   #lessons_element = {};
   #date_element = document.createElement("h2");
+  #day_element = document.createElement("h3");
   #top_bar = document.createElement("div");
   #container = document.createElement("div");
   #bottom_bar = document.createElement("div");
@@ -215,6 +216,7 @@ class DayViewer extends HTMLElement {
     const time_element = document.createElement("time");
 
     time_element.append(this.#date_element);
+    time_element.append(this.#day_element);
 
     style.textContent = `
     * {
@@ -236,8 +238,18 @@ class DayViewer extends HTMLElement {
     }
 
     h2 {
-      text-align: center;
       padding: 1em;
+      padding-bottom: 0;
+
+      text-align: center;
+    }
+
+    h3 {
+      padding-bottom: 0.2em;
+
+      text-align: center;
+
+      font-size: 1em;
     }
 
     .container {
@@ -336,6 +348,10 @@ class DayViewer extends HTMLElement {
   load(day_data, date) {
     this.#date_element.textContent = new Intl.DateTimeFormat("default", {
       dateStyle: "long",
+    })
+      .format(new Date(date));
+    this.#day_element.textContent = new Intl.DateTimeFormat("default", {
+      weekday: "long",
     })
       .format(new Date(date));
 
