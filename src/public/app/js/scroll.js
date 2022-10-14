@@ -58,8 +58,6 @@ class Scroll {
   };
 
   #pointer_end = () => {
-    this.#hold = false;
-
     this.#element.removeEventListener(
       "pointermove",
       this.#pointer_move,
@@ -76,6 +74,8 @@ class Scroll {
       "lostpointercapture",
       this.#pointer_end,
     );
+
+    this.#hold = false;
   };
 
   apply_scroll(x, y, shift, is_wheel = true) {
