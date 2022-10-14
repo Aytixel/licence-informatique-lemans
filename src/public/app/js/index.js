@@ -1,6 +1,17 @@
 if (window.indexedDB) {
+  const top_bar_element = document.querySelector("#top-bar");
+  const menu_button_element = top_bar_element.querySelector("#menu-button");
+
+  menu_button_element.addEventListener(
+    "mousedown",
+    (event) => event.preventDefault(),
+  );
+  menu_button_element.addEventListener("click", () => {
+    top_bar_element.classList.toggle("open");
+  });
+
   const planning_element = document.querySelector("planning-viewer");
-  const title_element = document.querySelectorAll("#top-bar h1, #top-bar h2");
+  const title_element = top_bar_element.querySelectorAll("h1, h2");
   const planning_database = window.indexedDB.open("planning", 2);
   const start_date = keep_only_date(add_days(new Date(), -7));
   const end_date = keep_only_date(add_days(new Date(), 7));

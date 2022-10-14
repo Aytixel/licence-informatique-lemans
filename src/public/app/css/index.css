@@ -5,6 +5,10 @@
     padding: 0;
 }
 
+*:focus {
+    outline-color: var(--color-accent-0);
+}
+
 html {
     height: 100%;
 
@@ -25,6 +29,9 @@ a {
     text-decoration: none;
 }
 
+/*
+    Top Bar
+*/
 #top-bar {
     display: grid;
     grid-template-columns: 1fr 3em;
@@ -64,6 +71,9 @@ a {
     font-size: 0.65em;
 }
 
+/*
+    Menu Button
+*/
 #menu-button {
     display: block;
     grid-column: 2;
@@ -84,6 +94,101 @@ a {
     background-color: var(--color-light-1);
 }
 
+#menu-button:focus {
+    outline: solid;
+    outline-color: var(--color-accent-0);
+}
+
+#menu-button:hover {
+    outline-color: var(--color-accent-1);
+}
+
+#menu-button div {
+    left: 50%;
+
+    height: 0.2em;
+    width: 80%;
+
+    border-radius: 0.1em;
+
+    background-color: var(--color-accent-0);
+
+    translate: -50% 0;
+
+    transition: 0.2s ease-in-out rotate, 0.2s ease-in-out width, 0.2s ease-in-out background-color;
+}
+
+#menu-button:hover div {
+    background-color: var(--color-accent-1);
+}
+
+#top-bar.open #menu-button div {
+    width: 70%;
+
+    rotate: 135deg;
+}
+
+#top-bar.open #menu-button:hover div {
+    width: 80%;
+}
+
+#menu-button div:before,
+#menu-button div:after {
+    display: block;
+
+    position: absolute;
+    left: 50%;
+
+    height: 0.2em;
+    width: 80%;
+
+    content: "";
+
+    border-radius: 0.1em;
+
+    background-color: inherit;
+
+    translate: -50% -0.6em;
+
+    transition: 0.2s ease-in-out translate, 0.2s ease-in-out rotate, 0.2s ease-in-out width;
+}
+
+#menu-button:hover div:before {
+    translate: -50% -0.7em;
+}
+
+#menu-button:hover div:after {
+    translate: -50% 0.7em;
+}
+
+#menu-button div:after {
+    translate: -50% 0.6em;
+}
+
+#top-bar.open #menu-button div:before,
+#top-bar.open #menu-button div:after {
+    width: 50%;
+
+    translate: -50% -250%;
+    rotate: -90deg;
+}
+
+#top-bar.open #menu-button div:after {
+    translate: -50% 250%;
+    rotate: 90deg;
+}
+
+#top-bar.open #menu-button:hover div:before {
+    translate: -50% -300%;
+}
+
+#top-bar.open #menu-button:hover div:after {
+    translate: -50% 300%;
+}
+
+/*
+    Planning Viewer
+*/
 planning-viewer {
     position: absolute;
     top: 6.4em;
