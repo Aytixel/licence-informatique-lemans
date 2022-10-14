@@ -26,9 +26,6 @@ class PlanningViewer extends HTMLElement {
 
       height: 100%;
 
-      overflow-y: hidden;
-      overflow-x: auto;
-
       white-space: nowrap;
     }
 
@@ -36,7 +33,7 @@ class PlanningViewer extends HTMLElement {
       height: 100%;
       width: 100%;
 
-      overflow: auto;
+      overflow: hidden;
     }
 
     .left-bar, .right-bar {
@@ -81,6 +78,8 @@ class PlanningViewer extends HTMLElement {
     this.#container.addEventListener("scroll", this.update_indicator_bars, {
       passive: true,
     });
+
+    new Scroll(this.#container, 1);
 
     window.addEventListener("resize", this.update_indicator_bars, {
       passive: true,
@@ -229,7 +228,7 @@ class DayViewer extends HTMLElement {
     .container {
       height: calc(100% - 5em - 2.5vmin);
 
-      overflow-y: auto;
+      overflow: hidden;
     }
 
     .top-bar, .bottom-bar {
@@ -274,6 +273,8 @@ class DayViewer extends HTMLElement {
     this.#container.addEventListener("scroll", this.update_indicator_bars, {
       passive: true,
     });
+
+    new Scroll(this.#container, 2);
 
     window.addEventListener("resize", this.update_indicator_bars, {
       passive: true,
