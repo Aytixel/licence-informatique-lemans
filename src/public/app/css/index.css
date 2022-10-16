@@ -181,17 +181,3 @@ planning-viewer {
     height: calc(100% - 6.4em);
     width: 100%;
 }
-
-/*
-    Day Viewer
-*/
-day-viewer {
-    scroll-snap-align: center;
-}
-
-/*
-    Lesson Viewer
-*/
-lesson-viewer {
-    scroll-snap-align: center;
-}

@@ -101,7 +101,6 @@ class Scroll {
 
       if (x_stop) x = 0;
       if (y_stop) y = 0;
-
       if (x_stop && y_stop) this.#running = false;
     }
 
