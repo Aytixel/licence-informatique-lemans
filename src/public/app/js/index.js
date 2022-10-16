@@ -1,13 +1,14 @@
 if (window.indexedDB) {
   const top_bar_element = document.querySelector("#top-bar");
   const menu_button_element = top_bar_element.querySelector("#menu-button");
+  const menu_element = top_bar_element.querySelector("#menu");
 
   menu_button_element.addEventListener(
     "mousedown",
     (event) => event.preventDefault(),
   );
   menu_button_element.addEventListener("click", () => {
-    top_bar_element.classList.toggle("open");
+    menu_element.classList.toggle("open");
   });
 
   const planning_element = document.querySelector("planning-viewer");
