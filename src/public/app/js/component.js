@@ -260,6 +260,8 @@ class DayViewer extends HTMLElement {
     .container {
       height: calc(100% - 5em - 2.5vmin);
 
+      border-radius: 0.5em;
+
       scroll-behavior: smooth;
       scroll-snap-type: y proximity;
     }
