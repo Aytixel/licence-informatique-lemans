@@ -44,7 +44,7 @@
             planning_resources_type = await (await fetch("https://api.licence-informatique-lemans.tk/v2/planning-resources-type.json")).json();
         })();
 
-        screen.orientation.lock("natural").catch(console.error)
+        screen.orientation.lock("natural").catch(() => console.log("Can't lock screen orientation !"))
     </script>
     <script src="/js/scroll.js" async></script>
     <script src="/js/component.js" async></script>
