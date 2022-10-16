@@ -1,17 +1,26 @@
-const top_bar_element = document.querySelector("#top-bar");
-const menu_button_element = top_bar_element.querySelector("#menu-button");
-const menu_element = top_bar_element.querySelector("#menu");
+const menu_button_element = document.querySelector("#menu-button");
+const menu_element = document.querySelector("#menu");
 
 menu_button_element.addEventListener(
   "mousedown",
   (event) => event.preventDefault(),
 );
 menu_button_element.addEventListener("click", () => {
-  menu_element.classList.toggle("open");
+  menu_element.showModal();
+});
+menu_element.addEventListener("click", (event) => {
+  const bounding_rect = menu_element.getBoundingClientRect();
+
+  if (
+    event.clientX < bounding_rect.left || event.clientX > bounding_rect.right ||
+    event.clientY < bounding_rect.top || event.clientY > bounding_rect.bottom
+  ) {
+    menu_element.close();
+  }
 });
 
 const planning_element = document.querySelector("planning-viewer");
-const title_element = top_bar_element.querySelectorAll("h1, h2");
+const title_element = document.querySelectorAll("h1, h2");
 const start_date = keep_only_date(add_days(new Date(), -7));
 const end_date = keep_only_date(add_days(new Date(), 7));
 const load_planning = (planning_data) => {

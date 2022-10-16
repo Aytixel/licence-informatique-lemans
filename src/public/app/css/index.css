@@ -133,7 +133,7 @@ a {
     position: absolute;
     left: 50%;
 
-    height: 0.2em;
+    height: 100%;
     width: 100%;
 
     content: "";
@@ -153,11 +153,27 @@ a {
     Menu
 */
 #menu {
-    display: none;
+    position: absolute;
+    top: 5.4em;
+    left: 50%;
+    z-index: 2;
+
+    height: calc(100vh - 6.4em);
+    width: 95vmin;
+
+    border-radius: 0.5em;
+
+    border: none;
+
+    background-color: var(--color-light-1);
+
+    translate: -50% 0;
 }
 
-#menu.open {
-    display: block;
+#menu::backdrop {
+    opacity: 0.2;
+
+    background-color: #1C1C1C;
 }
 
 /*
