@@ -57,7 +57,7 @@ const update_planning = async () => {
 window.addEventListener("load", async () => {
   await planning_resources_loaded;
 
-  // study level
+  // generate study level html
   for (const study_level of planning_resources_type["study-level"]) {
     const study_level_summary_element = document.createElement("summary");
     const year_details_element = document.createElement("details");
@@ -80,7 +80,7 @@ window.addEventListener("load", async () => {
     study_level_list_element.append(year_details_element);
   }
 
-  // place
+  // generate place html
   for (const place of (planning_resources_type["place"])) {
     const place_summary_element = document.createElement("summary");
     const room_details_element = document.createElement("details");
