@@ -38,8 +38,7 @@
         const add_days = (date, day) => new Date(new Date(date).getTime() + (day * 1000 * 60 * 60 * 24));
         let planning_resources_name;
         let planning_resources_type;
-
-        (async () => {
+        const planning_resources_loaded = (async () => {
             planning_resources_name = await (await fetch("https://api.licence-informatique-lemans.tk/v2/planning-resources-name.json")).json();
             planning_resources_type = await (await fetch("https://api.licence-informatique-lemans.tk/v2/planning-resources-type.json")).json();
         })();
@@ -61,7 +60,23 @@
         </a>
     </div>
     <dialog id="menu">
-
+        <ul>
+            <li id="izly">
+                <h3>Izly</h3>
+                <input type="email" placeholder="Email du compte Izly">
+                <input type="password" placeholder="Code secret" pattern="[0-9]*">
+                <input type="submit">
+                <img src="" alt="Qrcode Izly">
+            </li>
+            <li>
+                <h3>Formations</h3>
+                <ul id="study-level"></ul>
+            </li>
+            <li>
+                <h3>Bâtiment</h3>
+                <ul id="place"></ul>
+            </li>
+        </ul>
     </dialog>
     <planning-viewer></planning-viewer>
 </body>

@@ -1,3 +1,5 @@
+const study_level_list_element = document.querySelector("#study-level");
+const place_list_element = document.querySelector("#place");
 const menu_button_element = document.querySelector("#menu-button");
 const menu_element = document.querySelector("#menu");
 
@@ -43,7 +45,7 @@ const update_planning = async () => {
     favorites = JSON.parse(favorites);
 
     for (const favorite of favorites) {
-      load_planning(
+      await load_planning(
         await (await fetch(
           `https://api.licence-informatique-lemans.tk/v2/planning.json?level=${favorite.level}&group=${favorite.group}&start=${start_date.toISOString()}&end=${end_date.toISOString()}`,
         )).json(),
@@ -53,6 +55,53 @@ const update_planning = async () => {
 };
 
 window.addEventListener("load", async () => {
+  await planning_resources_loaded;
+
+  // study level
+  for (const study_level of planning_resources_type["study-level"]) {
+    const study_level_summary_element = document.createElement("summary");
+    const year_details_element = document.createElement("details");
+    const year_list_element = document.createElement("ul");
+
+    study_level_summary_element.textContent =
+      planning_resources_name[study_level].name;
+
+    for (const year_name of planning_resources_name[study_level].name_list) {
+      const year_element = document.createElement("li");
+
+      year_element.textContent = year_name;
+      year_list_element.append(year_element);
+    }
+
+    year_details_element.append(
+      study_level_summary_element,
+      year_list_element,
+    );
+    study_level_list_element.append(year_details_element);
+  }
+
+  // place
+  for (const place of (planning_resources_type["place"])) {
+    const place_summary_element = document.createElement("summary");
+    const room_details_element = document.createElement("details");
+    const room_list_element = document.createElement("ul");
+
+    place_summary_element.textContent = planning_resources_name[place].name;
+
+    for (const room_name of planning_resources_name[place].name_list) {
+      const room_element = document.createElement("li");
+
+      room_element.textContent = room_name;
+      room_list_element.append(room_element);
+    }
+
+    room_details_element.append(
+      place_summary_element,
+      room_list_element,
+    );
+    place_list_element.append(room_details_element);
+  }
+
   setInterval(
     () =>
       update_planning().catch((error) =>

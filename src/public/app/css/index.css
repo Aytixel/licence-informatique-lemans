@@ -155,6 +155,10 @@ a {
     height: calc(100vh - 6.4em);
     width: 95vmin;
 
+    box-sizing: border-box;
+
+    padding: 0.5em;
+
     border-radius: 0.5em;
 
     border: none;
@@ -166,6 +170,8 @@ a {
 
 #menu::backdrop {
     background-color: transparent;
+
+    cursor: pointer;
 }
 
 /*
