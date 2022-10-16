@@ -113,8 +113,6 @@ a {
     height: 0.2em;
     width: 80%;
 
-    border-radius: 0.1em;
-
     background-color: var(--color-accent-0);
 
     translate: -50% 0;
@@ -137,8 +135,6 @@ a {
     width: 100%;
 
     content: "";
-
-    border-radius: 0.1em;
 
     background-color: inherit;
 
