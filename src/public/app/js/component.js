@@ -474,6 +474,8 @@ class LessonViewer extends HTMLElement {
       background: linear-gradient(180deg, var(--color-light-1) 0%, var(--color-light-1) 50%, var(--color-accent-1) 50%, var(--color-accent-1) 100%);
       background-size: 100% 201%;
       background-position-y: 100%;
+
+      cursor: pointer;
     }
 
     h3 {
