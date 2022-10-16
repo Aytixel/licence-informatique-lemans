@@ -33,7 +33,8 @@ class PlanningViewer extends HTMLElement {
       height: 100%;
       width: 100%;
 
-      overflow: hidden;
+      scroll-behavior: smooth;
+      scroll-snap-type: x proximity;
     }
 
     .left-bar, .right-bar {
@@ -124,13 +125,17 @@ class PlanningViewer extends HTMLElement {
     });
   };
 
-  focus(date) {
+  focus(date, disable_animation = false) {
     if (date instanceof Date) date = date.toISOString();
     if (this.#days_element[date]) {
+      if (disable_animation) this.#container.style.scrollBehavior = "auto";
+
       this.#container.scrollLeft =
         this.#days_element[date].getBoundingClientRect().x -
         (this.#container.clientWidth / 2) +
         (this.#days_element[date].clientWidth / 2);
+
+      if (disable_animation) this.#container.style.scrollBehavior = "";
     }
   }
 
@@ -255,7 +260,8 @@ class DayViewer extends HTMLElement {
     .container {
       height: calc(100% - 5em - 2.5vmin);
 
-      overflow: hidden;
+      scroll-behavior: smooth;
+      scroll-snap-type: y proximity;
     }
 
     .top-bar, .bottom-bar {
@@ -545,7 +551,7 @@ class LessonViewer extends HTMLElement {
     this.addEventListener("focusin", () => {
       this.show();
       this.scrollIntoView(
-        window.innerWidth < window.innerHeight ? { inline: "center" } : null,
+        { inline: "center" },
       );
     });
     this.addEventListener("focusout", () => {

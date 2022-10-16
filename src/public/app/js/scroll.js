@@ -2,7 +2,7 @@ class Scroll {
   #orientation;
   #element;
   #last_position = { x: 0, y: 0 };
-  #deceleration = 0.975;
+  #deceleration = 0.95;
   #hold = false;
   #running = false;
 
@@ -15,6 +15,8 @@ class Scroll {
     this.#pointer_move = this.#pointer_move.bind(this);
     this.#pointer_end = this.#pointer_end.bind(this);
 
+    this.#element.style.overflow = "hidden";
+
     element.addEventListener(
       "wheel",
       this.#wheel,
@@ -24,6 +26,9 @@ class Scroll {
   }
 
   #wheel = (event) => {
+    this.#element.style.scrollBehavior = "auto";
+    this.#element.style.scrollSnapType = "none";
+
     this.apply_scroll(event.deltaX, event.deltaY, event.shiftKey);
   };
 
@@ -31,6 +36,8 @@ class Scroll {
     this.#hold = true;
     this.#last_position.x = event.clientX;
     this.#last_position.y = event.clientY;
+    this.#element.style.scrollBehavior = "auto";
+    this.#element.style.scrollSnapType = "none";
 
     this.#element.addEventListener("pointermove", this.#pointer_move, {
       passive: true,
@@ -76,9 +83,11 @@ class Scroll {
     );
 
     this.#hold = false;
+
+    this.#reset_scroll_style();
   };
 
-  apply_scroll(x, y, shift, is_wheel = true) {
+  apply_scroll(x, y, shift = false, is_wheel = true) {
     if (is_wheel) {
       this.#hold = false;
       this.#running = false;
@@ -95,6 +104,8 @@ class Scroll {
 
       if (x_stop && y_stop) this.#running = false;
     }
+
+    if (!this.#running && this.#hold) this.#running = true;
 
     window.requestAnimationFrame(() => {
       if (this.#orientation == 1) {
@@ -115,10 +126,17 @@ class Scroll {
         }
       }
 
-      if (!this.#running && this.#hold) this.#running = true;
       if (this.#running && !this.#hold) {
         this.apply_scroll(x, y, shift, is_wheel);
       }
+      if (!is_wheel) this.#reset_scroll_style();
     });
   }
+
+  #reset_scroll_style = debounce(() => {
+    if (!this.#hold) {
+      this.#element.style.scrollBehavior = "";
+      this.#element.style.scrollSnapType = "";
+    }
+  }, 50);
 }
