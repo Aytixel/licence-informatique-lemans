@@ -295,19 +295,15 @@ header h2 {
     transform: translate(-50%, 110%) scale(3.2);
 }
 
-#android-preview div {
-    width: fit-content;
+#app-android img {
+    height: 20em;
+    width: 9.875em;
 
     border-top: 0.8em solid #018785;
     border-bottom: 0.8em solid #FFF;
     border-radius: 0.8em;
 
     background-color: #d9d9d9;
-}
-
-#app-android img {
-    height: 20em;
-    width: 9.875em;
 }
 
 /*
@@ -333,15 +329,13 @@ footer {
         transform: translate(-50%, 200%) scale(5);
     }
 
-    #android-preview div {
-        border-top-width: 1.2em;
-        border-bottom-width: 1.2em;
-        border-radius: 1.2em;
-    }
-
     #app-android img {
         height: 30em;
         width: 14.8125em;
+
+        border-top-width: 1.2em;
+        border-bottom-width: 1.2em;
+        border-radius: 1.2em;
     }
 }
 
