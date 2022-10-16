@@ -10,6 +10,8 @@ addEventListener("install", (event) => {
       "/css/index.css",
       "/js/component.js",
       "/js/index.js",
+      "/js/scroll.js",
+      "/js/scroll-snap.js",
       "/site.webmanifest",
       "/android-chrome-192x192.png",
       "/android-chrome-512x512.png",
