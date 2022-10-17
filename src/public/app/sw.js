@@ -48,6 +48,7 @@ addEventListener("fetch", (event) => {
     } catch {
       return await cache.match(
         event.request,
+        { ignoreSearch: true },
       ) || new Response(null, { status: 404 });
     }
   })());
