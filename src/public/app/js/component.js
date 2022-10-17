@@ -81,7 +81,7 @@ class PlanningViewer extends HTMLElement {
     });
 
     new Scroll(this.#container, 1);
-    new ScrollSnap(this.#container, 1, this, "planning-viewer > .snap");
+    new ScrollSnap(this.#container, 1, this, "planning-viewer > day-viewer");
 
     window.addEventListener("resize", this.update_indicator_bars, {
       passive: true,
@@ -167,7 +167,6 @@ class PlanningViewer extends HTMLElement {
       for (const day_date of days_date) {
         if (!this.#days_element[day_date]) {
           this.#days_element[day_date] = document.createElement("day-viewer");
-          this.#days_element[day_date].classList.add("snap");
           this.#days_element[day_date].dataset.date = day_date;
 
           if (compare_date(this.#start_date, day_date) < 0) {
@@ -308,7 +307,7 @@ class DayViewer extends HTMLElement {
     });
 
     new Scroll(this.#container, 2);
-    new ScrollSnap(this.#container, 2, this, "day-viewer > .snap");
+    new ScrollSnap(this.#container, 2, this, "day-viewer > lesson-viewer");
 
     window.addEventListener("resize", this.update_indicator_bars, {
       passive: true,
@@ -379,7 +378,6 @@ class DayViewer extends HTMLElement {
           this.#lessons_element[lesson_id] = document.createElement(
             "lesson-viewer",
           );
-          this.#lessons_element[lesson_id].classList.add("snap");
           this.#lessons_element[lesson_id].dataset.start_date =
             lesson.start_date;
           this.#lessons_element[lesson_id].dataset.end_date = lesson.end_date;
