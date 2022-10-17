@@ -691,6 +691,10 @@ class LessonViewer extends HTMLElement {
 }
 
 class PlanningButton extends HTMLElement {
+  #level;
+  #group;
+  #svg_element;
+
   constructor() {
     super();
 
@@ -714,11 +718,21 @@ class PlanningButton extends HTMLElement {
       stroke: var(--color-accent-0);
       stroke-width: 3.5em;
 
-      transition: 0.2s ease-in-out fill;
+      transition: 0.2s ease-in-out fill, 0.2s ease-in-out stroke;
+
+      cursor: pointer;
     }
 
     svg.selected {
       fill: var(--color-accent-0);
+    }
+
+    svg:hover, svg:focus {
+      stroke: var(--color-accent-1);
+    }
+
+    svg.selected:hover, svg.selected:focus {
+      fill: var(--color-accent-1);
     }
     `;
 
@@ -728,9 +742,39 @@ class PlanningButton extends HTMLElement {
     this.shadowRoot.innerHTML =
       `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -10 584 567"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"/></svg>`;
     this.shadowRoot.append(style, slot);
+    this.#svg_element = this.shadowRoot.firstChild;
+
+    this.#svg_element.addEventListener(
+      "click",
+      () => {
+        let favorites = JSON.parse(localStorage.getItem("favorites"));
+
+        if (this.#svg_element.classList.toggle("selected")) {
+          favorites.push({ level: this.#level, group: this.#group });
+        } else {
+          favorites = favorites.filter((favorite) =>
+            favorite.level != this.#level || favorite.group != this.#group
+          );
+        }
+
+        localStorage.setItem("favorites", JSON.stringify(favorites));
+      },
+    );
   }
 
   init(level, group) {
+    const favorites = JSON.parse(localStorage.getItem("favorites"));
+
+    if (
+      favorites.some((favorite) =>
+        favorite.level == level && favorite.group == group
+      )
+    ) {
+      this.#svg_element.classList.add("selected");
+    }
+
+    this.#level = level;
+    this.#group = group;
     this.style.display = "";
     this.textContent = planning_resources_name[level].name_list[group];
   }
