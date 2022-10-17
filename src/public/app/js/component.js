@@ -707,6 +707,8 @@ class PlanningButton extends HTMLElement {
       display: block;
 
       height: 1.5em;
+
+      cursor: pointer;
     }
 
     svg {
@@ -718,9 +720,7 @@ class PlanningButton extends HTMLElement {
       stroke: var(--color-accent-0);
       stroke-width: 3.5em;
 
-      transition: 0.2s ease-in-out fill, 0.2s ease-in-out stroke;
-
-      cursor: pointer;
+      transition: 0.2s ease-in-out fill, 0.2s ease-in-out stroke;x
     }
 
     svg.selected {
@@ -760,6 +760,15 @@ class PlanningButton extends HTMLElement {
         localStorage.setItem("favorites", JSON.stringify(favorites));
       },
     );
+
+    this.addEventListener("click", (event) => {
+      if (
+        !event.composedPath().some((element) => element == this.#svg_element)
+      ) {
+        location.href = location.origin + location.pathname +
+          `?level=${this.#level}&group=${this.#group}`;
+      }
+    });
   }
 
   init(level, group) {

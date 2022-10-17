@@ -43,6 +43,8 @@
             planning_resources_type = await (await fetch("https://api.licence-informatique-lemans.tk/v2/planning-resources-type.json")).json();
         })();
 
+        if (!Array.isArray(JSON.parse(localStorage.getItem("favorites")))) localStorage.setItem("favorites", "[]");
+
         screen.orientation.lock("natural").catch(() => console.log("Can't lock screen orientation !"))
     </script>
     <script src="/js/scroll.js" async></script>

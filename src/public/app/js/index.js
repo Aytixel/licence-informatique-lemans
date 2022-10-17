@@ -23,8 +23,6 @@ menu_element.addEventListener("click", (event) => {
 
 const planning_element = document.querySelector("planning-viewer");
 const title_element = document.querySelectorAll("h1, h2");
-const start_date = keep_only_date(add_days(new Date(), -7));
-const end_date = keep_only_date(add_days(new Date(), 7));
 const load_planning = (planning_data) => {
   if (
     planning_resources_name[planning_data?.level]
@@ -39,22 +37,37 @@ const load_planning = (planning_data) => {
   }
 };
 const update_planning = async () => {
-  let favorites = localStorage.getItem("favorites");
+  const start_date = keep_only_date(new Date());
+  const end_date = keep_only_date(Date.now() + new Date().setMonth(4));
+  const favorites = JSON.parse(localStorage.getItem("favorites"));
+  const update = async (level, group) => {
+    try {
+      const response = await fetch(
+        `https://api.licence-informatique-lemans.tk/v2/planning.json?level=${level}&group=${group}&start=${start_date.toISOString()}&end=${end_date.toISOString()}`,
+      );
 
-  if (favorites) {
-    favorites = JSON.parse(favorites);
-
-    for (const favorite of favorites) {
-      await load_planning(
-        await (await fetch(
-          `https://api.licence-informatique-lemans.tk/v2/planning.json?level=${favorite.level}&group=${favorite.group}&start=${start_date.toISOString()}&end=${end_date.toISOString()}`,
-        )).json(),
+      localStorage.setItem(
+        `${level}:${group}`,
+        JSON.stringify(await response.json()),
+      );
+    } catch {
+      console.error(
+        `Failed to update level : ${level}, group : ${group}`,
       );
     }
-  }
+  };
+
+  await Promise.all([
+    favorites.map((favorite) => update(favorite.level, favorite.group)),
+  ]);
 };
 
 window.addEventListener("load", async () => {
+  if (!navigator.onLine) {
+    title_element[0].textContent = "Pas d'internet";
+    title_element[1].textContent = "rip... faut attendre";
+  }
+
   await planning_resources_loaded;
 
   // generate study level html
@@ -113,6 +126,28 @@ window.addEventListener("load", async () => {
   update_planning().catch((error) =>
     console.error("Failed to update planning data :", error)
   );
+
+  // load the targeted planning
+  const search_params = new URLSearchParams(location.search);
+
+  if (search_params.has("level") && search_params.has("group")) {
+    const level = search_params.get("level");
+    const group = search_params.get("group");
+    const start_date = keep_only_date(add_days(new Date(), -7));
+    const end_date = keep_only_date(add_days(new Date(), 7));
+
+    try {
+      const response = await fetch(
+        `https://api.licence-informatique-lemans.tk/v2/planning.json?level=${level}&group=${group}&start=${start_date.toISOString()}&end=${end_date.toISOString()}`,
+      );
+
+      load_planning(await response.json());
+    } catch {
+      console.error(
+        `Failed to load level : ${level}, group : ${group}`,
+      );
+    }
+  }
 
   if ("serviceWorker" in navigator) {
     try {
