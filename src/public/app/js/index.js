@@ -66,10 +66,10 @@ window.addEventListener("load", async () => {
     study_level_summary_element.textContent =
       planning_resources_name[study_level].name;
 
-    for (const year_name of planning_resources_name[study_level].name_list) {
-      const year_element = document.createElement("li");
+    for (const index in planning_resources_name[study_level].name_list) {
+      const year_element = document.createElement("planning-button");
 
-      year_element.textContent = year_name;
+      year_element.init(study_level, index);
       year_list_element.append(year_element);
     }
 
@@ -88,10 +88,10 @@ window.addEventListener("load", async () => {
 
     place_summary_element.textContent = planning_resources_name[place].name;
 
-    for (const room_name of planning_resources_name[place].name_list) {
-      const room_element = document.createElement("li");
+    for (const index in planning_resources_name[place].name_list) {
+      const room_element = document.createElement("planning-button");
 
-      room_element.textContent = room_name;
+      room_element.init(place, index);
       room_list_element.append(room_element);
     }
 
