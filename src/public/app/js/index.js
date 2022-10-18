@@ -23,10 +23,6 @@ menu_element.addEventListener("click", (event) => {
 
 const planning_element = document.querySelector("planning-viewer");
 const title_element = document.querySelectorAll("h1, h2");
-const focus = debounce(
-  () => planning_element.focus(keep_only_date(new Date()), true),
-  50,
-);
 const load_planning = (level, group) => {
   const planning_data = JSON.parse(localStorage.getItem(`${level}:${group}`));
 
@@ -39,8 +35,6 @@ const load_planning = (level, group) => {
       planning_resources_name[planning_data?.level].name;
     title_element[1].textContent = planning_resources_name[planning_data?.level]
       ?.name_list[planning_data?.group];
-
-    focus();
   }
 };
 const update_stored_planning = (level, group, new_planning_data) => {
