@@ -122,17 +122,24 @@ const fecth_planning = async (level, group, start_date, end_date) => {
   }
 };
 
-const update_favorites_planning = async () => {
+const update_favorites_planning = async (initial = false) => {
   const favorites = JSON.parse(localStorage.getItem("favorites"));
   const favorites_planning_data = await Promise.all(
-    favorites.map((favorite) =>
-      fecth_planning(
-        favorite.level,
-        favorite.group,
+    initial
+      ? [fecth_planning(
+        level,
+        group,
         keep_only_date(add_days(new Date(), -7)),
         keep_only_date(Date.now() + new Date(0).setMonth(4)),
-      )
-    ),
+      )]
+      : favorites.map((favorite) =>
+        fecth_planning(
+          favorite.level,
+          favorite.group,
+          keep_only_date(add_days(new Date(), -7)),
+          keep_only_date(Date.now() + new Date(0).setMonth(4)),
+        )
+      ),
   );
 
   for (const new_planning_data of favorites_planning_data) {
@@ -153,11 +160,10 @@ const update_favorites_planning = async () => {
 };
 
 const update_planning = async (initial = false) => {
-  const is_in_favorites = in_favorites();
   let planning_data;
 
-  if (is_in_favorites) {
-    await update_favorites_planning();
+  if (in_favorites()) {
+    await update_favorites_planning(initial);
 
     planning_data = JSON.parse(localStorage.getItem(`${level}:${group}`));
   } else {
@@ -183,7 +189,7 @@ const update_planning = async (initial = false) => {
 
   load_planning(planning_data);
 
-  if (!is_in_favorites) update_favorites_planning();
+  if (initial) update_favorites_planning();
 };
 
 const switch_planning = (level_, group_) => {
