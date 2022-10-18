@@ -100,49 +100,40 @@ window.addEventListener("load", async () => {
 
   await planning_resources_loaded;
 
-  // generate study level html
-  for (const study_level of planning_resources_type["study-level"]) {
-    const study_level_summary_element = document.createElement("summary");
-    const year_details_element = document.createElement("details");
-    const year_list_element = document.createElement("ul");
+  const generate_planning_buttons = (key) => {
+    const summary_element = document.createElement("summary");
+    const details_element = document.createElement("details");
+    const list_element = document.createElement("ul");
 
-    study_level_summary_element.textContent =
-      planning_resources_name[study_level].name;
+    summary_element.textContent = planning_resources_name[key].name;
 
-    for (const index in planning_resources_name[study_level].name_list) {
-      const year_element = document.createElement("planning-button");
+    for (const index in planning_resources_name[key].name_list) {
+      const planning_button_element = document.createElement("planning-button");
 
-      year_element.init(study_level, index);
-      year_list_element.append(year_element);
+      planning_button_element.init(key, index);
+      list_element.append(planning_button_element);
     }
 
-    year_details_element.append(
-      study_level_summary_element,
-      year_list_element,
+    details_element.append(
+      summary_element,
+      list_element,
     );
-    study_level_list_element.append(year_details_element);
+
+    return details_element;
+  };
+
+  // generate study level html
+  for (const study_level of planning_resources_type["study-level"]) {
+    study_level_list_element.append(
+      generate_planning_buttons(study_level),
+    );
   }
 
   // generate place html
   for (const place of (planning_resources_type["place"])) {
-    const place_summary_element = document.createElement("summary");
-    const room_details_element = document.createElement("details");
-    const room_list_element = document.createElement("ul");
-
-    place_summary_element.textContent = planning_resources_name[place].name;
-
-    for (const index in planning_resources_name[place].name_list) {
-      const room_element = document.createElement("planning-button");
-
-      room_element.init(place, index);
-      room_list_element.append(room_element);
-    }
-
-    room_details_element.append(
-      place_summary_element,
-      room_list_element,
+    place_list_element.append(
+      generate_planning_buttons(place),
     );
-    place_list_element.append(room_details_element);
   }
 
   const search_params = new URLSearchParams(location.search);
