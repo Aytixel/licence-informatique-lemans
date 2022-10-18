@@ -1,3 +1,7 @@
+const search_params = new URLSearchParams(location.search);
+let level = search_params.get("level");
+let group = search_params.get("group");
+
 const study_level_list_element = document.querySelector("#study-level");
 const place_list_element = document.querySelector("#place");
 const menu_button_element = document.querySelector("#menu-button");
@@ -23,7 +27,7 @@ menu_element.addEventListener("click", (event) => {
 
 const planning_element = document.querySelector("planning-viewer");
 const title_element = document.querySelectorAll("h1, h2");
-const load_planning = debounce((level, group) => {
+const load_planning = debounce(() => {
   const planning_data = JSON.parse(localStorage.getItem(`${level}:${group}`));
 
   if (
@@ -68,7 +72,7 @@ const update_stored_planning = (level, group, new_planning_data) => {
   );
   localStorage.setItem(planning_id, JSON.stringify(current_planning_data));
 };
-const update_planning = async (level, group) => {
+const update_favorites_planning = async () => {
   const start_date = keep_only_date(new Date());
   const end_date = keep_only_date(Date.now() + new Date(0).setMonth(4));
   const favorites = JSON.parse(localStorage.getItem("favorites"));
@@ -90,11 +94,32 @@ const update_planning = async (level, group) => {
     }
   };
 
-  load_planning(level, group);
+  load_planning();
 
   await Promise.all([
     favorites.map((favorite) => update(favorite.level, favorite.group)),
   ]);
+};
+const switch_planning = async (level_, group_) => {
+  const start_date = keep_only_date(add_days(new Date(), -7));
+  const end_date = keep_only_date(add_days(new Date(), 7));
+
+  level = level_;
+  group = group_;
+
+  try {
+    const response = await fetch(
+      `https://api.licence-informatique-lemans.tk/v2/planning.json?level=${level}&group=${group}&start=${start_date.toISOString()}&end=${end_date.toISOString()}`,
+    );
+
+    update_stored_planning(level, group, await response.json());
+  } catch {
+    console.error(
+      `Failed to load level : ${level}, group : ${group}`,
+    );
+  }
+
+  load_planning();
 };
 
 window.addEventListener("load", async () => {
@@ -115,7 +140,7 @@ window.addEventListener("load", async () => {
     for (const index in planning_resources_name[key].name_list) {
       const planning_button_element = document.createElement("planning-button");
 
-      planning_button_element.init(key, index);
+      planning_button_element.init(key, index, switch_planning);
       list_element.append(planning_button_element);
     }
 
@@ -141,41 +166,28 @@ window.addEventListener("load", async () => {
     );
   }
 
-  const search_params = new URLSearchParams(location.search);
-  const level = search_params.get("level");
-  const group = search_params.get("group");
-
+  // update favorites planning
   setInterval(
     () =>
-      update_planning(level, group).catch((error) =>
+      update_favorites_planning().catch((error) =>
         console.error("Failed to update planning data :", error)
       ),
     1000 * 60 * 60,
   );
 
-  update_planning(level, group).catch((error) =>
+  update_favorites_planning().catch((error) =>
     console.error("Failed to update planning data :", error)
   );
 
   // load the targeted planning
-  if (level && group) {
-    const start_date = keep_only_date(add_days(new Date(), -7));
-    const end_date = keep_only_date(add_days(new Date(), 7));
+  if (level && group) switch_planning(level, group);
 
-    try {
-      const response = await fetch(
-        `https://api.licence-informatique-lemans.tk/v2/planning.json?level=${level}&group=${group}&start=${start_date.toISOString()}&end=${end_date.toISOString()}`,
-      );
-
-      update_stored_planning(level, group, await response.json());
-    } catch {
-      console.error(
-        `Failed to load level : ${level}, group : ${group}`,
-      );
-    }
-
-    load_planning(level, group);
-  }
+  window.addEventListener(
+    "popstate",
+    (event) => {
+      if (event.state) switch_planning(event.state.level, event.state.group);
+    },
+  );
 
   if ("serviceWorker" in navigator) {
     try {

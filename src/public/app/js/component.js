@@ -752,6 +752,7 @@ class PlanningButton extends HTMLElement {
   #level;
   #group;
   #svg_element;
+  #switch_planning_callback;
 
   constructor() {
     super();
@@ -823,13 +824,19 @@ class PlanningButton extends HTMLElement {
       if (
         !event.composedPath().some((element) => element == this.#svg_element)
       ) {
-        location.href = location.origin + location.pathname +
-          `?level=${this.#level}&group=${this.#group}`;
+        history.pushState(
+          { level: this.#level, group: this.#group },
+          "",
+          location.origin + location.pathname +
+            `?level=${this.#level}&group=${this.#group}`,
+        );
+
+        this.#switch_planning_callback(this.#level, this.#group);
       }
     });
   }
 
-  init(level, group) {
+  init(level, group, switch_planning_callback) {
     const favorites = JSON.parse(localStorage.getItem("favorites"));
 
     if (
@@ -842,6 +849,7 @@ class PlanningButton extends HTMLElement {
 
     this.#level = level;
     this.#group = group;
+    this.#switch_planning_callback = switch_planning_callback;
     this.style.display = "";
     this.textContent = planning_resources_name[level].name_list[group];
   }
