@@ -253,11 +253,12 @@ class PlanningViewer extends HTMLElement {
       this.#first_load = false;
 
       this.focus(keep_only_date(new Date()), true);
-    } else this.#container.scrollLeft = this.#scroll_left;
-
-    this.#scroll_left = this.#container.scrollLeft;
-    this.#scroll_width = this.#container.scrollWidth;
-    this.#client_width = this.#container.clientWidth;
+    } else {
+      this.#container.scrollLeft = this.#scroll_left;
+      this.#scroll_left = this.#container.scrollLeft;
+      this.#scroll_width = this.#container.scrollWidth;
+      this.#client_width = this.#container.clientWidth;
+    }
   }
 }
 
