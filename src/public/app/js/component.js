@@ -97,22 +97,25 @@ class PlanningViewer extends HTMLElement {
     new ScrollSnap(this.#container, 1, this, "planning-viewer > day-viewer");
 
     window.addEventListener("resize", () => {
+      this.#resize_scroll();
       this.update_indicator_bars();
-
-      const old_width = this.#scroll_width - this.#client_width;
-      const current_width = this.#container.scrollWidth -
-        this.#container.clientWidth;
-
-      if (old_width && current_width) {
-        this.#container.scrollLeft += (current_width - old_width) / 2;
-      }
-
-      this.#scroll_left = this.#container.scrollLeft;
-      this.#scroll_width = this.#container.scrollWidth;
-      this.#client_width = this.#container.clientWidth;
     }, {
       passive: true,
     });
+  }
+
+  #resize_scroll() {
+    const old_width = this.#scroll_width - this.#client_width;
+    const current_width = this.#container.scrollWidth -
+      this.#container.clientWidth;
+
+    this.#container.scrollLeft =
+      (this.#scroll_left + this.#client_width / 2) / old_width *
+        current_width - (this.#container.clientWidth / 2);
+
+    this.#scroll_left = this.#container.scrollLeft;
+    this.#scroll_width = this.#container.scrollWidth;
+    this.#client_width = this.#container.clientWidth;
   }
 
   #update_indicator_bars = debounce(() => {
@@ -159,6 +162,9 @@ class PlanningViewer extends HTMLElement {
         this.#days_element[date].getBoundingClientRect().x -
         (this.#container.clientWidth / 2) +
         (this.#days_element[date].clientWidth / 2);
+      this.#scroll_left = this.#container.scrollLeft;
+      this.#scroll_width = this.#container.scrollWidth;
+      this.#client_width = this.#container.clientWidth;
 
       if (disable_animation) this.#container.style.scrollBehavior = "";
     }
@@ -248,6 +254,10 @@ class PlanningViewer extends HTMLElement {
 
       this.focus(keep_only_date(new Date()), true);
     } else this.#container.scrollLeft = this.#scroll_left;
+
+    this.#scroll_left = this.#container.scrollLeft;
+    this.#scroll_width = this.#container.scrollWidth;
+    this.#client_width = this.#container.clientWidth;
   }
 }
 
