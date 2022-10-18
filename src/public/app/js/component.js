@@ -164,7 +164,12 @@ class PlanningViewer extends HTMLElement {
         (this.#container.clientWidth / 2) +
         (this.#days_element[date].clientWidth / 2);
 
-      if (disable_animation) this.#container.style.scrollBehavior = "";
+      if (disable_animation) {
+        this.#container.style.scrollBehavior = "";
+        this.#scroll_left = this.#container.scrollLeft;
+        this.#scroll_width = this.#container.scrollWidth;
+        this.#client_width = this.#container.clientWidth;
+      }
     }
   }
 
