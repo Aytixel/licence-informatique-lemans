@@ -1,7 +1,16 @@
+class PlanningFetchEvent extends Event {
+  constructor(request) {
+    super("planningfetch");
+
+    this.request = request;
+  }
+}
+
 class PlanningViewer extends HTMLElement {
+  data;
   #days_element = {};
-  #start_date;
-  #end_date;
+  start_date;
+  end_date;
   #left_bar = document.createElement("div");
   #container = document.createElement("div");
   #right_bar = document.createElement("div");
@@ -9,6 +18,18 @@ class PlanningViewer extends HTMLElement {
   #scroll_left;
   #scroll_width;
   #client_width;
+  #intersection_observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting && Math.sign(entry.boundingClientRect.x)) {
+          this.dispatchEvent(
+            new PlanningFetchEvent(Math.sign(entry.boundingClientRect.x)),
+          );
+        }
+      }
+    },
+    { threshold: 0.1 },
+  );
 
   constructor() {
     super();
@@ -171,9 +192,12 @@ class PlanningViewer extends HTMLElement {
   }
 
   load(planning_data) {
+    this.data = planning_data;
+
     let start_date = new Date(planning_data?.start_date);
     let end_date = new Date(planning_data?.end_date);
 
+    this.#intersection_observer.disconnect();
     this.#scroll_left = this.#container.scrollLeft;
     this.#scroll_width = this.#container.scrollWidth;
     this.#client_width = this.#container.clientWidth;
@@ -188,8 +212,8 @@ class PlanningViewer extends HTMLElement {
       start_date = keep_only_date(start_date);
       end_date = keep_only_date(end_date);
 
-      if (!this.#start_date) this.#start_date = start_date;
-      if (!this.#end_date) this.#end_date = end_date;
+      if (!this.start_date) this.start_date = start_date;
+      if (!this.end_date) this.end_date = end_date;
 
       const days_date = [];
       let date = new Date(start_date);
@@ -206,8 +230,8 @@ class PlanningViewer extends HTMLElement {
           this.#days_element[day_date] = document.createElement("day-viewer");
           this.#days_element[day_date].dataset.date = day_date;
 
-          if (compare_date(this.#start_date, day_date) < 0) {
-            this.#days_element[this.#start_date.toISOString()].before(
+          if (compare_date(this.start_date, day_date) < 0) {
+            this.#days_element[this.start_date.toISOString()].before(
               this.#days_element[day_date],
             );
 
@@ -243,8 +267,8 @@ class PlanningViewer extends HTMLElement {
         }
       }
 
-      this.#start_date = start_date;
-      this.#end_date = end_date;
+      this.start_date = start_date;
+      this.end_date = end_date;
     }
 
     this.update_indicator_bars();
@@ -259,6 +283,11 @@ class PlanningViewer extends HTMLElement {
       this.#scroll_width = this.#container.scrollWidth;
       this.#client_width = this.#container.clientWidth;
     }
+
+    this.#intersection_observer.observe(this.children[0]);
+    this.#intersection_observer.observe(
+      this.children[this.children.length - 1],
+    );
   }
 }
 

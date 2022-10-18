@@ -27,6 +27,7 @@ menu_element.addEventListener("click", (event) => {
 
 const planning_element = document.querySelector("planning-viewer");
 const title_element = document.querySelectorAll("h1, h2");
+
 const load_planning = debounce(() => {
   const planning_data = JSON.parse(localStorage.getItem(`${level}:${group}`));
 
@@ -46,25 +47,55 @@ const load_planning = debounce(() => {
     }`;
   }
 }, 150);
+
 const update_stored_planning = (level, group, new_planning_data) => {
   const planning_id = `${level}:${group}`;
   let current_planning_data = JSON.parse(localStorage.getItem(planning_id)) ||
     new_planning_data;
+
+  // update start and end date of the planning
+  if (
+    compare_date(
+      new_planning_data.start_date,
+      current_planning_data.start_date,
+    ) > 0
+  ) {
+    current_planning_data.start_date = new_planning_data.start_date;
+  }
+  if (
+    compare_date(new_planning_data.end_date, current_planning_data.end_date) < 0
+  ) {
+    current_planning_data.end_date = new_planning_data.end_date;
+  }
+
+  // add empty days
+  const end_date = new Date(current_planning_data.end_date);
+  let date = new Date(current_planning_data.start_date);
+
+  while (compare_date(date, end_date)) {
+    if (
+      current_planning_data.days.findIndex((day) =>
+        !compare_date(day.date, date)
+      ) < 0
+    ) {
+      current_planning_data.days.push({
+        date: date.toISOString(),
+        lessons: [],
+      });
+    }
+
+    date = add_days(date, 1);
+  }
 
   for (const new_day of new_planning_data.days) {
     const old_data_index = current_planning_data.days.findIndex((day) =>
       !compare_date(day.date, new_day.date)
     );
 
+    // update old day data
     if (old_data_index > -1) {
       current_planning_data.days[old_data_index] = new_day;
     } else current_planning_data.days.push(new_day);
-    if (compare_date(new_day.date, current_planning_data.start_date) > 0) {
-      current_planning_data.start_date = new_day.date;
-    }
-    if (compare_date(new_day.date, current_planning_data.end_date) < 0) {
-      current_planning_data.end_date = new_day.date;
-    }
   }
 
   current_planning_data.days.sort((day_a, day_b) =>
@@ -72,53 +103,48 @@ const update_stored_planning = (level, group, new_planning_data) => {
   );
   localStorage.setItem(planning_id, JSON.stringify(current_planning_data));
 };
-const update_favorites_planning = async () => {
-  const start_date = keep_only_date(new Date());
-  const end_date = keep_only_date(Date.now() + new Date(0).setMonth(4));
-  const favorites = JSON.parse(localStorage.getItem("favorites"));
-  const update = async (level_, group_) => {
-    try {
-      const response = await fetch(
-        `https://api.licence-informatique-lemans.tk/v2/planning.json?level=${level_}&group=${group_}&start=${start_date.toISOString()}&end=${end_date.toISOString()}`,
-      );
 
-      update_stored_planning(
-        level_,
-        group_,
-        await response.json(),
-      );
-    } catch {
-      console.error(
-        `Failed to update level : ${level_}, group : ${group_}`,
-      );
-    }
-  };
-
-  load_planning();
-
-  await Promise.all([
-    favorites.map((favorite) => update(favorite.level, favorite.group)),
-  ]);
-};
-const switch_planning = async (level_, group_) => {
-  const start_date = keep_only_date(add_days(new Date(), -7));
-  const end_date = keep_only_date(add_days(new Date(), 7));
-
-  level = level_;
-  group = group_;
-
+const fecth_planning = async (level, group, start_date, end_date) => {
   try {
     const response = await fetch(
       `https://api.licence-informatique-lemans.tk/v2/planning.json?level=${level}&group=${group}&start=${start_date.toISOString()}&end=${end_date.toISOString()}`,
     );
 
-    update_stored_planning(level, group, await response.json());
-  } catch {
-    console.error(
-      `Failed to load level : ${level}, group : ${group}`,
-    );
-  }
+    const data = await response.json();
 
+    update_stored_planning(level, group, data);
+  } catch {
+    console.error(`Failed to update level : ${level}, group : ${group}`);
+  }
+};
+
+const update_favorites_planning = async () => {
+  const favorites = JSON.parse(localStorage.getItem("favorites"));
+
+  await Promise.all([
+    favorites.map((favorite) =>
+      fecth_planning(
+        favorite.level,
+        favorite.group,
+        keep_only_date(new Date()),
+        keep_only_date(Date.now() + new Date(0).setMonth(4)),
+      )
+    ),
+  ]);
+
+  load_planning();
+};
+
+const switch_planning = async (level_, group_) => {
+  level = level_;
+  group = group_;
+
+  fecth_planning(
+    level,
+    group,
+    keep_only_date(add_days(new Date(), -7)),
+    keep_only_date(add_days(new Date(), 7)),
+  );
   load_planning();
 };
 
@@ -178,6 +204,27 @@ window.addEventListener("load", async () => {
   update_favorites_planning().catch((error) =>
     console.error("Failed to update planning data :", error)
   );
+
+  // listen for planning fetch request
+  planning_element.addEventListener("planningfetch", async (event) => {
+    if (event.request > 0) {
+      await fecth_planning(
+        level,
+        group,
+        planning_element.end_date,
+        keep_only_date(add_days(planning_element.end_date, 7)),
+      );
+    } else {
+      await fecth_planning(
+        level,
+        group,
+        keep_only_date(add_days(planning_element.start_date, -7)),
+        planning_element.start_date,
+      );
+    }
+
+    load_planning();
+  });
 
   // load the targeted planning
   if (level && group) switch_planning(level, group);
