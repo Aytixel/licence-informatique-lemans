@@ -29,6 +29,25 @@
                 timer = setTimeout(() => callback.apply(context, args), delay)
             }
         }
+        function throttle(callback, delay) {
+            let last, timer;
+
+            return function () {
+                let context = this, now = +new Date(), args = arguments;
+
+                if (last && now < last + delay) {
+                    clearTimeout(timer);
+
+                    timer = setTimeout(() => {
+                        last = now;
+                        callback.apply(context, args);
+                    }, delay);
+                } else {
+                    last = now;
+                    callback.apply(context, args);
+                }
+            };
+        }
         const keep_only_date = (date) => {
             time = new Date(date).getTime();
 
