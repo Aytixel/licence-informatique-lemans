@@ -58,7 +58,7 @@ const update_stored_planning = (level, group, new_planning_data) => {
       current_planning_data.start_date = new_day.date;
     }
     if (compare_date(new_day.date, current_planning_data.end_date) < 0) {
-      current_planning_data.start_date = new_day.date;
+      current_planning_data.end_date = new_day.date;
     }
   }
 
@@ -175,10 +175,13 @@ window.addEventListener("load", async () => {
       const response = await fetch(
         `https://api.licence-informatique-lemans.tk/v2/planning.json?level=${level}&group=${group}&start=${start_date.toISOString()}&end=${end_date.toISOString()}`,
       );
+
       load_planning(
         update_stored_planning(level, group, await response.json()),
       );
     } catch {
+      load_planning(JSON.parse(localStorage.getItem(`${level}:${group}`)));
+
       console.error(
         `Failed to load level : ${level}, group : ${group}`,
       );
