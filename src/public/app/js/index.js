@@ -1,6 +1,6 @@
 const search_params = new URLSearchParams(location.search);
-let level = search_params.get("level") || "l1";
-let group = search_params.get("group") || 0;
+let level = search_params.get("level");
+let group = search_params.get("group");
 
 const study_level_list_element = document.querySelector("#study-level");
 const place_list_element = document.querySelector("#place");
@@ -53,7 +53,7 @@ const load_planning = debounce((planning_data) => {
       planning_resources_name[planning_data?.level]
         ?.name_list[planning_data?.group]
     }`;
-  }
+  } else planning_element.reset();
 }, 150);
 
 const add_empty_days = (planning_data) => {
@@ -160,6 +160,8 @@ const update_favorites_planning = async (initial = false) => {
 };
 
 const update_planning = async (initial = false) => {
+  if (!(typeof level === "string" && typeof group === "string")) return;
+
   let planning_data;
 
   if (in_favorites()) {
@@ -193,6 +195,11 @@ const update_planning = async (initial = false) => {
 };
 
 const switch_planning = (level_, group_) => {
+  if (!navigator.onLine) {
+    title_element[0].textContent = "Pas d'internet";
+    title_element[1].textContent = "rip... faut attendre";
+  }
+
   level = level_;
   group = group_;
 
@@ -200,11 +207,6 @@ const switch_planning = (level_, group_) => {
 };
 
 window.addEventListener("load", async () => {
-  if (!navigator.onLine) {
-    title_element[0].textContent = "Pas d'internet";
-    title_element[1].textContent = "rip... faut attendre";
-  }
-
   await planning_resources_loaded;
 
   const generate_planning_buttons = (key) => {
@@ -276,8 +278,9 @@ window.addEventListener("load", async () => {
   });
 
   // load the targeted planning
-  if (level && group) switch_planning(level, group);
-  else update_planning();
+  if (typeof level === "string" && typeof group === "string") {
+    switch_planning(level, group);
+  } else update_planning();
 
   setInterval(update_planning, 1000 * 60 * 60);
 

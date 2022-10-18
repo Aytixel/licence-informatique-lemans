@@ -125,6 +125,26 @@ class PlanningViewer extends HTMLElement {
     });
   }
 
+  reset() {
+    this.data = undefined;
+    this.#days_element = {};
+    this.start_date = undefined;
+    this.end_date = undefined;
+    this.#first_load = true;
+    this.#intersection_observer.disconnect();
+
+    for (const child of [...this.children]) {
+      console.log(child);
+      child.remove();
+    }
+
+    this.#scroll_left = this.#container.scrollLeft;
+    this.#scroll_width = this.#container.scrollWidth;
+    this.#client_width = this.#container.clientWidth;
+
+    this.update_indicator_bars();
+  }
+
   #resize_scroll() {
     const old_width = this.#scroll_width - this.#client_width;
     const current_width = this.#container.scrollWidth -
