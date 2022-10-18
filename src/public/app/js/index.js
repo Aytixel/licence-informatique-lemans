@@ -35,6 +35,11 @@ const load_planning = debounce((level, group) => {
       planning_resources_name[planning_data?.level].name;
     title_element[1].textContent = planning_resources_name[planning_data?.level]
       ?.name_list[planning_data?.group];
+
+    document.title = `${planning_resources_name[planning_data?.level].name} ${
+      planning_resources_name[planning_data?.level]
+        ?.name_list[planning_data?.group]
+    }`;
   }
 }, 150);
 const update_stored_planning = (level, group, new_planning_data) => {
