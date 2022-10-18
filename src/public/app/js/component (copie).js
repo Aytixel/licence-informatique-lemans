@@ -97,22 +97,26 @@ class PlanningViewer extends HTMLElement {
     new ScrollSnap(this.#container, 1, this, "planning-viewer > day-viewer");
 
     window.addEventListener("resize", () => {
+      this.#resize_scroll();
       this.update_indicator_bars();
-
-      const old_width = this.#scroll_width - this.#client_width;
-      const current_width = this.#container.scrollWidth -
-        this.#container.clientWidth;
-
-      if (old_width && current_width) {
-        this.#container.scrollLeft += (current_width - old_width) / 2;
-      }
-
-      this.#scroll_left = this.#container.scrollLeft;
-      this.#scroll_width = this.#container.scrollWidth;
-      this.#client_width = this.#container.clientWidth;
     }, {
       passive: true,
     });
+  }
+
+  #resize_scroll() {
+    const old_width = this.#scroll_width - this.#client_width;
+    const current_width = this.#container.scrollWidth -
+      this.#container.clientWidth;
+
+    if (old_width && current_width) {
+      this.#scroll_left = (this.#scroll_left + this.#client_width / 2) /
+          old_width * current_width - this.#container.clientWidth / 2;
+    }
+
+    this.#container.scrollLeft = this.#scroll_left;
+    this.#scroll_width = this.#container.scrollWidth;
+    this.#client_width = this.#container.clientWidth;
   }
 
   #update_indicator_bars = debounce(() => {
@@ -200,16 +204,19 @@ class PlanningViewer extends HTMLElement {
           this.#days_element[day_date] = document.createElement("day-viewer");
           this.#days_element[day_date].dataset.date = day_date;
 
+          const scroll_width_diff = this.#container.scrollWidth -
+            this.#scroll_width;
+
           if (compare_date(this.#start_date, day_date) < 0) {
             this.#days_element[this.#start_date.toISOString()].before(
               this.#days_element[day_date],
             );
 
-            this.#scroll_left += this.#container.scrollWidth -
-              this.#scroll_width;
+            this.#scroll_left += scroll_width_diff;
+            console.log(this.#scroll_left);
           } else this.append(this.#days_element[day_date]);
 
-          this.#scroll_width = this.#container.scrollWidth;
+          this.#scroll_width += scroll_width_diff;
         }
       }
 
@@ -228,12 +235,19 @@ class PlanningViewer extends HTMLElement {
 
           delete this.#days_element[date_key];
 
-          if (compare_date(removed_date, start_date) > 0) {
-            this.#scroll_left += this.#container.scrollWidth -
-              this.#scroll_width;
+          const scroll_width_diff = this.#container.scrollWidth -
+            this.#scroll_width;
+
+          if (
+            compare_date(
+              removed_date,
+              start_date,
+            ) > 0
+          ) {
+            this.#scroll_left -= scroll_width_diff;
           }
 
-          this.#scroll_width = this.#container.scrollWidth;
+          this.#scroll_width += scroll_width_diff;
         }
       }
 
@@ -243,11 +257,22 @@ class PlanningViewer extends HTMLElement {
 
     this.update_indicator_bars();
 
+    this.#scroll_left = Math.max(
+      Math.min(
+        this.#scroll_left,
+        this.#container.scrollWidth - this.#container.clientWidth,
+      ),
+      0,
+    );
+    this.#container.scrollLeft = this.#scroll_left;
+    this.#scroll_width = this.#container.scrollWidth;
+    this.#client_width = this.#container.clientWidth;
+
     if (this.#first_load) {
       this.#first_load = false;
 
       this.focus(keep_only_date(new Date()), true);
-    } else this.#container.scrollLeft = this.#scroll_left;
+    }
   }
 }
 
