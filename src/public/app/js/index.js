@@ -1,6 +1,6 @@
 const search_params = new URLSearchParams(location.search);
-let level = search_params.get("level");
-let group = search_params.get("group");
+let level = search_params.get("level") || "l1";
+let group = search_params.get("group") || 0;
 
 const study_level_list_element = document.querySelector("#study-level");
 const place_list_element = document.querySelector("#place");
