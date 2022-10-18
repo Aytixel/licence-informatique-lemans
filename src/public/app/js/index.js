@@ -27,7 +27,9 @@ const focus = debounce(
   () => planning_element.focus(keep_only_date(new Date()), true),
   50,
 );
-const load_planning = (planning_data) => {
+const load_planning = (level, group) => {
+  const planning_data = JSON.parse(localStorage.getItem(`${level}:${group}`));
+
   if (
     planning_resources_name[planning_data?.level]
       ?.name_list[planning_data?.group]
@@ -66,8 +68,6 @@ const update_stored_planning = (level, group, new_planning_data) => {
     -compare_date(day_a.date, day_b.date)
   );
   localStorage.setItem(planning_id, JSON.stringify(current_planning_data));
-
-  return current_planning_data;
 };
 const update_planning = async (level, group) => {
   const start_date = keep_only_date(new Date());
@@ -78,19 +78,20 @@ const update_planning = async (level, group) => {
       const response = await fetch(
         `https://api.licence-informatique-lemans.tk/v2/planning.json?level=${level_}&group=${group_}&start=${start_date.toISOString()}&end=${end_date.toISOString()}`,
       );
-      const data = update_stored_planning(
+
+      update_stored_planning(
         level_,
         group_,
         await response.json(),
       );
-
-      if (level == level_ && group == group_) load_planning(data);
     } catch {
       console.error(
         `Failed to update level : ${level_}, group : ${group_}`,
       );
     }
   };
+
+  load_planning(level, group);
 
   await Promise.all([
     favorites.map((favorite) => update(favorite.level, favorite.group)),
@@ -176,16 +177,14 @@ window.addEventListener("load", async () => {
         `https://api.licence-informatique-lemans.tk/v2/planning.json?level=${level}&group=${group}&start=${start_date.toISOString()}&end=${end_date.toISOString()}`,
       );
 
-      load_planning(
-        update_stored_planning(level, group, await response.json()),
-      );
+      update_stored_planning(level, group, await response.json());
     } catch {
-      load_planning(JSON.parse(localStorage.getItem(`${level}:${group}`)));
-
       console.error(
         `Failed to load level : ${level}, group : ${group}`,
       );
     }
+
+    load_planning(level, group);
   }
 
   if ("serviceWorker" in navigator) {
