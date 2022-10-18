@@ -6,6 +6,9 @@ class PlanningViewer extends HTMLElement {
   #container = document.createElement("div");
   #right_bar = document.createElement("div");
   #first_load = true;
+  #scroll_left;
+  #scroll_width;
+  #client_width;
 
   constructor() {
     super();
@@ -75,19 +78,46 @@ class PlanningViewer extends HTMLElement {
       this.#container,
       this.#right_bar,
     );
+
+    this.#scroll_left = this.#container.scrollLeft;
+    this.#scroll_width = this.#container.scrollWidth;
+    this.#client_width = this.#container.clientWidth;
+
     this.update_indicator_bars();
 
-    this.#container.addEventListener("scroll", this.update_indicator_bars, {
+    this.#container.addEventListener("scroll", () => {
+      this.#scroll_left = this.#container.scrollLeft;
+
+      this.update_indicator_bars();
+    }, {
       passive: true,
     });
 
     new Scroll(this.#container, 1);
     new ScrollSnap(this.#container, 1, this, "planning-viewer > day-viewer");
 
-    window.addEventListener("resize", this.update_indicator_bars, {
+    window.addEventListener("resize", () => {
+      this.#resize_scroll();
+      this.update_indicator_bars();
+    }, {
       passive: true,
     });
   }
+
+  #resize_scroll = throttle(() => {
+    const old_width = this.#scroll_width - this.#client_width;
+    const current_width = this.#container.scrollWidth -
+      this.#container.clientWidth;
+
+    if (old_width && current_width) {
+      this.#scroll_left = (this.#scroll_left + this.#client_width / 2) /
+          old_width * current_width - this.#container.clientWidth / 2;
+    }
+
+    this.#container.scrollLeft = this.#scroll_left;
+    this.#scroll_width = this.#container.scrollWidth;
+    this.#client_width = this.#container.clientWidth;
+  }, 1000 / 60);
 
   #update_indicator_bars = debounce(() => {
     this.#left_bar.style.opacity = 0;
@@ -141,8 +171,6 @@ class PlanningViewer extends HTMLElement {
   load(planning_data) {
     let start_date = new Date(planning_data?.start_date);
     let end_date = new Date(planning_data?.end_date);
-    let scroll_left = this.#container.scrollLeft;
-    let scroll_width = this.#container.scrollWidth;
 
     if (
       planning_resources_name[planning_data?.level]
@@ -172,17 +200,11 @@ class PlanningViewer extends HTMLElement {
           this.#days_element[day_date] = document.createElement("day-viewer");
           this.#days_element[day_date].dataset.date = day_date;
 
-          const scroll_width_diff = this.#container.scrollWidth - scroll_width;
-
           if (compare_date(this.#start_date, day_date) < 0) {
             this.#days_element[this.#start_date.toISOString()].before(
               this.#days_element[day_date],
             );
-
-            scroll_left += scroll_width_diff;
           } else this.append(this.#days_element[day_date]);
-
-          scroll_width += scroll_width_diff;
         }
       }
 
@@ -194,25 +216,10 @@ class PlanningViewer extends HTMLElement {
             date_key,
           );
         } else {
-          const removed_date = this.#days_element[date_key].dataset.date;
-
           // remove days if needed
           this.#days_element[date_key].remove();
 
           delete this.#days_element[date_key];
-
-          const scroll_width_diff = this.#container.scrollWidth - scroll_width;
-
-          if (
-            compare_date(
-              removed_date,
-              start_date,
-            ) > 0
-          ) {
-            scroll_left -= scroll_width_diff;
-          }
-
-          scroll_width += scroll_width_diff;
         }
       }
 
@@ -221,8 +228,6 @@ class PlanningViewer extends HTMLElement {
     }
 
     this.update_indicator_bars();
-
-    this.#container.scrollLeft = scroll_left;
 
     if (this.#first_load) {
       this.#first_load = false;
