@@ -269,25 +269,25 @@ class PlanningViewer extends HTMLElement {
 
       this.start_date = start_date;
       this.end_date = end_date;
+
+      if (this.#first_load) {
+        this.#first_load = false;
+
+        this.focus(keep_only_date(new Date()), true);
+      } else {
+        this.#container.scrollLeft = this.#scroll_left;
+        this.#scroll_left = this.#container.scrollLeft;
+        this.#scroll_width = this.#container.scrollWidth;
+        this.#client_width = this.#container.clientWidth;
+      }
+
+      this.#intersection_observer.observe(this.children[0]);
+      this.#intersection_observer.observe(
+        this.children[this.children.length - 1],
+      );
     }
 
     this.update_indicator_bars();
-
-    if (this.#first_load) {
-      this.#first_load = false;
-
-      this.focus(keep_only_date(new Date()), true);
-    } else {
-      this.#container.scrollLeft = this.#scroll_left;
-      this.#scroll_left = this.#container.scrollLeft;
-      this.#scroll_width = this.#container.scrollWidth;
-      this.#client_width = this.#container.clientWidth;
-    }
-
-    this.#intersection_observer.observe(this.children[0]);
-    this.#intersection_observer.observe(
-      this.children[this.children.length - 1],
-    );
   }
 }
 
