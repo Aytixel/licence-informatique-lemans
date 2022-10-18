@@ -23,36 +23,71 @@ menu_element.addEventListener("click", (event) => {
 
 const planning_element = document.querySelector("planning-viewer");
 const title_element = document.querySelectorAll("h1, h2");
+const focus = debounce(
+  () => planning_element.focus(keep_only_date(new Date()), true),
+  50,
+);
 const load_planning = (planning_data) => {
   if (
     planning_resources_name[planning_data?.level]
       ?.name_list[planning_data?.group]
   ) {
     planning_element.load(planning_data);
-    planning_element.focus(keep_only_date(new Date()), true);
     title_element[0].textContent =
       planning_resources_name[planning_data?.level].name;
     title_element[1].textContent = planning_resources_name[planning_data?.level]
       ?.name_list[planning_data?.group];
+
+    focus();
   }
 };
-const update_planning = async () => {
+const update_stored_planning = (level, group, new_planning_data) => {
+  const planning_id = `${level}:${group}`;
+  let current_planning_data = JSON.parse(localStorage.getItem(planning_id)) ||
+    new_planning_data;
+
+  for (const new_day of new_planning_data.days) {
+    const old_data_index = current_planning_data.days.findIndex((day) =>
+      !compare_date(day.date, new_day.date)
+    );
+
+    if (old_data_index > -1) {
+      current_planning_data.days[old_data_index] = new_day;
+    } else current_planning_data.days.push(new_day);
+    if (compare_date(new_day.date, current_planning_data.start_date) > 0) {
+      current_planning_data.start_date = new_day.date;
+    }
+    if (compare_date(new_day.date, current_planning_data.end_date) < 0) {
+      current_planning_data.start_date = new_day.date;
+    }
+  }
+
+  current_planning_data.days.sort((day_a, day_b) =>
+    -compare_date(day_a.date, day_b.date)
+  );
+  localStorage.setItem(planning_id, JSON.stringify(current_planning_data));
+
+  return current_planning_data;
+};
+const update_planning = async (level, group) => {
   const start_date = keep_only_date(new Date());
-  const end_date = keep_only_date(Date.now() + new Date().setMonth(4));
+  const end_date = keep_only_date(Date.now() + new Date(0).setMonth(4));
   const favorites = JSON.parse(localStorage.getItem("favorites"));
-  const update = async (level, group) => {
+  const update = async (level_, group_) => {
     try {
       const response = await fetch(
-        `https://api.licence-informatique-lemans.tk/v2/planning.json?level=${level}&group=${group}&start=${start_date.toISOString()}&end=${end_date.toISOString()}`,
+        `https://api.licence-informatique-lemans.tk/v2/planning.json?level=${level_}&group=${group_}&start=${start_date.toISOString()}&end=${end_date.toISOString()}`,
+      );
+      const data = update_stored_planning(
+        level_,
+        group_,
+        await response.json(),
       );
 
-      localStorage.setItem(
-        `${level}:${group}`,
-        JSON.stringify(await response.json()),
-      );
+      if (level == level_ && group == group_) load_planning(data);
     } catch {
       console.error(
-        `Failed to update level : ${level}, group : ${group}`,
+        `Failed to update level : ${level_}, group : ${group_}`,
       );
     }
   };
@@ -115,24 +150,24 @@ window.addEventListener("load", async () => {
     place_list_element.append(room_details_element);
   }
 
+  const search_params = new URLSearchParams(location.search);
+  const level = search_params.get("level");
+  const group = search_params.get("group");
+
   setInterval(
     () =>
-      update_planning().catch((error) =>
+      update_planning(level, group).catch((error) =>
         console.error("Failed to update planning data :", error)
       ),
     1000 * 60 * 60,
   );
 
-  update_planning().catch((error) =>
+  update_planning(level, group).catch((error) =>
     console.error("Failed to update planning data :", error)
   );
 
   // load the targeted planning
-  const search_params = new URLSearchParams(location.search);
-
-  if (search_params.has("level") && search_params.has("group")) {
-    const level = search_params.get("level");
-    const group = search_params.get("group");
+  if (level && group) {
     const start_date = keep_only_date(add_days(new Date(), -7));
     const end_date = keep_only_date(add_days(new Date(), 7));
 
@@ -140,8 +175,9 @@ window.addEventListener("load", async () => {
       const response = await fetch(
         `https://api.licence-informatique-lemans.tk/v2/planning.json?level=${level}&group=${group}&start=${start_date.toISOString()}&end=${end_date.toISOString()}`,
       );
-
-      load_planning(await response.json());
+      load_planning(
+        update_stored_planning(level, group, await response.json()),
+      );
     } catch {
       console.error(
         `Failed to load level : ${level}, group : ${group}`,
