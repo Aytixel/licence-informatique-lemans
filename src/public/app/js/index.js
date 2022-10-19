@@ -16,7 +16,7 @@ menu_button_element.addEventListener("click", (event) => {
 
   menu_element.showModal();
 });
-menu_element.addEventListener("click", (event) => {
+menu_element.addEventListener("pointerup", (event) => {
   const bounding_rect = menu_element.getBoundingClientRect();
 
   if (
