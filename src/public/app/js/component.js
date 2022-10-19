@@ -134,7 +134,6 @@ class PlanningViewer extends HTMLElement {
     this.#intersection_observer.disconnect();
 
     for (const child of [...this.children]) {
-      console.log(child);
       child.remove();
     }
 
