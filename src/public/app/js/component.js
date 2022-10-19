@@ -132,11 +132,7 @@ class PlanningViewer extends HTMLElement {
     this.end_date = undefined;
     this.#first_load = true;
     this.#intersection_observer.disconnect();
-
-    for (const child of [...this.children]) {
-      child.remove();
-    }
-
+    this.innerHTML = "";
     this.#scroll_left = this.#container.scrollLeft;
     this.#scroll_width = this.#container.scrollWidth;
     this.#client_width = this.#container.clientWidth;
@@ -474,63 +470,65 @@ class DayViewer extends HTMLElement {
         new Date(lesson.end_date).toJSON()
       )
     ) {
-      const new_lesson_id = [];
+      const current_lesson_ids = Object.keys(this.#lessons_element);
+      const new_lessons = day_data.lessons.reduce(
+        (accumulator, lesson) => {
+          accumulator[lesson.start_date + lesson.end_date] = lesson;
 
-      for (const lesson of day_data.lessons) {
-        const lesson_id = lesson.start_date + lesson.end_date;
+          return accumulator;
+        },
+        {},
+      );
 
-        new_lesson_id.push(lesson_id);
-
-        // add new lessons if needed
-        if (!this.#lessons_element[lesson_id]) {
-          this.#lessons_element[lesson_id] = document.createElement(
-            "lesson-viewer",
-          );
-          this.#lessons_element[lesson_id].dataset.start_date =
-            lesson.start_date;
-          this.#lessons_element[lesson_id].dataset.end_date = lesson.end_date;
-
-          const lessons_element = Array.from(this.children);
-
-          let lesson_element = lessons_element.findLast((lesson_element) =>
-            compare_date(lesson_element.dataset.end_date, lesson.start_date) >=
-              0
+      for (const current_lesson_id of current_lesson_ids) {
+        if (new_lessons[current_lesson_id]) {
+          this.#lessons_element[current_lesson_id].load(
+            new_lessons[current_lesson_id],
           );
 
-          if (lesson_element) {
-            lesson_element.after(this.#lessons_element[lesson_id]);
-          } else {
-            lesson_element = lessons_element.find((lesson_element) =>
-              compare_date(
-                lesson.end_date,
-                lesson_element.dataset.start_date,
-              ) >= 0
-            );
+          delete new_lessons[current_lesson_id];
+        } else {
+          this.#lessons_element[current_lesson_id]?.remove();
 
-            if (lesson_element) {
-              lesson_element.before(this.#lessons_element[lesson_id]);
-            } else {
-              this.appendChild(this.#lessons_element[lesson_id]);
-            }
-          }
+          delete this.#lessons_element[current_lesson_id];
         }
-
-        // update cources data
-        this.#lessons_element[lesson_id].load(lesson);
       }
 
-      for (const lesson_id_key in this.#lessons_element) {
-        if (!new_lesson_id.includes(lesson_id_key)) {
-          // remove lessons if needed
-          this.#lessons_element[lesson_id_key].remove();
+      for (const new_lesson_id in new_lessons) {
+        const new_lesson_element = document.createElement("lesson-viewer");
 
-          delete this.#lessons_element[lesson_id_key];
+        new_lesson_element.dataset.start_date =
+          new_lessons[new_lesson_id].start_date;
+        new_lesson_element.dataset.end_date =
+          new_lessons[new_lesson_id].end_date;
+        new_lesson_element.load(new_lessons[new_lesson_id]);
+
+        const lessons_element = [...this.children];
+        let lesson_element = lessons_element.findLast((lesson_element) =>
+          compare_date(
+            new_lessons[new_lesson_id].end_date,
+            lesson_element.dataset.start_date,
+          ) <= 0
+        );
+
+        if (lesson_element) lesson_element.after(new_lesson_element);
+        else {
+          let lesson_element = lessons_element.find((lesson_element) =>
+            compare_date(
+              new_lessons[new_lesson_id].start_date,
+              lesson_element.dataset.end_date,
+            ) >= 0
+          );
+
+          if (lesson_element) lesson_element.before(new_lesson_element);
+          else this.appendChild(new_lesson_element);
         }
+
+        this.#lessons_element[new_lesson_id] = new_lesson_element;
       }
     } else {
-      for (const child of Array.from(this.children)) {
-        child.remove();
-      }
+      this.#lessons_element = {};
+      this.innerHTML = "";
     }
 
     this.update_indicator_bars();
