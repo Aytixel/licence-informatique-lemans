@@ -175,12 +175,10 @@ a {
 }
 
 #menu ul {
-    left: -0.5em;
-
     margin: 0.5em 0;
 
     padding: 0.3em 0;
-    padding-left: 1em;
+    padding-left: 0.5em;
 
     list-style: none;
 }
@@ -189,11 +187,56 @@ a {
     font-size: 1.3em;
 
     list-style: none;
+
+    cursor: pointer;
 }
 
 #menu details ul {
     border: 0.15em solid var(--color-accent-0);
     border-radius: 0.5em;
+}
+
+/*
+    Izly
+*/
+#izly form {
+    text-align: center;
+}
+
+#izly input {
+    display: block;
+
+    padding: 0.5em 1em;
+
+    margin: 0.5em;
+
+    border: none;
+    border-radius: 0.5em;
+
+    appearance: none;
+
+    font-family: "Marianne";
+    color: var(--color-dark-0);
+
+    background-color: var(--color-light-0);
+
+    transition: 0.2s ease-in-out background-color, 0.2s ease-in-out outline-color;
+}
+
+#izly input:hover {
+    outline-color: var(--color-accent-1);
+
+    background-color: var(--color-accent-1);
+}
+
+#izly.connected #izly-connection-form,
+#izly-pay {
+    display: none;
+}
+
+#izly-connection-form,
+#izly.connected #izly-pay {
+    display: initial;
 }
 
 /*

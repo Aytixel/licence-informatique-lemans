@@ -70,6 +70,7 @@
     <script src="/js/scroll-snap.js" async></script>
     <script src="/js/component.js" async></script>
     <script src="/js/index.js" async defer></script>
+    <script src="/js/izly.js" async defer></script>
 </head>
 
 <body>
@@ -84,10 +85,16 @@
         <ul>
             <li id="izly">
                 <h3>Izly</h3>
-                <input type="email" placeholder="Email du compte Izly">
-                <input type="password" placeholder="Code secret" pattern="[0-9]*">
-                <input type="submit">
-                <img src="" alt="Qrcode Izly">
+                <form id="izly-connection-form">
+                    <input type="email" name="email" required placeholder="Email du compte Izly">
+                    <input type="password" name="code" required placeholder="Code secret" pattern="[0-9]*">
+                    <input type="submit" value="Se connecter">
+                </form>
+                <div id="izly-pay">
+                    <div id="izly-email"></div>
+                    <img src="" alt="Qrcode Izly">
+                    <input id="izly_change_account" type="submit" value="Changer de compte">
+                </div>
             </li>
             <li>
                 <h3>Formations</h3>

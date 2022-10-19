@@ -10,6 +10,7 @@ addEventListener("install", (event) => {
       "/css/index.css",
       "/js/component.js",
       "/js/index.js",
+      "/js/izly.js",
       "/js/scroll.js",
       "/js/scroll-snap.js",
       "/site.webmanifest",
