@@ -5,9 +5,7 @@ class ScrollSnap {
       "scroll",
       debounce(() => {
         const bounding_rect = element.getBoundingClientRect();
-        const snap_elements = Array.from(
-          snap_container.querySelectorAll(snap_query),
-        );
+        const snap_elements = [...snap_container.querySelectorAll(snap_query)];
         const snap_bounding_rects = snap_elements.map(
           (snap_element) => snap_element.getBoundingClientRect(),
         );
