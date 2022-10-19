@@ -194,6 +194,20 @@ const update_planning = async (initial = false) => {
   if (initial) update_favorites_planning();
 };
 
+const fetch_favorite_planning = async (level, group) => {
+  localStorage.setItem(
+    `${level}:${group}`,
+    JSON.stringify(
+      await fecth_planning(
+        level,
+        group,
+        keep_only_date(add_days(new Date(), -7)),
+        keep_only_date(Date.now() + new Date(0).setMonth(4)),
+      ),
+    ),
+  );
+};
+
 const switch_planning = (level_, group_) => {
   if (!navigator.onLine) {
     title_element[0].textContent = "Pas d'internet";
@@ -219,7 +233,12 @@ window.addEventListener("load", async () => {
     for (const index in planning_resources_name[key].name_list) {
       const planning_button_element = document.createElement("planning-button");
 
-      planning_button_element.init(key, index, switch_planning);
+      planning_button_element.init(
+        key,
+        index,
+        switch_planning,
+        fetch_favorite_planning,
+      );
       list_element.append(planning_button_element);
     }
 
