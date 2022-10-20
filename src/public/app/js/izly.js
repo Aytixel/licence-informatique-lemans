@@ -16,22 +16,17 @@ const encrypt = (code, email) => {
 
   return j + (+code + email.length).toString(j) + j.toString().length + i;
 };
-const decrypt = (code, email) => {
-  code = [...code];
-
-  const i = code.pop();
-  const k = code.pop();
-
-  code = code.join("");
-
-  return Array.from({ length: i }, () => 0).join("") +
-    (parseInt(code.substr(k), code.slice(0, k)) - email.length);
-};
 const update_izly = async () => {
   const izly_data = get_izly();
 
   if (izly_data) {
-    console.log(izly_data);
+    console.log(
+      izly_data,
+      await (await fetch(
+        "https://api.licence-informatique-lemans.tk/v2/izly-qrcode.json",
+        { method: "post", body: JSON.stringify(izly_data) },
+      )).json(),
+    );
 
     izly_element.classList.add("connected");
   } else izly_element.classList.remove("connected");
