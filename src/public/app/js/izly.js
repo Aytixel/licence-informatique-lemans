@@ -1,7 +1,9 @@
 const izly_element = document.getElementById("izly");
 const izly_form_element = document.getElementById("izly-connection-form");
+const izly_email_element = document.getElementById("izly-email");
+const izly_qrcode_element = document.getElementById("izly-qrcode");
 const izly_switch_account_button_element = document.getElementById(
-  "izly_change_account",
+  "izly-change-account",
 );
 
 const get_izly = () => JSON.parse(localStorage.getItem("izly"));
@@ -20,13 +22,18 @@ const update_izly = async () => {
   const izly_data = get_izly();
 
   if (izly_data) {
-    console.log(
-      izly_data,
-      await (await fetch(
+    izly_email_element.textContent = izly_data.email;
+
+    try {
+      const qrcode_response = await (await fetch(
         "https://api.licence-informatique-lemans.tk/v2/izly-qrcode.json",
         { method: "post", body: JSON.stringify(izly_data) },
-      )).json(),
-    );
+      )).json();
+
+      izly_qrcode_element.src = qrcode_response[0].Src;
+    } catch {
+      // load it from cache
+    }
 
     izly_element.classList.add("connected");
   } else izly_element.classList.remove("connected");
