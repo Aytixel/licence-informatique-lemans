@@ -263,6 +263,8 @@ a {
 
     border-radius: 0.5em;
 
+    image-rendering: pixelated;
+
     background-color: var(--color-light-0);
 }
 
