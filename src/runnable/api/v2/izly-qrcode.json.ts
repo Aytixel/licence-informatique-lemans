@@ -7,17 +7,17 @@ import {
 } from "https://deno.land/x/another_cookiejar@v4.1.4/mod.ts";
 
 const decrypt = (code: string, email: string) => {
-  const code_split = [...code];
-  const i = Number(code_split.pop());
-  const k = Number(code_split.pop());
+  const codeSplit = [...code];
+  const i = Number(codeSplit.pop());
+  const k = Number(codeSplit.pop());
 
-  code = code_split.join("");
+  code = codeSplit.join("");
 
   return Array.from({ length: i }, () => 0).join("") +
     (parseInt(code.substring(k), Number(code.slice(0, k))) - email.length);
 };
 
-const get_request_verification_token = async (fetch: any) =>
+const getRequestVerificationToken = async (fetch: any) =>
   (await (await fetch("https://mon-espace.izly.fr/Home/Logon", {
     credentials: "include",
   })).text()).match(
@@ -29,7 +29,7 @@ const login = async (
   izly_data: { email: string; code: string },
 ) => {
   const form_data =
-    `__RequestVerificationToken=${await get_request_verification_token(
+    `__RequestVerificationToken=${await getRequestVerificationToken(
       fetch,
     )}&Username=${encodeURIComponent(izly_data.email)}&Password=${
       encodeURIComponent(decrypt(izly_data.code, izly_data.email))
@@ -49,7 +49,7 @@ const login = async (
   );
 };
 
-const generate_qrcode = async (fetch: any) =>
+const generateQrcode = async (fetch: any) =>
   await (await fetch("https://mon-espace.izly.fr/Home/CreateQrCodeImg", {
     credentials: "include",
     method: "post",
@@ -76,7 +76,7 @@ export default async function (
   try {
     await login(fetch, await request.json());
 
-    runnerResponse.respondWith(JSON.stringify(await generate_qrcode(fetch)));
+    runnerResponse.respondWith(JSON.stringify(await generateQrcode(fetch)));
 
     await logout(fetch);
   } catch {
