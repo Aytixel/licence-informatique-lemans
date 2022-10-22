@@ -269,7 +269,7 @@ class PlanningViewer extends HTMLElement {
           const removed_date = this.#days_element[date_key].dataset.date;
 
           // remove days if needed
-          this.#days_element[date_key].remove();
+          this.#days_element[date_key].delete();
 
           delete this.#days_element[date_key];
 
@@ -416,6 +416,14 @@ class DayViewer extends HTMLElement {
     window.addEventListener("resize", this.update_indicator_bars, {
       passive: true,
     });
+  }
+
+  delete() {
+    window.removeEventListener("resize", this.update_indicator_bars, {
+      passive: true,
+    });
+
+    this.remove();
   }
 
   #update_indicator_bars = debounce(() => {
