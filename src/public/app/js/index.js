@@ -23,7 +23,7 @@ const update_free_room_list = async () => {
 
       room_list_element.innerHtml = "";
 
-      for (const place of planning_resources_type["place"]) {
+      for (const place in free_room_list) {
         const summary_element = document.createElement("summary");
         const details_element = document.createElement("details");
         const list_element = document.createElement("ul");
