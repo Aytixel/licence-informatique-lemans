@@ -4,6 +4,7 @@ let group = search_params.get("group");
 
 const study_level_list_element = document.getElementById("study-level");
 const place_list_element = document.getElementById("place");
+const room_list_element = document.getElementById("room");
 const menu_button_element = document.getElementById("menu-button");
 const menu_element = document.getElementById("menu");
 
@@ -12,8 +13,50 @@ const update_free_room_list = async () => {
     const response = await fetch(
       `https://api.licence-informatique-lemans.tk/v2/find-free-room.json`,
     );
+    const free_room_list = await response.json();
 
-    console.log(await response.json());
+    if (!free_room_list?.error) {
+      const date_to_time_intl = new Intl.DateTimeFormat("default", {
+        timeStyle: "short",
+        timeZone: "UTC",
+      });
+
+      room_list_element.innerHtml = "";
+
+      for (const place of planning_resources_type["place"]) {
+        const summary_element = document.createElement("summary");
+        const details_element = document.createElement("details");
+        const list_element = document.createElement("ul");
+
+        summary_element.textContent = planning_resources_name[place].name;
+
+        for (const free_room of free_room_list[place]) {
+          const room_name_element = document.createElement("div");
+
+          room_name_element.textContent =
+            planning_resources_name[place].name_list[free_room.room];
+          list_element.append(room_name_element);
+
+          if (free_room.time_left) {
+            const time_left_element = document.createElement("div");
+
+            time_left_element.textContent = `temps restant : ${
+              date_to_time_intl.format(new Date(free_room.time_left))
+            }`;
+            time_left_element.classList.add("time-left");
+            list_element.append(time_left_element);
+          }
+        }
+
+        details_element.append(
+          summary_element,
+          list_element,
+        );
+        room_list_element.append(details_element);
+      }
+    } else {
+      console.error(`Failed to update free room list :`, free_room_list.error);
+    }
   } catch {
     console.error(`Failed to update free room list`);
   }
