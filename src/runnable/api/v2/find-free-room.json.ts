@@ -92,6 +92,8 @@ export default async function (
       const roomUsageList: any = await planningDatabase.collection(place)
         .aggregate(getAggregatePipeline(date)).toArray();
 
+      freeRoomList[place] = [];
+
       for (const roomUsage of roomUsageList) {
         if (roomUsage.empty) {
           freeRoomList[place].push({ room: roomUsage.group });
