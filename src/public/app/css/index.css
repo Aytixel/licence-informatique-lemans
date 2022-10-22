@@ -30,6 +30,28 @@ a {
 }
 
 /*
+    Body
+*/
+body.offline::after {
+    display: block;
+
+    position: absolute;
+    bottom: 0;
+
+    width: 100%;
+
+    content: "mode hors-ligne";
+
+    color: var(--color-light-0);
+
+    font-size: 1em;
+    font-weight: bold;
+    text-align: center;
+
+    background-color: #f9335f;
+}
+
+/*
     Top Bar
 */
 #top-bar {

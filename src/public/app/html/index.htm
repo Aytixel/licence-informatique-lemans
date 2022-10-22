@@ -111,6 +111,12 @@
         </ul>
     </dialog>
     <planning-viewer></planning-viewer>
+    <script>
+        if (!navigator.onLine) document.body.classList.add("offline")
+
+        window.addEventListener("offline", () => document.body.classList.add("offline"))
+        window.addEventListener("online", () => document.body.classList.remove("offline"))
+    </script>
 </body>
 
 </html>
