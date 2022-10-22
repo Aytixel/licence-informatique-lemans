@@ -7,6 +7,18 @@ const place_list_element = document.getElementById("place");
 const menu_button_element = document.getElementById("menu-button");
 const menu_element = document.getElementById("menu");
 
+const update_free_room_list = async () => {
+  try {
+    const response = await fetch(
+      `https://api.licence-informatique-lemans.tk/v2/find-free-room.json`,
+    );
+
+    console.log(await response.json());
+  } catch {
+    console.error(`Failed to update free room list`);
+  }
+};
+
 menu_button_element.addEventListener(
   "mousedown",
   (event) => event.preventDefault(),
@@ -15,6 +27,8 @@ menu_button_element.addEventListener("click", (event) => {
   event.preventDefault();
 
   menu_element.showModal();
+
+  update_free_room_list();
 });
 menu_element.addEventListener("pointerup", (event) => {
   const bounding_rect = menu_element.getBoundingClientRect();
@@ -163,7 +177,11 @@ const update_favorites_planning = async (initial = false) => {
 };
 
 const update_planning = async (initial = false) => {
-  if (!(typeof level === "string" && typeof group === "string")) return;
+  if (!(typeof level === "string" && typeof group === "string")) {
+    update_favorites_planning();
+
+    return;
+  }
 
   let planning_data;
 
