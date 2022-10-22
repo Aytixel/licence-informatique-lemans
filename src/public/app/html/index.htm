@@ -64,7 +64,7 @@
 
         if (!Array.isArray(JSON.parse(localStorage.getItem("favorites")))) localStorage.setItem("favorites", "[]");
 
-        screen.orientation.lock("natural").catch(() => console.log("Can't lock screen orientation !"))
+        screen?.orientation?.lock("natural").catch(() => console.log("Can't lock screen orientation !"))
     </script>
     <script src="/js/scroll.js" async></script>
     <script src="/js/scroll-snap.js" async></script>
