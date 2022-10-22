@@ -45,7 +45,6 @@ class Scroll {
     });
 
     this.#element.addEventListener("pointerup", this.#pointer_end);
-    this.#element.addEventListener("pointercancel", this.#pointer_end);
     this.#element.addEventListener("pointerleave", this.#pointer_end);
     this.#element.addEventListener(
       "lostpointercapture",
