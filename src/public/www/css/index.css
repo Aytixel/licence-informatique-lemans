@@ -262,9 +262,9 @@ header h2 {
 }
 
 /*
-    App android
+    App preview
 */
-#android-preview {
+.app-preview {
     display: inline-block;
 
     width: fit-content;
@@ -275,7 +275,7 @@ header h2 {
     background-color: #1c1c1c;
 }
 
-#android-preview::before {
+.app-preview::before {
     display: block;
 
     position: absolute;
@@ -295,7 +295,7 @@ header h2 {
     transform: translate(-50%, 110%) scale(3.2);
 }
 
-#app-android img {
+.app-preview img {
     height: 20em;
     width: 9.875em;
 
@@ -317,19 +317,19 @@ footer {
     Media queries
 */
 @media screen and (min-width: 400px) {
-    #android-preview {
+    .app-preview {
         border-width: 0.6em;
         border-radius: 1.8em;
     }
 
-    #android-preview::before {
+    .app-preview::before {
         height: 0.25em;
         width: 0.75em;
 
         transform: translate(-50%, 200%) scale(5);
     }
 
-    #app-android img {
+    .app-preview img {
         height: 30em;
         width: 14.8125em;
 
