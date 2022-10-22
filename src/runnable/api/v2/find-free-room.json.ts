@@ -84,7 +84,8 @@ export default async function (
   const planningDatabase = await app.planningConnection?.v2;
 
   if (planningDatabase) {
-    const freeRoomList: Record<string, number | string>[] = [];
+    const freeRoomList: Record<string, { room: number; time_left?: number }[]> =
+      {};
     const date = new Date();
 
     for (const place of planningResourcesPlaceList) {
@@ -93,19 +94,18 @@ export default async function (
 
       for (const roomUsage of roomUsageList) {
         if (roomUsage.empty) {
-          freeRoomList.push({ place, group: roomUsage.group });
+          freeRoomList[place].push({ room: roomUsage.group });
         } else if (!roomUsage.now) {
           const nextLessonStartDate = roomUsage.lessons_start_date.find((
             start_date: Date,
           ) => compareDate(start_date, date) < 0);
 
           if (nextLessonStartDate) {
-            freeRoomList.push({
-              place,
-              group: roomUsage.group,
-              time: nextLessonStartDate.getTime() - date.getTime(),
+            freeRoomList[place].push({
+              room: roomUsage.group,
+              time_left: nextLessonStartDate.getTime() - date.getTime(),
             });
-          } else freeRoomList.push({ place, group: roomUsage.group });
+          } else freeRoomList[place].push({ room: roomUsage.group });
         }
       }
     }
