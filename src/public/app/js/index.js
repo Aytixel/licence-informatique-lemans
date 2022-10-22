@@ -21,7 +21,7 @@ const update_free_room_list = async () => {
         timeZone: "UTC",
       });
 
-      room_list_element.innerHtml = "";
+      room_list_element.innerHTML = "";
 
       for (const place in free_room_list) {
         const summary_element = document.createElement("summary");
