@@ -122,17 +122,6 @@ async function handle(conn: Deno.Conn) {
             headers,
           );
 
-          if (
-            request.headers.has("origin") &&
-            new URL(request.url).hostname.split(".").slice(-2).join(".") ==
-              new URL(request.headers.get("origin") || "").hostname.split(".")
-                .slice(-2).join(".")
-          ) {
-            headers["access-control-allow-origin"] = request.headers.get(
-              "origin",
-            ) || "";
-          }
-
           if (cache.addCacheHeader(request, body, routerData, headers)) {
             respondWith(new NotModified304()).catch(console.error);
           } else {
