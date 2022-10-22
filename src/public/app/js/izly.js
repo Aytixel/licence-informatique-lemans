@@ -6,7 +6,6 @@ const izly_switch_account_button_element = document.getElementById(
   "izly-change-account",
 );
 
-const get_izly = () => JSON.parse(localStorage.getItem("izly"));
 const encrypt = (code, email) => {
   const i = [...code.toString()].reduce((accumulator, x) => {
     return {
@@ -19,7 +18,7 @@ const encrypt = (code, email) => {
   return j + (+code + email.length).toString(j) + j.toString().length + i;
 };
 const update_izly = async () => {
-  const izly_data = get_izly();
+  const izly_data = JSON.parse(localStorage.getItem("izly"));
 
   if (izly_data) {
     izly_email_element.textContent = izly_data.email;
@@ -30,9 +29,10 @@ const update_izly = async () => {
         { method: "post", body: JSON.stringify(izly_data) },
       )).json();
 
+      localStorage.setItem("izly-qrcode", qrcode_response[0].Src);
       izly_qrcode_element.src = qrcode_response[0].Src;
     } catch {
-      // load it from cache
+      izly_qrcode_element.src = localStorage.getItem("izly-qrcode") || "";
     }
 
     izly_element.classList.add("connected");
