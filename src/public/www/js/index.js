@@ -35,7 +35,7 @@ const mobile_tablet_check = function () {
 };
 
 // banner animation on mouse move or device orientation
-const header_banner = document.querySelector("#header-banner");
+const header_banner = document.getElementById("header-banner");
 
 if (mobile_tablet_check()) {
   window.addEventListener("deviceorientation", (e) => {

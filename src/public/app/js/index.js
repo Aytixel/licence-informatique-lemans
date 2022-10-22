@@ -2,10 +2,10 @@ const search_params = new URLSearchParams(location.search);
 let level = search_params.get("level");
 let group = search_params.get("group");
 
-const study_level_list_element = document.querySelector("#study-level");
-const place_list_element = document.querySelector("#place");
-const menu_button_element = document.querySelector("#menu-button");
-const menu_element = document.querySelector("#menu");
+const study_level_list_element = document.getElementById("study-level");
+const place_list_element = document.getElementById("place");
+const menu_button_element = document.getElementById("menu-button");
+const menu_element = document.getElementById("menu");
 
 menu_button_element.addEventListener(
   "mousedown",
@@ -27,8 +27,11 @@ menu_element.addEventListener("pointerup", (event) => {
   }
 });
 
-const planning_element = document.querySelector("planning-viewer");
-const title_element = document.querySelectorAll("h1, h2");
+const planning_element = document.getElementsByTagName("planning-viewer")[0];
+const title_element = [
+  ...document.getElementsByTagName("h1"),
+  ...document.getElementsByTagName("h2"),
+];
 
 const in_favorites = () => {
   const favorites = JSON.parse(localStorage.getItem("favorites"));
