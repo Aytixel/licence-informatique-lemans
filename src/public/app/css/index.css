@@ -213,6 +213,10 @@ body.offline::after {
     cursor: pointer;
 }
 
+#menu summary::-webkit-details-marker {
+    display: none;
+}
+
 #menu details ul {
     border: 0.15em solid var(--color-accent-0);
     border-radius: 0.5em;
