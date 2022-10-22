@@ -21,8 +21,6 @@ const update_free_room_list = async () => {
         timeZone: "UTC",
       });
 
-      room_list_element.innerHTML = "";
-
       for (const place in free_room_list) {
         const summary_element = document.createElement("summary");
         const details_element = document.createElement("details");
@@ -81,6 +79,8 @@ menu_element.addEventListener("pointerup", (event) => {
     event.clientY < bounding_rect.top || event.clientY > bounding_rect.bottom
   ) {
     menu_element.close();
+
+    room_list_element.innerHTML = "";
   }
 });
 
