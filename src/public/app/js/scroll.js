@@ -2,8 +2,9 @@ class Scroll {
   #orientation;
   #element;
   #last_position = { x: 0, y: 0 };
-  #deceleration = 0.95;
+  #deceleration = 0.975;
   #hold = false;
+  #last_hold = false;
   #running = false;
 
   // orientation: 1 = x, 2 = y, 3 = xy
@@ -72,10 +73,6 @@ class Scroll {
     );
 
     this.#element.removeEventListener("pointerup", this.#pointer_move);
-    this.#element.removeEventListener(
-      "pointercancel",
-      this.#pointer_end,
-    );
     this.#element.removeEventListener("pointerleave", this.#pointer_end);
     this.#element.removeEventListener(
       "lostpointercapture",
@@ -91,6 +88,16 @@ class Scroll {
     if (is_wheel) {
       this.#hold = false;
       this.#running = false;
+    }
+
+    if (this.#last_hold && !this.#hold) {
+      const boost_multiplier = Math.max(
+        window.innerHeight / window.innerWidth,
+        1,
+      );
+
+      x *= boost_multiplier;
+      y *= boost_multiplier;
     }
 
     if (!this.#hold) {
@@ -129,6 +136,8 @@ class Scroll {
         this.apply_scroll(x, y, shift, is_wheel);
       }
       if (!is_wheel) this.#reset_scroll_style();
+
+      this.#last_hold = this.#hold;
     });
   }
 

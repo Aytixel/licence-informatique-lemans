@@ -74,7 +74,7 @@ class ScrollSnap {
             snap_bounding_rects[index][orientation == 1 ? "width" : "height"] /
               6
         )?.scrollIntoView(scroll_options);
-      }, 100),
+      }, 150),
       { passive: true },
     );
   }
