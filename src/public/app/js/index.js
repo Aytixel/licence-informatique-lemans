@@ -64,7 +64,7 @@ menu_button_element.addEventListener(
   "mousedown",
   (event) => event.preventDefault(),
 );
-menu_button_element.addEventListener("click", (event) => {
+menu_button_element.addEventListener("pointerup", (event) => {
   event.preventDefault();
 
   menu_element.showModal();
