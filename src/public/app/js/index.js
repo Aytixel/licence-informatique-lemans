@@ -1,6 +1,6 @@
 const search_params = new URLSearchParams(location.search);
-let level = search_params.get("level");
-let group = search_params.get("group");
+let level = search_params.get("level") || localStorage.getItem("history-level");
+let group = search_params.get("group") || localStorage.getItem("history-group");
 
 const study_level_list_element = document.getElementById("study-level");
 const place_list_element = document.getElementById("place");
@@ -282,8 +282,17 @@ const switch_planning = (level_, group_) => {
     title_element[1].textContent = "rip... faut attendre";
   }
 
-  level = level_;
-  group = group_;
+  if (level != level_ || group != group_) {
+    level = level_;
+    group = group_;
+    localStorage.setItem("history-level", level);
+    localStorage.setItem("history-group", group);
+    history.pushState(
+      { level, group },
+      "",
+      location.origin + location.pathname + `?level=${level}&group=${group}`,
+    );
+  }
 
   update_planning(true);
 };

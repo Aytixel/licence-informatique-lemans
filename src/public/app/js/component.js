@@ -897,16 +897,7 @@ class PlanningButton extends HTMLElement {
     this.addEventListener("click", (event) => {
       if (
         !event.composedPath().some((element) => element == this.__svg_element)
-      ) {
-        history.pushState(
-          { level: this.__level, group: this.__group },
-          "",
-          location.origin + location.pathname +
-            `?level=${this.__level}&group=${this.__group}`,
-        );
-
-        this.__switch_planning_callback(this.__level, this.__group);
-      }
+      ) this.__switch_planning_callback(this.__level, this.__group);
     });
   }
 
