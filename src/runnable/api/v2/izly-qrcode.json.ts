@@ -47,6 +47,8 @@ const login = async (
       },
     },
   );
+
+  // Regex to get the sold of the account : /balance-text order-2\">[\n \+]*([0-9]*,[0-9]*)</gm
 };
 
 const generateQrcode = async (fetch: any) =>
