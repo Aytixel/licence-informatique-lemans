@@ -344,6 +344,13 @@ class DayViewer extends HTMLElement {
       padding: 0 2.5vmin !important;
     }
 
+    time {
+      position: absolute;
+      top: 0;
+      
+      width: 95vmin;
+    }
+
     h2 {
       padding: 1em;
       padding-bottom: 0;
@@ -360,7 +367,11 @@ class DayViewer extends HTMLElement {
     }
 
     .container {
+      position: absolute;
+      top: 4.7em;
+
       height: calc(100% - 5em - 2.5vmin);
+      width: 95vmin;
 
       border-radius: 0.5em;
     }
