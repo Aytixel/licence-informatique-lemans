@@ -64,6 +64,10 @@ menu_button_element.addEventListener(
   "mousedown",
   (event) => event.preventDefault(),
 );
+menu_button_element.addEventListener(
+  "touchdown",
+  (event) => event.preventDefault(),
+);
 menu_button_element.addEventListener("pointerup", (event) => {
   event.preventDefault();
 

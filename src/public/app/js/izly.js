@@ -47,6 +47,10 @@ izly_switch_account_button_element.addEventListener("click", () => {
   update_izly();
 });
 
+document.getElementById("menu-button").addEventListener("pointerup", () => {
+  izly_element.children[0].open = izly_element.classList.contains("connected");
+});
+
 izly_form_element.addEventListener("submit", (event) => {
   event.preventDefault();
 

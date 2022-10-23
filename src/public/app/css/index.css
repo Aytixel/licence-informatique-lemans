@@ -227,6 +227,10 @@ body.offline::after {
 /*
     Izly
 */
+#izly summary {
+    font-size: unset;
+}
+
 #izly input {
     display: block;
 
