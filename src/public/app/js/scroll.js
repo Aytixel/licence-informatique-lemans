@@ -1,95 +1,90 @@
 class Scroll {
-  #orientation;
-  #element;
-  #last_position = { x: 0, y: 0 };
-  #deceleration = 0.975;
-  #hold = false;
-  #last_hold = false;
-  #running = false;
+  __orientation;
+  __element;
+  __last_position = { x: 0, y: 0 };
+  __deceleration = 0.975;
+  __hold = false;
+  __last_hold = false;
+  __running = false;
 
   // orientation: 1 = x, 2 = y, 3 = xy
   constructor(element, orientation = 0) {
-    this.#orientation = orientation;
-    this.#element = element;
-    this.#wheel = this.#wheel.bind(this);
-    this.#pointer_start = this.#pointer_start.bind(this);
-    this.#pointer_move = this.#pointer_move.bind(this);
-    this.#pointer_end = this.#pointer_end.bind(this);
-
-    this.#element.style.overflow = "hidden";
+    this.__orientation = orientation;
+    this.__element = element;
+    this.__element.style.overflow = "hidden";
 
     element.addEventListener(
       "wheel",
-      this.#wheel,
+      this.__wheel,
       { passive: true },
     );
-    element.addEventListener("pointerdown", this.#pointer_start);
+    element.addEventListener("pointerdown", this.__pointer_start);
   }
 
-  #wheel = (event) => {
-    this.#element.style.scrollBehavior = "auto";
-    this.#element.style.scrollSnapType = "none";
+  __wheel = (event) => {
+    this.__element.style.scrollBehavior = "auto";
+    this.__element.style.scrollSnapType = "none";
 
     this.apply_scroll(event.deltaX, event.deltaY, event.shiftKey);
   };
 
-  #pointer_start = (event) => {
-    this.#hold = true;
-    this.#last_position.x = event.clientX;
-    this.#last_position.y = event.clientY;
-    this.#element.style.scrollBehavior = "auto";
-    this.#element.style.scrollSnapType = "none";
+  __pointer_start = (event) => {
+    this.__hold = true;
+    this.__last_position.x = event.clientX;
+    this.__last_position.y = event.clientY;
+    this.__element.style.scrollBehavior = "auto";
+    this.__element.style.scrollSnapType = "none";
 
-    this.#element.addEventListener("pointermove", this.#pointer_move, {
+    this.__element.addEventListener("pointermove", this.__pointer_move, {
       passive: true,
     });
 
-    this.#element.addEventListener("pointerup", this.#pointer_end);
-    this.#element.addEventListener("pointerleave", this.#pointer_end);
-    this.#element.addEventListener(
+    this.__element.addEventListener("pointerup", this.__pointer_end);
+    this.__element.addEventListener("pointerleave", this.__pointer_end);
+    this.__element.addEventListener(
       "lostpointercapture",
-      this.#pointer_end,
+      this.__pointer_end,
     );
   };
 
-  #pointer_move = (event) => {
+  __pointer_move = (event) => {
     this.apply_scroll(
-      this.#last_position.x - event.clientX,
-      this.#last_position.y - event.clientY,
+      this.__last_position.x - event.clientX,
+      this.__last_position.y - event.clientY,
       false,
       false,
     );
 
-    this.#last_position.x = event.clientX;
-    this.#last_position.y = event.clientY;
+    this.__last_position.x = event.clientX;
+    this.__last_position.y = event.clientY;
   };
 
-  #pointer_end = () => {
-    this.#element.removeEventListener(
+  __pointer_end = () => {
+    this.__element.removeEventListener(
       "pointermove",
-      this.#pointer_move,
+      this.__pointer_move,
       { passive: true },
     );
 
-    this.#element.removeEventListener("pointerup", this.#pointer_move);
-    this.#element.removeEventListener("pointerleave", this.#pointer_end);
-    this.#element.removeEventListener(
+    this.__element.removeEventListener("pointerup", this.__pointer_move);
+    this.__element.removeEventListener("pointerleave", this.__pointer_end);
+    this.__element.removeEventListener(
       "lostpointercapture",
-      this.#pointer_end,
+      this.__pointer_end,
     );
 
-    this.#hold = false;
+    this.__hold = false;
 
-    this.#reset_scroll_style();
+    this.__reset_scroll_style();
   };
 
   apply_scroll(x, y, shift = false, is_wheel = true) {
     if (is_wheel) {
-      this.#hold = false;
-      this.#running = false;
+      this.__hold = false;
+      this.__running = false;
     }
 
-    if (this.#last_hold && !this.#hold) {
+    if (this.__last_hold && !this.__hold) {
       const boost_multiplier = Math.max(
         window.innerHeight / window.innerWidth,
         1,
@@ -99,51 +94,51 @@ class Scroll {
       y *= boost_multiplier;
     }
 
-    if (!this.#hold) {
+    if (!this.__hold) {
       const x_stop = Math.abs(x) < 1;
       const y_stop = Math.abs(y) < 1;
-      x *= this.#deceleration;
-      y *= this.#deceleration;
+      x *= this.__deceleration;
+      y *= this.__deceleration;
 
       if (x_stop) x = 0;
       if (y_stop) y = 0;
-      if (x_stop && y_stop) this.#running = false;
+      if (x_stop && y_stop) this.__running = false;
     }
 
-    if (!this.#running && this.#hold) this.#running = true;
+    if (!this.__running && this.__hold) this.__running = true;
 
     window.requestAnimationFrame(() => {
-      if (this.#orientation == 1) {
-        if (is_wheel) this.#element.scrollLeft += y;
-        this.#element.scrollLeft += x;
+      if (this.__orientation == 1) {
+        if (is_wheel) this.__element.scrollLeft += y;
+        this.__element.scrollLeft += x;
       }
-      if (this.#orientation == 2) {
-        this.#element.scrollTop += y;
-        if (is_wheel) this.#element.scrollTop += x;
+      if (this.__orientation == 2) {
+        this.__element.scrollTop += y;
+        if (is_wheel) this.__element.scrollTop += x;
       }
-      if (this.#orientation == 3) {
+      if (this.__orientation == 3) {
         if (is_wheel && shift) {
-          this.#element.scrollTop += x;
-          this.#element.scrollLeft += y;
+          this.__element.scrollTop += x;
+          this.__element.scrollLeft += y;
         } else {
-          this.#element.scrollTop += y;
-          this.#element.scrollLeft += x;
+          this.__element.scrollTop += y;
+          this.__element.scrollLeft += x;
         }
       }
 
-      if (this.#running && !this.#hold) {
+      if (this.__running && !this.__hold) {
         this.apply_scroll(x, y, shift, is_wheel);
       }
-      if (!is_wheel) this.#reset_scroll_style();
+      if (!is_wheel) this.__reset_scroll_style();
 
-      this.#last_hold = this.#hold;
+      this.__last_hold = this.__hold;
     });
   }
 
-  #reset_scroll_style = debounce(() => {
-    if (!this.#hold) {
-      this.#element.style.scrollBehavior = "";
-      this.#element.style.scrollSnapType = "";
+  __reset_scroll_style = debounce(() => {
+    if (!this.__hold) {
+      this.__element.style.scrollBehavior = "";
+      this.__element.style.scrollSnapType = "";
     }
   }, 50);
 }

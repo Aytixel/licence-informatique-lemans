@@ -8,17 +8,17 @@ class PlanningFetchEvent extends Event {
 
 class PlanningViewer extends HTMLElement {
   data;
-  #days_element = {};
+  __days_element = {};
   start_date;
   end_date;
-  #left_bar = document.createElement("div");
-  #container = document.createElement("div");
-  #right_bar = document.createElement("div");
-  #first_load = true;
-  #scroll_left;
-  #scroll_width;
-  #client_width;
-  #intersection_observer = new IntersectionObserver(
+  __left_bar = document.createElement("div");
+  __container = document.createElement("div");
+  __right_bar = document.createElement("div");
+  __first_load = true;
+  __scroll_left;
+  __scroll_width;
+  __client_width;
+  __intersection_observer = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
         if (entry.isIntersecting && Math.sign(entry.boundingClientRect.x)) {
@@ -85,40 +85,40 @@ class PlanningViewer extends HTMLElement {
     }
     `;
 
-    this.#left_bar.classList.add("left-bar");
-    this.#right_bar.classList.add("right-bar");
+    this.__left_bar.classList.add("left-bar");
+    this.__right_bar.classList.add("right-bar");
 
     const slot = document.createElement("slot");
 
-    this.#container.classList.add("container");
-    this.#container.append(slot);
+    this.__container.classList.add("container");
+    this.__container.append(slot);
 
     this.shadowRoot.append(
       style,
-      this.#left_bar,
-      this.#container,
-      this.#right_bar,
+      this.__left_bar,
+      this.__container,
+      this.__right_bar,
     );
 
-    this.#scroll_left = this.#container.scrollLeft;
-    this.#scroll_width = this.#container.scrollWidth;
-    this.#client_width = this.#container.clientWidth;
+    this.__scroll_left = this.__container.scrollLeft;
+    this.__scroll_width = this.__container.scrollWidth;
+    this.__client_width = this.__container.clientWidth;
 
     this.update_indicator_bars();
 
-    this.#container.addEventListener("scroll", () => {
-      this.#scroll_left = this.#container.scrollLeft;
+    this.__container.addEventListener("scroll", () => {
+      this.__scroll_left = this.__container.scrollLeft;
 
       this.update_indicator_bars();
     }, {
       passive: true,
     });
 
-    new Scroll(this.#container, 1);
-    new ScrollSnap(this.#container, 1, this, "planning-viewer > day-viewer");
+    new Scroll(this.__container, 1);
+    new ScrollSnap(this.__container, 1, this, "planning-viewer > day-viewer");
 
     window.addEventListener("resize", () => {
-      this.#resize_scroll();
+      this.__resize_scroll();
       this.update_indicator_bars();
     }, {
       passive: true,
@@ -127,82 +127,82 @@ class PlanningViewer extends HTMLElement {
 
   reset() {
     this.data = undefined;
-    this.#days_element = {};
+    this.__days_element = {};
     this.start_date = undefined;
     this.end_date = undefined;
-    this.#first_load = true;
-    this.#intersection_observer.disconnect();
+    this.__first_load = true;
+    this.__intersection_observer.disconnect();
     this.innerHTML = "";
-    this.#scroll_left = this.#container.scrollLeft;
-    this.#scroll_width = this.#container.scrollWidth;
-    this.#client_width = this.#container.clientWidth;
+    this.__scroll_left = this.__container.scrollLeft;
+    this.__scroll_width = this.__container.scrollWidth;
+    this.__client_width = this.__container.clientWidth;
 
     this.update_indicator_bars();
   }
 
-  #resize_scroll() {
-    const old_width = this.#scroll_width - this.#client_width;
-    const current_width = this.#container.scrollWidth -
-      this.#container.clientWidth;
+  __resize_scroll() {
+    const old_width = this.__scroll_width - this.__client_width;
+    const current_width = this.__container.scrollWidth -
+      this.__container.clientWidth;
 
-    this.#container.scrollLeft =
-      (this.#scroll_left + this.#client_width / 2) / old_width *
-        current_width - (this.#container.clientWidth / 2);
+    this.__container.scrollLeft =
+      (this.__scroll_left + this.__client_width / 2) / old_width *
+        current_width - (this.__container.clientWidth / 2);
 
-    this.#scroll_left = this.#container.scrollLeft;
-    this.#scroll_width = this.#container.scrollWidth;
-    this.#client_width = this.#container.clientWidth;
+    this.__scroll_left = this.__container.scrollLeft;
+    this.__scroll_width = this.__container.scrollWidth;
+    this.__client_width = this.__container.clientWidth;
   }
 
-  #update_indicator_bars = debounce(() => {
-    this.#left_bar.style.opacity = 0;
-    this.#right_bar.style.opacity = 0;
+  __update_indicator_bars = debounce(() => {
+    this.__left_bar.style.opacity = 0;
+    this.__right_bar.style.opacity = 0;
   }, 1000);
 
   update_indicator_bars = () => {
-    const scroll_width_offset = this.#container.scrollWidth -
-      this.#container.clientWidth;
+    const scroll_width_offset = this.__container.scrollWidth -
+      this.__container.clientWidth;
 
-    this.#update_indicator_bars();
+    this.__update_indicator_bars();
 
     requestAnimationFrame(() => {
       if (scroll_width_offset) {
-        const progress = this.#container.scrollLeft / scroll_width_offset;
+        const progress = this.__container.scrollLeft / scroll_width_offset;
 
-        this.#left_bar.style.opacity = 0.5;
-        this.#right_bar.style.opacity = 0.5;
+        this.__left_bar.style.opacity = 0.5;
+        this.__right_bar.style.opacity = 0.5;
 
         if (progress >= 1) {
-          this.#left_bar.style.display = "block";
-          this.#right_bar.style.display = "none";
+          this.__left_bar.style.display = "block";
+          this.__right_bar.style.display = "none";
         } else if (progress <= 0) {
-          this.#left_bar.style.display = "none";
-          this.#right_bar.style.display = "block";
+          this.__left_bar.style.display = "none";
+          this.__right_bar.style.display = "block";
         } else {
-          this.#left_bar.style.display = "block";
-          this.#right_bar.style.display = "block";
+          this.__left_bar.style.display = "block";
+          this.__right_bar.style.display = "block";
         }
       } else {
-        this.#left_bar.style.display = "none";
-        this.#right_bar.style.display = "none";
+        this.__left_bar.style.display = "none";
+        this.__right_bar.style.display = "none";
       }
     });
   };
 
   focus(date, disable_animation = false) {
     if (date instanceof Date) date = date.toISOString();
-    if (this.#days_element[date]) {
-      if (disable_animation) this.#container.style.scrollBehavior = "auto";
+    if (this.__days_element[date]) {
+      if (disable_animation) this.__container.style.scrollBehavior = "auto";
 
-      this.#container.scrollLeft =
-        this.#days_element[date].getBoundingClientRect().x -
-        (this.#container.clientWidth / 2) +
-        (this.#days_element[date].clientWidth / 2);
-      this.#scroll_left = this.#container.scrollLeft;
-      this.#scroll_width = this.#container.scrollWidth;
-      this.#client_width = this.#container.clientWidth;
+      this.__container.scrollLeft =
+        this.__days_element[date].getBoundingClientRect().x -
+        (this.__container.clientWidth / 2) +
+        (this.__days_element[date].clientWidth / 2);
+      this.__scroll_left = this.__container.scrollLeft;
+      this.__scroll_width = this.__container.scrollWidth;
+      this.__client_width = this.__container.clientWidth;
 
-      if (disable_animation) this.#container.style.scrollBehavior = "";
+      if (disable_animation) this.__container.style.scrollBehavior = "";
     }
   }
 
@@ -212,10 +212,10 @@ class PlanningViewer extends HTMLElement {
     let start_date = new Date(planning_data?.start_date);
     let end_date = new Date(planning_data?.end_date);
 
-    this.#intersection_observer.disconnect();
-    this.#scroll_left = this.#container.scrollLeft;
-    this.#scroll_width = this.#container.scrollWidth;
-    this.#client_width = this.#container.clientWidth;
+    this.__intersection_observer.disconnect();
+    this.__scroll_left = this.__container.scrollLeft;
+    this.__scroll_width = this.__container.scrollWidth;
+    this.__client_width = this.__container.clientWidth;
 
     if (
       planning_resources_name[planning_data?.level]
@@ -241,63 +241,63 @@ class PlanningViewer extends HTMLElement {
 
       // add new days if needed
       for (const day_date of days_date) {
-        if (!this.#days_element[day_date]) {
-          this.#days_element[day_date] = document.createElement("day-viewer");
-          this.#days_element[day_date].dataset.date = day_date;
+        if (!this.__days_element[day_date]) {
+          this.__days_element[day_date] = document.createElement("day-viewer");
+          this.__days_element[day_date].dataset.date = day_date;
 
           if (compare_date(this.start_date, day_date) < 0) {
-            this.#days_element[this.start_date.toISOString()].before(
-              this.#days_element[day_date],
+            this.__days_element[this.start_date.toISOString()].before(
+              this.__days_element[day_date],
             );
 
-            this.#scroll_left += this.#container.scrollWidth -
-              this.#scroll_width;
-          } else this.append(this.#days_element[day_date]);
+            this.__scroll_left += this.__container.scrollWidth -
+              this.__scroll_width;
+          } else this.append(this.__days_element[day_date]);
 
-          this.#scroll_width = this.#container.scrollWidth;
+          this.__scroll_width = this.__container.scrollWidth;
         }
       }
 
-      for (const date_key in this.#days_element) {
+      for (const date_key in this.__days_element) {
         if (days_date.includes(date_key)) {
           // update days data
-          this.#days_element[date_key].load(
+          this.__days_element[date_key].load(
             planning_data.days.find((x) => x.date == date_key),
             date_key,
           );
         } else {
-          const removed_date = this.#days_element[date_key].dataset.date;
+          const removed_date = this.__days_element[date_key].dataset.date;
 
           // remove days if needed
-          this.#days_element[date_key].delete();
+          this.__days_element[date_key].delete();
 
-          delete this.#days_element[date_key];
+          delete this.__days_element[date_key];
 
           if (compare_date(removed_date, start_date) > 0) {
-            this.#scroll_left += this.#container.scrollWidth -
-              this.#scroll_width;
+            this.__scroll_left += this.__container.scrollWidth -
+              this.__scroll_width;
           }
 
-          this.#scroll_width = this.#container.scrollWidth;
+          this.__scroll_width = this.__container.scrollWidth;
         }
       }
 
       this.start_date = start_date;
       this.end_date = end_date;
 
-      if (this.#first_load) {
-        this.#first_load = false;
+      if (this.__first_load) {
+        this.__first_load = false;
 
         this.focus(keep_only_date(new Date()), true);
       } else {
-        this.#container.scrollLeft = this.#scroll_left;
-        this.#scroll_left = this.#container.scrollLeft;
-        this.#scroll_width = this.#container.scrollWidth;
-        this.#client_width = this.#container.clientWidth;
+        this.__container.scrollLeft = this.__scroll_left;
+        this.__scroll_left = this.__container.scrollLeft;
+        this.__scroll_width = this.__container.scrollWidth;
+        this.__client_width = this.__container.clientWidth;
       }
 
-      this.#intersection_observer.observe(this.children[0]);
-      this.#intersection_observer.observe(
+      this.__intersection_observer.observe(this.children[0]);
+      this.__intersection_observer.observe(
         this.children[this.children.length - 1],
       );
     }
@@ -307,12 +307,12 @@ class PlanningViewer extends HTMLElement {
 }
 
 class DayViewer extends HTMLElement {
-  #lessons_element = {};
-  #date_element = document.createElement("h2");
-  #day_element = document.createElement("h3");
-  #top_bar = document.createElement("div");
-  #container = document.createElement("div");
-  #bottom_bar = document.createElement("div");
+  __lessons_element = {};
+  __date_element = document.createElement("h2");
+  __day_element = document.createElement("h3");
+  __top_bar = document.createElement("div");
+  __container = document.createElement("div");
+  __bottom_bar = document.createElement("div");
 
   constructor() {
     super();
@@ -322,8 +322,8 @@ class DayViewer extends HTMLElement {
     const style = document.createElement("style");
     const time_element = document.createElement("time");
 
-    time_element.append(this.#date_element);
-    time_element.append(this.#day_element);
+    time_element.append(this.__date_element);
+    time_element.append(this.__day_element);
 
     style.textContent = `
     * {
@@ -389,29 +389,29 @@ class DayViewer extends HTMLElement {
     }
     `;
 
-    this.#top_bar.classList.add("top-bar");
-    this.#bottom_bar.classList.add("bottom-bar");
+    this.__top_bar.classList.add("top-bar");
+    this.__bottom_bar.classList.add("bottom-bar");
 
     const slot = document.createElement("slot");
 
-    this.#container.classList.add("container");
-    this.#container.append(slot);
+    this.__container.classList.add("container");
+    this.__container.append(slot);
 
     this.shadowRoot.append(
       style,
       time_element,
-      this.#top_bar,
-      this.#container,
-      this.#bottom_bar,
+      this.__top_bar,
+      this.__container,
+      this.__bottom_bar,
     );
     this.update_indicator_bars();
 
-    this.#container.addEventListener("scroll", this.update_indicator_bars, {
+    this.__container.addEventListener("scroll", this.update_indicator_bars, {
       passive: true,
     });
 
-    new Scroll(this.#container, 2);
-    new ScrollSnap(this.#container, 2, this, "day-viewer > lesson-viewer");
+    new Scroll(this.__container, 2);
+    new ScrollSnap(this.__container, 2, this, "day-viewer > lesson-viewer");
 
     window.addEventListener("resize", this.update_indicator_bars, {
       passive: true,
@@ -426,47 +426,47 @@ class DayViewer extends HTMLElement {
     this.remove();
   }
 
-  #update_indicator_bars = debounce(() => {
-    this.#top_bar.style.opacity = 0;
-    this.#bottom_bar.style.opacity = 0;
+  __update_indicator_bars = debounce(() => {
+    this.__top_bar.style.opacity = 0;
+    this.__bottom_bar.style.opacity = 0;
   }, 1000);
 
   update_indicator_bars = () => {
-    const scroll_height_offset = this.#container.scrollHeight -
-      this.#container.clientHeight;
+    const scroll_height_offset = this.__container.scrollHeight -
+      this.__container.clientHeight;
 
-    this.#update_indicator_bars();
+    this.__update_indicator_bars();
 
     requestAnimationFrame(() => {
       if (scroll_height_offset) {
-        const progress = this.#container.scrollTop / scroll_height_offset;
+        const progress = this.__container.scrollTop / scroll_height_offset;
 
-        this.#top_bar.style.opacity = 0.5;
-        this.#bottom_bar.style.opacity = 0.5;
+        this.__top_bar.style.opacity = 0.5;
+        this.__bottom_bar.style.opacity = 0.5;
 
         if (progress >= 1) {
-          this.#top_bar.style.display = "block";
-          this.#bottom_bar.style.display = "none";
+          this.__top_bar.style.display = "block";
+          this.__bottom_bar.style.display = "none";
         } else if (progress <= 0) {
-          this.#top_bar.style.display = "none";
-          this.#bottom_bar.style.display = "block";
+          this.__top_bar.style.display = "none";
+          this.__bottom_bar.style.display = "block";
         } else {
-          this.#top_bar.style.display = "block";
-          this.#bottom_bar.style.display = "block";
+          this.__top_bar.style.display = "block";
+          this.__bottom_bar.style.display = "block";
         }
       } else {
-        this.#top_bar.style.display = "none";
-        this.#bottom_bar.style.display = "none";
+        this.__top_bar.style.display = "none";
+        this.__bottom_bar.style.display = "none";
       }
     });
   };
 
   load(day_data, date) {
-    this.#date_element.textContent = new Intl.DateTimeFormat("default", {
+    this.__date_element.textContent = new Intl.DateTimeFormat("default", {
       dateStyle: "long",
     })
       .format(new Date(date));
-    this.#day_element.textContent = new Intl.DateTimeFormat("default", {
+    this.__day_element.textContent = new Intl.DateTimeFormat("default", {
       weekday: "long",
     })
       .format(new Date(date));
@@ -478,7 +478,7 @@ class DayViewer extends HTMLElement {
         new Date(lesson.end_date).toJSON()
       )
     ) {
-      const current_lesson_ids = Object.keys(this.#lessons_element);
+      const current_lesson_ids = Object.keys(this.__lessons_element);
       const new_lessons = day_data.lessons.reduce(
         (accumulator, lesson) => {
           accumulator[lesson.start_date + lesson.end_date] = lesson;
@@ -490,15 +490,15 @@ class DayViewer extends HTMLElement {
 
       for (const current_lesson_id of current_lesson_ids) {
         if (new_lessons[current_lesson_id]) {
-          this.#lessons_element[current_lesson_id].load(
+          this.__lessons_element[current_lesson_id].load(
             new_lessons[current_lesson_id],
           );
 
           delete new_lessons[current_lesson_id];
         } else {
-          this.#lessons_element[current_lesson_id]?.remove();
+          this.__lessons_element[current_lesson_id]?.remove();
 
-          delete this.#lessons_element[current_lesson_id];
+          delete this.__lessons_element[current_lesson_id];
         }
       }
 
@@ -532,10 +532,10 @@ class DayViewer extends HTMLElement {
           else this.appendChild(new_lesson_element);
         }
 
-        this.#lessons_element[new_lesson_id] = new_lesson_element;
+        this.__lessons_element[new_lesson_id] = new_lesson_element;
       }
     } else {
-      this.#lessons_element = {};
+      this.__lessons_element = {};
       this.innerHTML = "";
     }
 
@@ -544,14 +544,14 @@ class DayViewer extends HTMLElement {
 }
 
 class LessonViewer extends HTMLElement {
-  #container = document.createElement("div");
-  #title_element = document.createElement("h3");
-  #description_element = document.createElement("p");
-  #start_date_element = document.createElement("time");
-  #end_date_element = document.createElement("time");
-  #rooms_element = document.createElement("span");
+  __container = document.createElement("div");
+  __title_element = document.createElement("h3");
+  __description_element = document.createElement("p");
+  __start_date_element = document.createElement("time");
+  __end_date_element = document.createElement("time");
+  __rooms_element = document.createElement("span");
   data = null;
-  #show_state = false;
+  __show_state = false;
 
   constructor() {
     super();
@@ -640,26 +640,26 @@ class LessonViewer extends HTMLElement {
     }
     `;
 
-    this.#rooms_element.classList.add("rooms");
+    this.__rooms_element.classList.add("rooms");
 
     const bottom_bar = document.createElement("span");
 
     bottom_bar.classList.add("bottom-bar");
     bottom_bar.append(
-      this.#start_date_element,
+      this.__start_date_element,
       " - ",
-      this.#end_date_element,
-      this.#rooms_element,
+      this.__end_date_element,
+      this.__rooms_element,
     );
 
-    this.#container.append(
-      this.#title_element,
-      this.#description_element,
+    this.__container.append(
+      this.__title_element,
+      this.__description_element,
       bottom_bar,
     );
     this.shadowRoot.append(
       style,
-      this.#container,
+      this.__container,
     );
 
     this.addEventListener("pointerdown", () => {
@@ -716,26 +716,26 @@ class LessonViewer extends HTMLElement {
   }
 
   show() {
-    if (this.data && !this.#show_state) {
-      this.#container.classList.add("show");
-      this.#rooms_element.innerHTML = this.#rooms_element.innerHTML
+    if (this.data && !this.__show_state) {
+      this.__container.classList.add("show");
+      this.__rooms_element.innerHTML = this.__rooms_element.innerHTML
         .replaceAll(
           ", ",
           "<br>",
         );
-      this.#show_state = true;
+      this.__show_state = true;
     }
   }
 
   hide() {
-    if (this.data && this.#show_state) {
-      this.#container.classList.remove("show");
-      this.#rooms_element.innerHTML = this.#rooms_element.innerHTML
+    if (this.data && this.__show_state) {
+      this.__container.classList.remove("show");
+      this.__rooms_element.innerHTML = this.__rooms_element.innerHTML
         .replaceAll(
           "<br>",
           ", ",
         );
-      this.#show_state = false;
+      this.__show_state = false;
     }
   }
 
@@ -771,43 +771,44 @@ class LessonViewer extends HTMLElement {
           "linear-gradient(180deg, #dcf9f6 0%, #dcf9f6 50%, #70f0ee 50%, #70f0ee 100%)";
       }
 
-      this.#title_element.textContent = lesson_data.title;
-      this.#description_element.textContent = lesson_data.description.join(
+      this.__title_element.textContent = lesson_data.title;
+      this.__description_element.textContent = lesson_data.description.join(
         "\n",
       );
-      this.#description_element.innerHTML = this.#description_element.innerHTML
+      this.__description_element.innerHTML = this.__description_element
+        .innerHTML
         .replaceAll(
           "\n",
           "<br>",
         );
-      this.#start_date_element.textContent = date_to_time_intl.format(
+      this.__start_date_element.textContent = date_to_time_intl.format(
         new Date(lesson_data.start_date),
       );
-      this.#start_date_element.dateTime = lesson_data.start_date;
-      this.#end_date_element.textContent = date_to_time_intl.format(
+      this.__start_date_element.dateTime = lesson_data.start_date;
+      this.__end_date_element.textContent = date_to_time_intl.format(
         new Date(lesson_data.end_date),
       );
-      this.#end_date_element.dateTime = lesson_data.end_date;
-      this.#rooms_element.textContent = lesson_data.rooms.join(", ");
+      this.__end_date_element.dateTime = lesson_data.end_date;
+      this.__rooms_element.textContent = lesson_data.rooms.join(", ");
       this.data = lesson_data;
     } else {
-      this.#title_element.textContent = "";
-      this.#start_date_element.textContent = "";
-      this.#start_date_element.dateTime = "";
-      this.#end_date_element.textContent = "";
-      this.#end_date_element.dateTime = "";
-      this.#rooms_element.textContent = "";
+      this.__title_element.textContent = "";
+      this.__start_date_element.textContent = "";
+      this.__start_date_element.dateTime = "";
+      this.__end_date_element.textContent = "";
+      this.__end_date_element.dateTime = "";
+      this.__rooms_element.textContent = "";
       this.data = null;
     }
   }
 }
 
 class PlanningButton extends HTMLElement {
-  #level;
-  #group;
-  #svg_element;
-  #switch_planning_callback;
-  #fetch_favorite_planning_callback;
+  __level;
+  __group;
+  __svg_element;
+  __switch_planning_callback;
+  __fetch_favorite_planning_callback;
 
   constructor() {
     super();
@@ -856,22 +857,22 @@ class PlanningButton extends HTMLElement {
     this.shadowRoot.innerHTML =
       `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -10 584 567"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"/></svg>`;
     this.shadowRoot.append(style, slot);
-    this.#svg_element = this.shadowRoot.firstChild;
+    this.__svg_element = this.shadowRoot.firstChild;
 
-    this.#svg_element.addEventListener(
+    this.__svg_element.addEventListener(
       "click",
       () => {
         let favorites = JSON.parse(localStorage.getItem("favorites"));
 
-        if (this.#svg_element.classList.toggle("selected")) {
-          favorites.push({ level: this.#level, group: this.#group });
+        if (this.__svg_element.classList.toggle("selected")) {
+          favorites.push({ level: this.__level, group: this.__group });
 
-          this.#fetch_favorite_planning_callback(this.#level, this.#group);
+          this.__fetch_favorite_planning_callback(this.__level, this.__group);
         } else {
           favorites = favorites.filter((favorite) =>
-            favorite.level != this.#level || favorite.group != this.#group
+            favorite.level != this.__level || favorite.group != this.__group
           );
-          localStorage.removeItem(`${this.#level}:${this.#group}`);
+          localStorage.removeItem(`${this.__level}:${this.__group}`);
         }
 
         localStorage.setItem("favorites", JSON.stringify(favorites));
@@ -880,16 +881,16 @@ class PlanningButton extends HTMLElement {
 
     this.addEventListener("click", (event) => {
       if (
-        !event.composedPath().some((element) => element == this.#svg_element)
+        !event.composedPath().some((element) => element == this.__svg_element)
       ) {
         history.pushState(
-          { level: this.#level, group: this.#group },
+          { level: this.__level, group: this.__group },
           "",
           location.origin + location.pathname +
-            `?level=${this.#level}&group=${this.#group}`,
+            `?level=${this.__level}&group=${this.__group}`,
         );
 
-        this.#switch_planning_callback(this.#level, this.#group);
+        this.__switch_planning_callback(this.__level, this.__group);
       }
     });
   }
@@ -907,13 +908,13 @@ class PlanningButton extends HTMLElement {
         favorite.level == level && favorite.group == group
       )
     ) {
-      this.#svg_element.classList.add("selected");
+      this.__svg_element.classList.add("selected");
     }
 
-    this.#level = level;
-    this.#group = group;
-    this.#switch_planning_callback = switch_planning_callback;
-    this.#fetch_favorite_planning_callback = fetch_favorite_planning_callback;
+    this.__level = level;
+    this.__group = group;
+    this.__switch_planning_callback = switch_planning_callback;
+    this.__fetch_favorite_planning_callback = fetch_favorite_planning_callback;
     this.style.display = "";
     this.textContent = planning_resources_name[level].name_list[group];
   }
