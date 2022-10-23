@@ -12,7 +12,7 @@
 html {
     height: 100%;
 
-    scroll-behavior: smooth;
+    overflow: hidden;
 }
 
 body {
@@ -22,6 +22,8 @@ body {
 
     font-family: "Marianne";
     color: var(--color-dark-0);
+
+    overflow: hidden;
 }
 
 a {
