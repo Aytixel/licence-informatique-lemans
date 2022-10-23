@@ -875,7 +875,7 @@ class PlanningButton extends HTMLElement {
     this.__svg_element = this.shadowRoot.firstChild;
 
     this.__svg_element.addEventListener(
-      "click",
+      "pointerup",
       () => {
         let favorites = JSON.parse(localStorage.getItem("favorites"));
 
