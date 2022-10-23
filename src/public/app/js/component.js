@@ -368,7 +368,7 @@ class DayViewer extends HTMLElement {
 
     .container {
       position: absolute;
-      top: 4.7em;
+      top: 5.1em;
 
       height: calc(100% - 5em - 2.5vmin);
       width: 95vmin;
@@ -378,6 +378,7 @@ class DayViewer extends HTMLElement {
 
     .top-bar, .bottom-bar {
       position: absolute;
+      top: 5.1em;
       left: 50%;
       z-index: 1;
 
@@ -396,7 +397,10 @@ class DayViewer extends HTMLElement {
     }
 
     .bottom-bar {
-      translate: -50% -0.4em;
+      top: auto;
+      bottom: 0;
+
+      translate: -50% -0.8em;
     }
     `;
 

@@ -39,6 +39,7 @@ body.offline::after {
 
     position: absolute;
     bottom: 0;
+    z-index: -1;
 
     width: 100%;
 
@@ -176,7 +177,7 @@ body.offline::after {
     left: 50%;
     z-index: 2;
 
-    height: calc(100vh - 6.4em);
+    height: calc(100vh - 6.1em);
     width: 95vmin;
 
     box-sizing: border-box;
@@ -317,6 +318,6 @@ planning-viewer {
     top: 6.4em;
     left: 0;
 
-    height: calc(100% - 6.4em);
+    height: calc(100% - 6.5em);
     width: 100%;
 }
