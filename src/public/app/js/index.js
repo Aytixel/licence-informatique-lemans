@@ -38,7 +38,7 @@ const update_free_room_list = async () => {
           if (free_room.time_left) {
             const time_left_element = document.createElement("div");
 
-            time_left_element.textContent = `temps restant : ${
+            time_left_element.textContent = `disponible encore : ${
               date_to_time_intl.format(new Date(free_room.time_left))
             }`;
             time_left_element.classList.add("time-left");
