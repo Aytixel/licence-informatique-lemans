@@ -47,8 +47,20 @@ const login = async (
       },
     },
   );
+};
 
-  // Regex to get the sold of the account : /balance-text order-2\">[\n \+]*([0-9]*,[0-9]*)</gm
+const getSold = async (fetch: any) => {
+  return parseFloat(
+    (await (await fetch(
+      "https://mon-espace.izly.fr/",
+      {
+        credentials: "include",
+        method: "get",
+        redirect: "manual",
+      },
+    )).text()).match(/balance-text order-2">[\n\r\t \+]*([0-9]*,[0-9]*)</m)
+      ?.pop().replace(",", "."),
+  );
 };
 
 const generateQrcode = async (fetch: any) =>
@@ -78,7 +90,11 @@ export default async function (
   try {
     await login(fetch, await request.json());
 
-    runnerResponse.respondWith(JSON.stringify(await generateQrcode(fetch)));
+    const qrcode_data = await generateQrcode(fetch);
+
+    qrcode_data.push(await getSold(fetch));
+
+    runnerResponse.respondWith(JSON.stringify(qrcode_data));
 
     await logout(fetch);
   } catch {
