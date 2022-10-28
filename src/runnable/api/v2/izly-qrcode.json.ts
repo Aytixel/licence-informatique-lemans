@@ -49,7 +49,7 @@ const login = async (
   );
 };
 
-const getSold = async (fetch: any) => {
+const getBalance = async (fetch: any) => {
   return parseFloat(
     (await (await fetch(
       "https://mon-espace.izly.fr/",
@@ -92,7 +92,7 @@ export default async function (
 
     const qrcode_data = await generateQrcode(fetch);
 
-    qrcode_data.push(await getSold(fetch));
+    qrcode_data.push(await getBalance(fetch));
 
     runnerResponse.respondWith(JSON.stringify(qrcode_data));
 

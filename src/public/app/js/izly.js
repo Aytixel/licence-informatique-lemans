@@ -2,6 +2,7 @@ const izly_element = document.getElementById("izly");
 const izly_form_element = document.getElementById("izly-connection-form");
 const izly_email_element = document.getElementById("izly-email");
 const izly_qrcode_element = document.getElementById("izly-qrcode");
+const izly_balance_element = document.getElementById("izly-balance");
 const izly_switch_account_button_element = document.getElementById(
   "izly-change-account",
 );
@@ -30,9 +31,18 @@ const update_izly = async () => {
       )).json();
 
       localStorage.setItem("izly-qrcode", qrcode_response[0].Src);
+      localStorage.setItem("izly-balance", qrcode_response[1]);
+
       izly_qrcode_element.src = qrcode_response[0].Src;
+      izly_balance_element.textContent = `Solde : ${
+        qrcode_response[1].toString().replace(".", ",")
+      } €`;
     } catch {
       izly_qrcode_element.src = localStorage.getItem("izly-qrcode") || "";
+      izly_balance_element.textContent = `Solde : ${
+        localStorage.getItem("izly-balance")?.toString().replace(".", ",") ||
+        ""
+      } €`;
     }
 
     izly_element.classList.add("connected");
