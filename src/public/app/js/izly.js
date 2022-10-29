@@ -24,26 +24,32 @@ const update_izly = async () => {
   if (izly_data) {
     izly_email_element.textContent = izly_data.email;
 
-    try {
-      const qrcode_response = await (await fetch(
-        "https://api.licence-informatique-lemans.tk/v2/izly-qrcode.json",
-        { method: "post", body: JSON.stringify(izly_data) },
-      )).json();
-
-      localStorage.setItem("izly-qrcode", qrcode_response[0].Src);
-      localStorage.setItem("izly-balance", qrcode_response[1]);
-
-      izly_qrcode_element.src = qrcode_response[0].Src;
-      izly_balance_element.textContent = `Solde : ${
-        qrcode_response[1].toString().replace(".", ",")
-      } €`;
-    } catch {
+    const update_izly_offline = () => {
       izly_qrcode_element.src = localStorage.getItem("izly-qrcode") || "";
       izly_balance_element.textContent = `Solde : ${
         localStorage.getItem("izly-balance")?.toString().replace(".", ",") ||
         ""
       } €`;
-    }
+    };
+
+    if (navigator.onLine) {
+      try {
+        const qrcode_response = await (await fetch(
+          "https://api.licence-informatique-lemans.tk/v2/izly-qrcode.json",
+          { method: "post", body: JSON.stringify(izly_data) },
+        )).json();
+
+        localStorage.setItem("izly-qrcode", qrcode_response[0].Src);
+        localStorage.setItem("izly-balance", qrcode_response[1]);
+
+        izly_qrcode_element.src = qrcode_response[0].Src;
+        izly_balance_element.textContent = `Solde : ${
+          qrcode_response[1].toString().replace(".", ",")
+        } €`;
+      } catch {
+        update_izly_offline();
+      }
+    } else update_izly_offline();
 
     izly_element.classList.add("connected");
   } else izly_element.classList.remove("connected");

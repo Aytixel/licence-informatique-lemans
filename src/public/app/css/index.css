@@ -131,6 +131,37 @@ body.offline::after {
     background-color: var(--color-light-0);
 }
 
+@keyframes menu-button-loading-animation {
+    to {
+        rotate: 360deg;
+    }
+}
+
+#menu-button:before {
+    display: block;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    height: 100%;
+    width: 100%;
+
+    box-sizing: border-box;
+
+    border-radius: inherit;
+
+    content: "";
+
+    border: solid 0.15em transparent;
+}
+
+#menu-button.loading:before {
+    border-top-color: var(--color-accent-0);
+
+    animation: menu-button-loading-animation 1s infinite linear;
+}
+
 #menu-button div {
     top: 50%;
     left: 50%;

@@ -9,6 +9,10 @@ const menu_button_element = document.getElementById("menu-button");
 const menu_element = document.getElementById("menu");
 
 const update_free_room_list = async () => {
+  if (!navigator.onLine) return; // do nothing if there is no connection
+
+  start_loader();
+
   try {
     const response = await fetch(
       `https://api.licence-informatique-lemans.tk/v2/find-free-room.json`,
@@ -58,6 +62,8 @@ const update_free_room_list = async () => {
   } catch {
     console.error(`Failed to update free room list`);
   }
+
+  end_loader(false);
 };
 
 menu_button_element.addEventListener(
@@ -173,37 +179,44 @@ const merge_new_planning = (current_planning_data, new_planning_data) => {
 };
 
 const fecth_planning = async (level, group, start_date, end_date) => {
+  if (!navigator.onLine) return null; // do nothing if there is no connection
+
+  start_loader();
+
   try {
     const response = await fetch(
       `https://api.licence-informatique-lemans.tk/v2/planning.json?level=${level}&group=${group}&start=${start_date.toISOString()}&end=${end_date.toISOString()}`,
     );
 
+    end_loader();
+
     return add_empty_days(await response.json());
   } catch {
     console.error(`Failed to update level : ${level}, group : ${group}`);
+
+    end_loader();
 
     return null;
   }
 };
 
 const update_favorites_planning = async (initial = false) => {
+  if (!navigator.onLine) return; // do nothing if there is no connection
+
+  start_loader();
+
   const favorites = JSON.parse(localStorage.getItem("favorites"));
   const favorites_planning_data = await Promise.all(
-    initial
-      ? [fecth_planning(
-        level,
-        group,
-        keep_only_date(add_days(new Date(), -7)),
+    favorites.map((favorite) =>
+      fecth_planning(
+        favorite.level,
+        favorite.group,
+        initial // if its not the initial request the 7 last are useless
+          ? keep_only_date(add_days(new Date(), -7))
+          : keep_only_date(new Date()),
         keep_only_date(Date.now() + new Date(0).setMonth(4)),
-      )]
-      : favorites.map((favorite) =>
-        fecth_planning(
-          favorite.level,
-          favorite.group,
-          keep_only_date(add_days(new Date(), -7)),
-          keep_only_date(Date.now() + new Date(0).setMonth(4)),
-        )
-      ),
+      )
+    ),
   );
 
   for (const new_planning_data of favorites_planning_data) {
@@ -221,28 +234,47 @@ const update_favorites_planning = async (initial = false) => {
       );
     }
   }
+
+  end_loader();
 };
 
 const update_planning = async (initial = false) => {
-  if (!(typeof level === "string" && typeof group === "string")) {
+  start_loader();
+
+  if (!navigator.onLine) { // load only favorites if there is no connection
+    load_planning(JSON.parse(localStorage.getItem(`${level}:${group}`)));
+    end_loader();
+
+    return;
+  }
+  if (typeof level !== "string" || typeof group !== "string") {
     update_favorites_planning();
+    end_loader();
 
     return;
   }
 
   let planning_data;
 
+  // if its the initial loading and the selected is a favorite load first from cache
+  // then wait for favorites to be fetched and load new data
   if (in_favorites()) {
-    await update_favorites_planning(initial);
+    const favorites_promise = update_favorites_planning();
+
+    if (initial) {
+      load_planning(JSON.parse(localStorage.getItem(`${level}:${group}`)));
+    }
+
+    await favorites_promise;
 
     planning_data = JSON.parse(localStorage.getItem(`${level}:${group}`));
   } else {
     planning_data = await fecth_planning(
       level,
       group,
-      initial
+      initial // if its not the initial request the 7 last are useless
         ? keep_only_date(add_days(new Date(), -7))
-        : planning_element.start_date,
+        : keep_only_date(new Date()),
       initial
         ? keep_only_date(add_days(new Date(), 7))
         : planning_element.end_date,
@@ -258,11 +290,14 @@ const update_planning = async (initial = false) => {
   }
 
   load_planning(planning_data);
-
-  if (initial) update_favorites_planning();
+  end_loader();
 };
 
 const fetch_favorite_planning = async (level, group) => {
+  if (!navigator.onLine) return; // do nothing if there is no connection
+
+  start_loader();
+
   localStorage.setItem(
     `${level}:${group}`,
     JSON.stringify(
@@ -274,13 +309,12 @@ const fetch_favorite_planning = async (level, group) => {
       ),
     ),
   );
+
+  end_loader();
 };
 
 const switch_planning = (level_, group_) => {
-  if (!navigator.onLine) {
-    title_element[0].textContent = "Pas d'internet";
-    title_element[1].textContent = "rip... faut attendre";
-  }
+  start_loader();
 
   if (level != level_ || group != group_) {
     level = level_;
@@ -294,7 +328,13 @@ const switch_planning = (level_, group_) => {
     );
   }
 
+  if (!navigator.onLine && !in_favorites()) {
+    title_element[0].textContent = "Pas d'internet";
+    title_element[1].textContent = "rip... faut attendre";
+  }
+
   update_planning(true);
+  end_loader();
 };
 
 window.addEventListener("load", async () => {
@@ -343,6 +383,10 @@ window.addEventListener("load", async () => {
 
   // listen for planning fetch request
   planning_element.addEventListener("planningfetch", async (event) => {
+    if (!navigator.onLine) return; // do nothing if there is no connection
+
+    start_loader();
+
     const planning_data = { ...planning_element.data };
     let new_planning_data;
 
@@ -371,6 +415,7 @@ window.addEventListener("load", async () => {
     }
 
     load_planning(planning_data);
+    end_loader();
   });
 
   // load the targeted planning

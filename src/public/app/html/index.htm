@@ -65,6 +65,18 @@
         if (!Array.isArray(JSON.parse(localStorage.getItem("favorites")))) localStorage.setItem("favorites", "[]");
 
         screen?.orientation?.lock("natural").catch(() => console.log("Can't lock screen orientation !"))
+
+        let loader_count = 0;
+
+        const start_loader = () => {
+            loader_count++;
+
+            document.getElementById("menu-button").classList.add("loading");
+        };
+
+        const end_loader = () => {
+            document.getElementById("menu-button").classList.toggle("loading", loader_count = Math.max(0, loader_count - 1));
+        };
     </script>
     <script src="/js/scroll.js" async></script>
     <script src="/js/scroll-snap.js" async></script>
