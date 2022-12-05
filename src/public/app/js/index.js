@@ -1,12 +1,5 @@
-const search_params = new URLSearchParams(location.search);
-let level = search_params.get("level") || localStorage.getItem("history-level");
-let group = search_params.get("group") || localStorage.getItem("history-group");
-
-const study_level_list_element = document.getElementById("study-level");
-const place_list_element = document.getElementById("place");
+// free room
 const room_list_element = document.getElementById("room");
-const menu_button_element = document.getElementById("menu-button");
-const menu_element = document.getElementById("menu");
 
 const update_free_room_list = async () => {
   if (!navigator.onLine) return; // do nothing if there is no connection
@@ -14,6 +7,8 @@ const update_free_room_list = async () => {
   start_loader();
 
   try {
+    room_list_element.innerHTML = "";
+
     const response = await fetch(
       `https://api.licence-informatique-lemans.tk/v2/find-free-room.json`,
     );
@@ -66,6 +61,18 @@ const update_free_room_list = async () => {
   end_loader(false);
 };
 
+let star_update_free_room_update = () => {
+  star_update_free_room_update = () => {};
+
+  update_free_room_list();
+
+  setInterval(update_free_room_list, 1000 * 60);
+};
+
+// menu
+const menu_button_element = document.getElementById("menu-button");
+const menu_element = document.getElementById("menu");
+
 menu_button_element.addEventListener(
   "mousedown",
   (event) => event.preventDefault(),
@@ -79,7 +86,7 @@ menu_button_element.addEventListener("pointerup", (event) => {
 
   menu_element.showModal();
 
-  update_free_room_list();
+  star_update_free_room_update();
 });
 menu_element.addEventListener("pointerup", (event) => {
   const bounding_rect = menu_element.getBoundingClientRect();
@@ -89,15 +96,17 @@ menu_element.addEventListener("pointerup", (event) => {
     event.clientY < bounding_rect.top || event.clientY > bounding_rect.bottom
   ) {
     menu_element.close();
-
-    room_list_element.innerHTML = "";
   }
 });
 
+// planning
+const search_params = new URLSearchParams(location.search);
+let level = search_params.get("level") || localStorage.getItem("history-level");
+let group = search_params.get("group") || localStorage.getItem("history-group");
 const planning_element = document.getElementsByTagName("planning-viewer")[0];
 const title_element = [
-  ...document.getElementsByTagName("h1"),
-  ...document.getElementsByTagName("h2"),
+  document.getElementsByTagName("h1")[0],
+  document.getElementsByTagName("h2")[0],
 ];
 
 const in_favorites = () => {
@@ -129,13 +138,18 @@ const load_planning = debounce((planning_data) => {
 const add_empty_days = (planning_data) => {
   const end_date = new Date(planning_data.end_date);
   let date = new Date(planning_data.start_date);
+  const date_list = new Set(
+    planning_data.days.map((day) => day.date),
+  );
 
   while (compare_date(date, end_date)) {
+    const date_string = date.toISOString();
+
     if (
-      planning_data.days.findIndex((day) => !compare_date(day.date, date)) < 0
+      !date_list.has(date_string)
     ) {
       planning_data.days.push({
-        date: date.toISOString(),
+        date: date_string,
         lessons: [],
       });
     }
@@ -162,15 +176,18 @@ const merge_new_planning = (current_planning_data, new_planning_data) => {
     current_planning_data.end_date = new_planning_data.end_date;
   }
 
-  for (const new_day of new_planning_data.days) {
-    const old_data_index = current_planning_data.days.findIndex((day) =>
-      !compare_date(day.date, new_day.date)
-    );
+  const old_data_indexes = new Map(
+    current_planning_data.days.map((day, index) => {
+      return [day.date, index];
+    }),
+  );
 
-    // update old day data
-    if (old_data_index > -1) {
-      current_planning_data.days[old_data_index] = new_day;
-    } else current_planning_data.days.push(new_day);
+  for (const new_day of new_planning_data.days) {
+    const old_data_index = old_data_indexes.get(new_day.date);
+
+    if (old_data_index) {
+      current_planning_data.days[old_data_index] = new_day; // update old day data
+    } else current_planning_data.days.push(new_day); // add new day data
   }
 
   current_planning_data.days.sort((day_a, day_b) =>
@@ -247,7 +264,7 @@ const update_planning = async (initial = false) => {
 
     return;
   }
-  if (typeof level !== "string" || typeof group !== "string") {
+  if (typeof level !== "string" || typeof group !== "string") { // if no level or group selected, only favorites can be updated
     update_favorites_planning();
     end_loader();
 
@@ -281,11 +298,11 @@ const update_planning = async (initial = false) => {
     );
 
     if (!initial) {
-      const old_planning_data = { ...planning_element.data };
+      const new_planning_data = planning_data;
 
-      merge_new_planning(old_planning_data, planning_data);
+      planning_data = { ...planning_element.data };
 
-      planning_data = old_planning_data;
+      merge_new_planning(planning_data, new_planning_data);
     }
   }
 
@@ -340,6 +357,7 @@ const switch_planning = (level_, group_) => {
 window.addEventListener("load", async () => {
   await planning_resources_loaded;
 
+  // menu button generation
   const generate_planning_buttons = (key) => {
     const summary_element = document.createElement("summary");
     const details_element = document.createElement("details");
@@ -367,14 +385,18 @@ window.addEventListener("load", async () => {
     return details_element;
   };
 
-  // generate study level html
+  // generate study level menu button html
+  const study_level_list_element = document.getElementById("study-level");
+
   for (const study_level of planning_resources_type["study-level"]) {
     study_level_list_element.append(
       generate_planning_buttons(study_level),
     );
   }
 
-  // generate place html
+  // generate place menu button html
+  const place_list_element = document.getElementById("place");
+
   for (const place of (planning_resources_type["place"])) {
     place_list_element.append(
       generate_planning_buttons(place),
@@ -432,6 +454,7 @@ window.addEventListener("load", async () => {
     },
   );
 
+  // install the service worker
   if ("serviceWorker" in navigator) {
     try {
       const registration = await navigator.serviceWorker.register(
