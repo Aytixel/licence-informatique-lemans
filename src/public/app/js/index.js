@@ -7,8 +7,6 @@ const update_free_room_list = async () => {
   start_loader();
 
   try {
-    room_list_element.innerHTML = "";
-
     const response = await fetch(
       `https://api.licence-informatique-lemans.tk/v2/find-free-room.json`,
     );
@@ -61,14 +59,6 @@ const update_free_room_list = async () => {
   end_loader(false);
 };
 
-let star_update_free_room_update = () => {
-  star_update_free_room_update = () => {};
-
-  update_free_room_list();
-
-  setInterval(update_free_room_list, 1000 * 60);
-};
-
 // menu
 const menu_button_element = document.getElementById("menu-button");
 const menu_element = document.getElementById("menu");
@@ -86,7 +76,7 @@ menu_button_element.addEventListener("pointerup", (event) => {
 
   menu_element.showModal();
 
-  star_update_free_room_update();
+  update_free_room_list();
 });
 menu_element.addEventListener("pointerup", (event) => {
   const bounding_rect = menu_element.getBoundingClientRect();
@@ -96,6 +86,8 @@ menu_element.addEventListener("pointerup", (event) => {
     event.clientY < bounding_rect.top || event.clientY > bounding_rect.bottom
   ) {
     menu_element.close();
+
+    room_list_element.innerHTML = "";
   }
 });
 
