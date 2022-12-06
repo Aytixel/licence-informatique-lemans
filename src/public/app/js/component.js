@@ -8,7 +8,7 @@ class PlanningFetchEvent extends Event {
 
 class PlanningViewer extends HTMLElement {
   data;
-  __days_element = {};
+  __days_element = new Map();
   start_date;
   end_date;
   __left_bar = document.createElement("div");
@@ -127,7 +127,7 @@ class PlanningViewer extends HTMLElement {
 
   reset() {
     this.data = undefined;
-    this.__days_element = {};
+    this.__days_element.clear();
     this.start_date = undefined;
     this.end_date = undefined;
     this.__first_load = true;
@@ -191,13 +191,15 @@ class PlanningViewer extends HTMLElement {
 
   focus(date, disable_animation = false) {
     if (date instanceof Date) date = date.toISOString();
-    if (this.__days_element[date]) {
+
+    const day_element = this.__days_element.get(date);
+
+    if (day_element) {
       if (disable_animation) this.__container.style.scrollBehavior = "auto";
 
-      this.__container.scrollLeft =
-        this.__days_element[date].getBoundingClientRect().x -
+      this.__container.scrollLeft = day_element.getBoundingClientRect().x -
         (this.__container.clientWidth / 2) +
-        (this.__days_element[date].clientWidth / 2);
+        (day_element.clientWidth / 2);
       this.__scroll_left = this.__container.scrollLeft;
       this.__scroll_width = this.__container.scrollWidth;
       this.__client_width = this.__container.clientWidth;
@@ -230,56 +232,63 @@ class PlanningViewer extends HTMLElement {
       if (!this.start_date) this.start_date = start_date;
       if (!this.end_date) this.end_date = end_date;
 
-      const days_date = [];
-      let date = new Date(start_date);
+      planning_data.days.sort((day_a, day_b) =>
+        compare_date(day_a.date, day_b.date)
+      );
 
-      // create the list of day
-      while (compare_date(date, end_date)) {
-        days_date.push(date.toISOString());
-        date = add_days(date, 1);
-      }
+      const data_indexes = new Map(
+        planning_data.days.map((day, index) => {
+          return [day.date, index];
+        }),
+      );
 
-      // add new days if needed
-      for (const day_date of days_date) {
-        if (!this.__days_element[day_date]) {
-          this.__days_element[day_date] = document.createElement("day-viewer");
-          this.__days_element[day_date].dataset.date = day_date;
-
-          if (compare_date(this.start_date, day_date) < 0) {
-            this.__days_element[this.start_date.toISOString()].before(
-              this.__days_element[day_date],
-            );
-
-            this.__scroll_left += this.__container.scrollWidth -
-              this.__scroll_width;
-          } else this.append(this.__days_element[day_date]);
-
-          this.__scroll_width = this.__container.scrollWidth;
-        }
-      }
-
-      for (const date_key in this.__days_element) {
-        if (days_date.includes(date_key)) {
-          // update days data
-          this.__days_element[date_key].load(
-            planning_data.days.find((x) => x.date == date_key),
-            date_key,
+      for (const date of this.__days_element.keys()) {
+        if (data_indexes.has(date)) {
+          this.__days_element.get(date).load(
+            planning_data.days[data_indexes.get(date)],
           );
+
+          data_indexes.delete(date);
         } else {
-          const removed_date = this.__days_element[date_key].dataset.date;
-
           // remove days if needed
-          this.__days_element[date_key].delete();
+          this.__days_element.get(date).delete();
+          this.__days_element.delete(date);
 
-          delete this.__days_element[date_key];
-
-          if (compare_date(removed_date, start_date) > 0) {
+          if (compare_date(date, start_date) > 0) {
             this.__scroll_left += this.__container.scrollWidth -
               this.__scroll_width;
           }
 
           this.__scroll_width = this.__container.scrollWidth;
         }
+      }
+
+      for (const date of data_indexes.keys()) {
+        const day_element = document.createElement("day-viewer");
+
+        day_element.dataset.date = date;
+        day_element.load(planning_data.days[data_indexes.get(date)]);
+
+        this.__days_element.set(date, day_element);
+
+        const next_day_element = this.__days_element.get(
+          add_days(date, 1).toISOString(),
+        );
+
+        if (next_day_element) {
+          next_day_element.before(day_element);
+
+          if (compare_date(this.start_date, date) < 0) {
+            this.__scroll_left += this.__container.scrollWidth -
+              this.__scroll_width;
+          }
+
+          this.__scroll_width = this.__container.scrollWidth;
+          continue;
+        }
+
+        this.append(day_element);
+        this.__scroll_width = this.__container.scrollWidth;
       }
 
       this.start_date = start_date;
@@ -476,15 +485,15 @@ class DayViewer extends HTMLElement {
     });
   };
 
-  load(day_data, date) {
+  load(day_data) {
     this.__date_element.textContent = new Intl.DateTimeFormat("default", {
       dateStyle: "long",
     })
-      .format(new Date(date));
+      .format(new Date(day_data.date));
     this.__day_element.textContent = new Intl.DateTimeFormat("default", {
       weekday: "long",
     })
-      .format(new Date(date));
+      .format(new Date(day_data.date));
 
     if (
       day_data?.lessons?.length &&
