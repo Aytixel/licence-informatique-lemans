@@ -48,15 +48,17 @@ class Scroll {
   };
 
   __pointer_move = (event) => {
-    this.apply_scroll(
-      this.__last_position.x - event.clientX,
-      this.__last_position.y - event.clientY,
-      false,
-      false,
-    );
+    window.requestAnimationFrame(() => {
+      this.apply_scroll(
+        this.__last_position.x - event.clientX,
+        this.__last_position.y - event.clientY,
+        false,
+        false,
+      );
 
-    this.__last_position.x = event.clientX;
-    this.__last_position.y = event.clientY;
+      this.__last_position.x = event.clientX;
+      this.__last_position.y = event.clientY;
+    });
   };
 
   __pointer_end = () => {
@@ -85,9 +87,12 @@ class Scroll {
     }
 
     if (this.__last_hold && !this.__hold) {
-      const boost_multiplier = Math.max(
-        window.innerHeight / window.innerWidth,
-        1,
+      const boost_multiplier = Math.min(
+        Math.max(
+          Math.log2(window.innerHeight / window.innerWidth),
+          1,
+        ),
+        2,
       );
 
       x *= boost_multiplier;
