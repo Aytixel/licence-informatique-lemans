@@ -21,6 +21,6 @@
     },
     "room_ic2": {
         "name": "IC2",
-        "name_list": ["Salle de cours", "TD1-010", "TD2-012", "TD3-020", "TD4-022", "TP-110-Robots", "TP-112-Robots", "TP-114", "TP-120", "TP-122-FEDER", "TP-124", "TP-130"]
+        "name_list": ["Salle de cours", "TD1-010", "TD2-012", "TD3-020", "TD4-022", "TP-110-Robots", "TP-112-Robots", "TP-114", "TP-120", "TP-122-FEDER", "TP-124", "TP-130", "Master 2 Recherche-210"]
     }
 }
