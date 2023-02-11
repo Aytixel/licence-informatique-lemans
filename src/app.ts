@@ -1,4 +1,4 @@
-import { config } from "./deps.ts";
+import { load } from "./deps.ts";
 import { Router, RouterData } from "./router.ts";
 import { Mime } from "./mime.ts";
 import { stream } from "./stream.ts";
@@ -14,7 +14,7 @@ interface ResponseData {
   status: number;
 }
 
-const env = await config({ safe: true });
+const env = await load();
 const router = new Router(env);
 const cache = new Cache();
 const runner = new Runner(env);

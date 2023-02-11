@@ -1,14 +1,14 @@
-import { DotenvConfig, join, resolve } from "./deps.ts";
+import { join, resolve } from "./deps.ts";
 import { existsSync } from "./utils.ts";
 import { RouterData } from "./router.ts";
 import { WebSocketConnectionInfo } from "./websocket.ts";
 import { ResponseData } from "./app.ts";
 
 class AppRunner {
-  public env: DotenvConfig;
+  public env: Record<string, string>;
   public connections: WebSocketConnectionInfo[];
 
-  constructor(env: DotenvConfig) {
+  constructor(env: Record<string, string>) {
     this.env = env;
     this.connections = [];
   }
@@ -62,10 +62,10 @@ class RunnerResponse {
 class Runner {
   public app: AppRunner;
 
-  private env: DotenvConfig;
+  private env: Record<string, string>;
   private runnablePath: string;
 
-  constructor(env: DotenvConfig) {
+  constructor(env: Record<string, string>) {
     this.env = env;
     this.app = new AppRunner(env);
     this.runnablePath = env.RUNNABLE_PATH;

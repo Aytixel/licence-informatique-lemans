@@ -1,4 +1,4 @@
-import { DotenvConfig, join, resolve } from "./deps.ts";
+import { join, resolve } from "./deps.ts";
 import { AppRunner, Runner } from "./runner.ts";
 import { existsSync } from "./utils.ts";
 
@@ -17,7 +17,7 @@ class WebSocketServer {
   ) => void;
   private id = 0;
 
-  constructor(env: DotenvConfig, runner: Runner) {
+  constructor(env: Record<string, string>, runner: Runner) {
     this.runner = runner;
 
     for (const extension of ["ts", "tsx", "js", "jsx"]) {

@@ -1,4 +1,4 @@
-import { DotenvConfig, join, parse, ParsedPath } from "./deps.ts";
+import { join, parse, ParsedPath } from "./deps.ts";
 import { createSubDomainConfig, getJsonSync } from "./utils.ts";
 
 interface SubDomainConfig {
@@ -26,7 +26,7 @@ class Router {
   private config: RouterConfig;
   private publicPath: string;
 
-  constructor(env: DotenvConfig) {
+  constructor(env: Record<string, string>) {
     this.config = createSubDomainConfig(
       getJsonSync("./src/config/router.json"),
     );
