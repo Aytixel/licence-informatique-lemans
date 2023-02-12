@@ -55,24 +55,25 @@ class ScrollSnap {
         const snap_distances = snap_bounding_rects
           .map(
             (snap_bounding_rect) => {
-              return orientation == 1
-                ? (bounding_rect.left +
-                  (bounding_rect.right - bounding_rect.left) / 2 -
-                  snap_bounding_rect.width / 2 -
-                  snap_bounding_rect.x)
-                : (bounding_rect.top +
-                  (bounding_rect.bottom - bounding_rect.top) / 2 -
-                  snap_bounding_rect.height / 2 -
-                  snap_bounding_rect.y);
+              return Math.abs(
+                orientation == 1
+                  ? (bounding_rect.left +
+                    (bounding_rect.right - bounding_rect.left) / 2 -
+                    snap_bounding_rect.width / 2 -
+                    snap_bounding_rect.x)
+                  : (bounding_rect.top +
+                    (bounding_rect.bottom - bounding_rect.top) / 2 -
+                    snap_bounding_rect.height / 2 -
+                    snap_bounding_rect.y),
+              );
             },
           );
 
         snap_elements.find((_, index) =>
-          Math.abs(snap_distances[index]) <
+          snap_distances[index] <
             snap_bounding_rects[index][orientation == 1 ? "width" : "height"] /
-              2 && Math.abs(snap_distances[index]) >
-            snap_bounding_rects[index][orientation == 1 ? "width" : "height"] /
-              6
+              2 &&
+          snap_distances[index] > 0
         )?.scrollIntoView(scroll_options);
       }, 150),
       { passive: true },
