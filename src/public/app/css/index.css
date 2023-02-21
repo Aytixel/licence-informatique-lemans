@@ -289,10 +289,39 @@ body.offline::after {
     transition: 0.2s ease-in-out background-color, 0.2s ease-in-out outline-color;
 }
 
+#izly input[type="checkbox"] {
+    display: inline-block;
+
+    padding: 0;
+
+    width: 2em;
+    height: 2em;
+
+    margin: 0.5em;
+
+    vertical-align: middle;
+}
+
 #izly input:hover {
     outline-color: var(--color-accent-1);
 
     background-color: var(--color-accent-1);
+}
+
+#izly input[type="checkbox"]:checked::before {
+    display: block;
+
+    width: 0.5em;
+    height: 1em;
+
+    content: "";
+
+    border: solid var(--color-dark-0) 0.2em;
+    border-top-color: transparent;
+    border-left-color: transparent;
+
+    rotate: 45deg;
+    translate: 0.5em 0.2em;
 }
 
 #izly-connection-form,
@@ -300,9 +329,26 @@ body.offline::after {
     width: calc(100% - 0.5em);
     max-width: 40vh;
 
-    margin: 0.5em 0;
+    margin: 0.5em;
 
     text-align: center;
+}
+
+#izly-tos {
+    font-size: 0.8em;
+    text-align: left;
+}
+
+#izly-tos details {
+    display: inline-block;
+
+    margin: 0.5em;
+}
+
+#izly-tos summary {
+    font-weight: bold;
+
+    text-decoration: underline;
 }
 
 #izly-email {
