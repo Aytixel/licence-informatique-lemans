@@ -224,7 +224,9 @@ class PlanningViewer extends HTMLElement {
         ?.name_list[planning_data?.group] &&
       start_date.toJSON() && end_date.toJSON() &&
       compare_date(start_date, end_date) > 0 && planning_data?.days?.length &&
-      planning_data.days.every((day) => new Date(day.date).toJSON())
+      planning_data.days.every((day) =>
+        new $mol_time_moment(day.date).toJSON().length
+      )
     ) {
       start_date = keep_only_date(start_date);
       end_date = keep_only_date(end_date);
@@ -486,20 +488,16 @@ class DayViewer extends HTMLElement {
   };
 
   load(day_data) {
-    this.__date_element.textContent = new Intl.DateTimeFormat("default", {
-      dateStyle: "long",
-    })
-      .format(new Date(day_data.date));
-    this.__day_element.textContent = new Intl.DateTimeFormat("default", {
-      weekday: "long",
-    })
-      .format(new Date(day_data.date));
+    const day_date_format = new $mol_time_moment(day_data.date);
+
+    this.__date_element.textContent = day_date_format.toString("D Mon YYYY");
+    this.__day_element.textContent = day_date_format.toString("WD");
 
     if (
       day_data?.lessons?.length &&
       day_data.lessons.every((lesson) =>
-        new Date(lesson.start_date).toJSON() &&
-        new Date(lesson.end_date).toJSON()
+        new $mol_time_moment(lesson.start_date).toJSON().length &&
+        new $mol_time_moment(lesson.end_date).toJSON().length
       )
     ) {
       const current_lesson_ids = Object.keys(this.__lessons_element);
@@ -770,13 +768,9 @@ class LessonViewer extends HTMLElement {
       lesson_data.description.every((part) => typeof part === "string") &&
       lesson_data?.rooms?.length &&
       lesson_data.rooms.every((part) => typeof part === "string") &&
-      new Date(lesson_data.start_date).toJSON() &&
-      new Date(lesson_data.end_date).toJSON()
+      new $mol_time_moment(lesson_data.start_date).toJSON().length &&
+      new $mol_time_moment(lesson_data.end_date).toJSON().length
     ) {
-      const date_to_time_intl = new Intl.DateTimeFormat("default", {
-        timeStyle: "short",
-      });
-
       if (lesson_data.title.match(/exam|qcm|contrôle|partiel|soutenance/i)) {
         //exam
         this.style.backgroundImage =
@@ -796,22 +790,25 @@ class LessonViewer extends HTMLElement {
       }
 
       this.__title_element.textContent = lesson_data.title;
-      this.__description_element.textContent = lesson_data.description.join(
-        "\n",
-      );
-      this.__description_element.innerHTML = this.__description_element
-        .innerHTML
-        .replaceAll(
-          "\n",
-          "<br>",
-        );
-      this.__start_date_element.textContent = date_to_time_intl.format(
-        new Date(lesson_data.start_date),
-      );
+
+      const p = document.createElement("p");
+
+      lesson_data.description.forEach((value, index, array) => {
+        p.append(document.createTextNode(value));
+
+        if (index < array.length - 1) {
+          p.append(document.createElement("br"));
+        }
+      });
+
+      this.__description_element.replaceWith(p);
+      this.__start_date_element.textContent = new $mol_time_moment(
+        lesson_data.start_date,
+      ).toString("hh:mm");
       this.__start_date_element.dateTime = lesson_data.start_date;
-      this.__end_date_element.textContent = date_to_time_intl.format(
-        new Date(lesson_data.end_date),
-      );
+      this.__end_date_element.textContent = new $mol_time_moment(
+        lesson_data.end_date,
+      ).toString("hh:mm");
       this.__end_date_element.dateTime = lesson_data.end_date;
       this.__rooms_element.textContent = lesson_data.rooms.join(", ");
       this.data = lesson_data;
