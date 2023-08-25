@@ -187,7 +187,7 @@ const merge_new_planning = (current_planning_data, new_planning_data) => {
   );
 };
 
-const fecth_planning = async (level, group, start_date, end_date) => {
+const fetch_planning = async (level, group, start_date, end_date) => {
   if (!navigator.onLine) return null; // do nothing if there is no connection
 
   start_loader();
@@ -217,7 +217,7 @@ const update_favorites_planning = async (initial = false) => {
   const favorites = JSON.parse(localStorage.getItem("favorites"));
   const favorites_planning_data = await Promise.all(
     favorites.map((favorite) =>
-      fecth_planning(
+      fetch_planning(
         favorite.level,
         favorite.group,
         initial // if its not the initial request the 7 last are useless
@@ -278,7 +278,7 @@ const update_planning = async (initial = false) => {
 
     planning_data = JSON.parse(localStorage.getItem(`${level}:${group}`));
   } else {
-    planning_data = await fecth_planning(
+    planning_data = await fetch_planning(
       level,
       group,
       initial // if its not the initial request the 7 last are useless
@@ -310,7 +310,7 @@ const fetch_favorite_planning = async (level, group) => {
   localStorage.setItem(
     `${level}:${group}`,
     JSON.stringify(
-      await fecth_planning(
+      await fetch_planning(
         level,
         group,
         keep_only_date(add_days(new Date(), -7)),
@@ -405,7 +405,7 @@ window.addEventListener("load", async () => {
     let new_planning_data;
 
     if (event.request > 0) {
-      new_planning_data = await fecth_planning(
+      new_planning_data = await fetch_planning(
         level,
         group,
         planning_element.end_date,
@@ -414,7 +414,7 @@ window.addEventListener("load", async () => {
 
       merge_new_planning(planning_data, new_planning_data);
     } else {
-      new_planning_data = await fecth_planning(
+      new_planning_data = await fetch_planning(
         level,
         group,
         keep_only_date(add_days(planning_element.start_date, -7)),
