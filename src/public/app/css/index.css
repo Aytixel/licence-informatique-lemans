@@ -259,6 +259,41 @@ body.offline::after {
 }
 
 /*
+    Planning Selector
+*/
+.planning-selector li {
+    height: 1.5em;
+
+    cursor: pointer;
+}
+
+.planning-selector svg {
+    margin-right: 0.5em;
+
+    height: 1em;
+
+    fill: transparent;
+    stroke: var(--color-accent-0);
+    stroke-width: 3.5em;
+
+    transition: 0.2s ease-in-out fill, 0.2s ease-in-out stroke;
+}
+
+.planning-selector svg.selected {
+    fill: var(--color-accent-0);
+}
+
+.planning-selector svg:hover,
+.planning-selector svg:focus {
+    stroke: var(--color-accent-1);
+}
+
+.planning-selector svg.selected:hover,
+.planning-selector svg.selected:focus {
+    fill: var(--color-accent-1);
+}
+
+/*
     Izly
 */
 #izly summary {

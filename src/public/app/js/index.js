@@ -5,16 +5,16 @@ document.addEventListener("alpine:init", () => {
       timeZone: "UTC",
     }),
     list: {},
+
     async update() {
       if (!navigator.onLine) return; // do nothing if there is no connection
 
       start_loader();
 
       try {
-        const list =
-          await (await fetch(
-            `https://api.licence-informatique-lemans.tk/v2/find-free-room.json`,
-          )).json();
+        const list = await (await fetch(
+          `https://api.licence-informatique-lemans.tk/v2/find-free-room.json`,
+        )).json();
 
         if (!list?.error) this.list = list;
         else {
@@ -197,7 +197,10 @@ const update_planning = async (initial = false) => {
 
     return;
   }
-  if (typeof level !== "string" || typeof group !== "string") { // if no level or group selected, only favorites can be updated
+  if (
+    typeof level !== "string" ||
+    !(typeof group === "string" || typeof group === "number")
+  ) { // if no level or group selected, only favorites can be updated
     update_favorites_planning();
     end_loader();
 
@@ -289,52 +292,6 @@ const switch_planning = (level_, group_) => {
 
 window.addEventListener("load", async () => {
   await planning_resources_loaded;
-
-  // menu button generation
-  const generate_planning_buttons = (key) => {
-    const summary_element = document.createElement("summary");
-    const details_element = document.createElement("details");
-    const list_element = document.createElement("ul");
-
-    summary_element.textContent = planning_resources_name[key].name;
-
-    for (const index in planning_resources_name[key].name_list) {
-      const planning_button_element = document.createElement("planning-button");
-
-      planning_button_element.init(
-        key,
-        index,
-        switch_planning,
-        fetch_favorite_planning,
-      );
-      list_element.append(planning_button_element);
-    }
-
-    details_element.append(
-      summary_element,
-      list_element,
-    );
-
-    return details_element;
-  };
-
-  // generate study level menu button html
-  const study_level_list_element = document.getElementById("study-level");
-
-  for (const study_level of planning_resources_type["study-level"]) {
-    study_level_list_element.append(
-      generate_planning_buttons(study_level),
-    );
-  }
-
-  // generate place menu button html
-  const place_list_element = document.getElementById("place");
-
-  for (const place of (planning_resources_type["place"])) {
-    place_list_element.append(
-      generate_planning_buttons(place),
-    );
-  }
 
   // listen for planning fetch request
   planning_element.addEventListener("planningfetch", async (event) => {
