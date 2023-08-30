@@ -829,6 +829,38 @@ customElements.define("day-viewer", DayViewer);
 customElements.define("lesson-viewer", LessonViewer);
 
 document.addEventListener("alpine:init", () => {
+  Alpine.data("free_room", () => ({
+    date_to_time_intl: new Intl.DateTimeFormat("default", {
+      timeStyle: "short",
+      timeZone: "UTC",
+    }),
+    list: {},
+
+    async update() {
+      if (!navigator.onLine) return; // do nothing if there is no connection
+
+      start_loader();
+
+      try {
+        const list = await (await fetch(
+          `https://api.licence-informatique-lemans.tk/v2/find-free-room.json`,
+        )).json();
+
+        if (!list?.error) this.list = list;
+        else {
+          console.error(
+            `Failed to update free room list :`,
+            list.error,
+          );
+        }
+      } catch {
+        console.error(`Failed to update free room list`);
+      }
+
+      end_loader();
+    },
+  }));
+
   Alpine.data("planning_selector", (resources_type) => ({
     levels: [],
 
