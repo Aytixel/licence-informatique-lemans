@@ -31,6 +31,9 @@ addEventListener("install", (event) => {
       "https://api.licence-informatique-lemans.tk/v2/planning-resources-name.json",
       "https://api.licence-informatique-lemans.tk/v2/planning-resources-type.json",
       "https://unpkg.com/mol_time_all/web.js",
+      "https://cdn.jsdelivr.net/npm/alpinejs@3.13.0/dist/cdn.min.js",
+      "https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.13.0/dist/cdn.min.js",
+      "https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.13.0/dist/cdn.min.js",
     ]);
   })());
 });

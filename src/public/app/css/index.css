@@ -324,7 +324,7 @@ body.offline::after {
     translate: 0.5em 0.2em;
 }
 
-#izly-connection-form,
+#izly form,
 #izly-pay {
     width: calc(100% - 0.5em);
     max-width: 40vh;
@@ -355,17 +355,7 @@ body.offline::after {
     margin: 0.5em 0;
 }
 
-#izly.connected #izly-connection-form,
-#izly-pay {
-    display: none;
-}
-
-#izly-connection-form,
-#izly.connected #izly-pay {
-    display: block;
-}
-
-#izly-pay img {
+#izly-qrcode {
     width: 100%;
     aspect-ratio: 1/1;
 
