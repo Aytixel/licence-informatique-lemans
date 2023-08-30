@@ -59,38 +59,6 @@ const update_free_room_list = async () => {
   end_loader(false);
 };
 
-// menu
-const menu_button_element = document.getElementById("menu-button");
-const menu_element = document.getElementById("menu");
-
-menu_button_element.addEventListener(
-  "mousedown",
-  (event) => event.preventDefault(),
-);
-menu_button_element.addEventListener(
-  "touchdown",
-  (event) => event.preventDefault(),
-);
-menu_button_element.addEventListener("pointerup", (event) => {
-  event.preventDefault();
-
-  menu_element.showModal();
-
-  update_free_room_list();
-});
-menu_element.addEventListener("pointerup", (event) => {
-  const bounding_rect = menu_element.getBoundingClientRect();
-
-  if (
-    event.clientX < bounding_rect.left || event.clientX > bounding_rect.right ||
-    event.clientY < bounding_rect.top || event.clientY > bounding_rect.bottom
-  ) {
-    menu_element.close();
-
-    room_list_element.innerHTML = "";
-  }
-});
-
 // planning
 const search_params = new URLSearchParams(location.search);
 let level = search_params.get("level") || localStorage.getItem("history-level");
