@@ -139,7 +139,7 @@
                             <ul>
                                 <template x-for="(group, group_index) in planning_resources_name[level].name_list"
                                     :key="group">
-                                    <li @click="click(level, group_index)">
+                                    <li @click="switch_planning(level, group_index)">
                                         <svg @click.stop="select_favorite(level, group_index)"
                                             :class="in_favorites(level, group_index) &&'selected'"
                                             xmlns="http://www.w3.org/2000/svg"
@@ -164,7 +164,7 @@
                             <ul>
                                 <template x-for="(group, group_index) in planning_resources_name[level].name_list"
                                     :key="group">
-                                    <li @click="click(level, group_index)">
+                                    <li @click="switch_planning(level, group_index)">
                                         <svg @click.stop="select_favorite(level, group_index)"
                                             :class="in_favorites(level, group_index) &&'selected'"
                                             xmlns="http://www.w3.org/2000/svg"

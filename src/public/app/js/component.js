@@ -893,8 +893,5 @@ document.addEventListener("alpine:init", () => {
 
       localStorage.setItem("favorites", JSON.stringify(favorites));
     },
-    click(level, group) {
-      switch_planning(level, group);
-    },
   }));
 });
