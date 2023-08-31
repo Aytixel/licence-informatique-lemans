@@ -76,21 +76,8 @@
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.0/dist/cdn.min.js" defer></script>
 </head>
 
-<body x-data="{
-        offline: !navigator.onLine,
-        izly_connected: false,
-        open_menu() {
-            document.getElementById('izly').children[0].open = this.izly_connected;
-            
-            $refs.menu.showModal();
-            $dispatch('update-free-room')
-        },
-        close_menu({clientX, clientY}) {
-            const {left, right, top, bottom} = $refs.menu.getBoundingClientRect();
-
-            if (clientX < left || clientX > right || clientY < top || clientY > bottom) $refs.menu.close();
-        },
-    }" @offline.window="offline = true" @online.window="offline = false" :class="offline && 'offline'">
+<body x-data="{offline: !navigator.onLine, izly_connected: false}" @offline.window="offline = true"
+    @online.window="offline = false" :class="offline && 'offline'">
     <div id="top-bar">
         <h1>Pas de formation</h1>
         <h2>sélectionner</h2>

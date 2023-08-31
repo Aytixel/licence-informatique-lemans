@@ -1,3 +1,19 @@
+// menu
+function open_menu() {
+  document.getElementById("izly").children[0].open = this.izly_connected;
+
+  this.$refs.menu.showModal();
+  this.$dispatch("update-free-room");
+}
+
+function close_menu({ clientX, clientY }) {
+  const { left, right, top, bottom } = this.$refs.menu.getBoundingClientRect();
+
+  if (clientX < left || clientX > right || clientY < top || clientY > bottom) {
+    this.$refs.menu.close();
+  }
+}
+
 // planning
 const search_params = new URLSearchParams(location.search);
 let level = search_params.get("level") || localStorage.getItem("history-level");
