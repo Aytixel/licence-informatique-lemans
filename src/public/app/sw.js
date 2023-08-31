@@ -8,6 +8,7 @@ addEventListener("install", (event) => {
       "/css/font.css",
       "/css/palette.css",
       "/css/index.css",
+      "/css/planning-components.css",
       "/js/component.js",
       "/js/index.js",
       "/js/izly.js",
