@@ -18,7 +18,6 @@ function close_menu({ clientX, clientY }) {
 const search_params = new URLSearchParams(location.search);
 let level = search_params.get("level") || localStorage.getItem("history-level");
 let group = search_params.get("group") || localStorage.getItem("history-group");
-const planning_element = document.getElementsByTagName("planning-viewer")[0];
 const title_element = [
   document.getElementsByTagName("h1")[0],
   document.getElementsByTagName("h2")[0],
@@ -37,7 +36,7 @@ const load_planning = debounce((planning_data) => {
     planning_resources_name[planning_data?.level]
       ?.name_list[planning_data?.group]
   ) {
-    planning_element.load(planning_data);
+    Alpine.store("planning_viewer").load(planning_data);
     title_element[0].textContent =
       planning_resources_name[planning_data?.level].name;
     title_element[1].textContent = planning_resources_name[planning_data?.level]
@@ -47,7 +46,7 @@ const load_planning = debounce((planning_data) => {
       planning_resources_name[planning_data?.level]
         ?.name_list[planning_data?.group]
     }`;
-  } else planning_element.reset();
+  } else Alpine.store("planning_viewer").reset();
 }, 150);
 
 const add_empty_days = (planning_data) => {
@@ -212,13 +211,13 @@ const update_planning = async (initial = false) => {
         : keep_only_date(new Date()),
       initial
         ? keep_only_date(add_days(new Date(), 7))
-        : planning_element.end_date,
+        : Alpine.store("planning_viewer").end_date,
     );
 
     if (!initial) {
       const new_planning_data = planning_data;
 
-      planning_data = { ...planning_element.data };
+      planning_data = { ...Alpine.store("planning_viewer").data };
 
       merge_new_planning(planning_data, new_planning_data);
     }
@@ -276,20 +275,20 @@ window.addEventListener("load", async () => {
   await planning_resources_loaded;
 
   // listen for planning fetch request
-  planning_element.addEventListener("planningfetch", async (event) => {
+  window.addEventListener("planningfetch", async (event) => {
     if (!navigator.onLine) return; // do nothing if there is no connection
 
     start_loader();
 
-    const planning_data = { ...planning_element.data };
+    const planning_data = { ...Alpine.store("planning_viewer").data };
     let new_planning_data;
 
     if (event.request > 0) {
       new_planning_data = await fetch_planning(
         level,
         group,
-        planning_element.end_date,
-        keep_only_date(add_days(planning_element.end_date, 7)),
+        Alpine.store("planning_viewer").end_date,
+        keep_only_date(add_days(Alpine.store("planning_viewer").end_date, 7)),
       );
 
       merge_new_planning(planning_data, new_planning_data);
@@ -297,8 +296,10 @@ window.addEventListener("load", async () => {
       new_planning_data = await fetch_planning(
         level,
         group,
-        keep_only_date(add_days(planning_element.start_date, -7)),
-        planning_element.start_date,
+        keep_only_date(
+          add_days(Alpine.store("planning_viewer").start_date, -7),
+        ),
+        Alpine.store("planning_viewer").start_date,
       );
 
       merge_new_planning(planning_data, new_planning_data);

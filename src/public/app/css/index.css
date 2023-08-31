@@ -261,13 +261,15 @@ body.offline::after {
 /*
     Planning Selector
 */
-.planning-selector li {
+[x-data*="planning_selector"] li {
+    display: block;
+
     height: 1.5em;
 
     cursor: pointer;
 }
 
-.planning-selector svg {
+[x-data*="planning_selector"] svg {
     margin-right: 0.5em;
 
     height: 1em;
@@ -279,17 +281,17 @@ body.offline::after {
     transition: 0.2s ease-in-out fill, 0.2s ease-in-out stroke;
 }
 
-.planning-selector svg.selected {
+[x-data*="planning_selector"] svg.selected {
     fill: var(--color-accent-0);
 }
 
-.planning-selector svg:hover,
-.planning-selector svg:focus {
+[x-data*="planning_selector"] svg:hover,
+[x-data*="planning_selector"] svg:focus {
     stroke: var(--color-accent-1);
 }
 
-.planning-selector svg.selected:hover,
-.planning-selector svg.selected:focus {
+[x-data*="planning_selector"] svg.selected:hover,
+[x-data*="planning_selector"] svg.selected:focus {
     fill: var(--color-accent-1);
 }
 
@@ -412,16 +414,4 @@ body.offline::after {
     margin-left: 1em;
 
     font-size: 0.8em;
-}
-
-/*
-    Planning Viewer
-*/
-planning-viewer {
-    position: absolute;
-    top: 6.4em;
-    left: 0;
-
-    height: calc(100% - 6.5em);
-    width: 100%;
 }

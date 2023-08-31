@@ -34,6 +34,7 @@ addEventListener("install", (event) => {
       "https://cdn.jsdelivr.net/npm/alpinejs@3.13.0/dist/cdn.min.js",
       "https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.13.0/dist/cdn.min.js",
       "https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.13.0/dist/cdn.min.js",
+      "https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.13.0/dist/cdn.min.js",
     ]);
   })());
 });

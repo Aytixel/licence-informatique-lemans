@@ -16,6 +16,7 @@
     <link rel="preload stylesheet" as="style" type="text/css" href="/css/font.css">
     <link rel="preload stylesheet" as="style" type="text/css" href="/css/palette.css">
     <link rel="preload stylesheet" as="style" type="text/css" href="/css/index.css">
+    <link rel="preload stylesheet" as="style" type="text/css" href="/css/planning-components.css">
     <script>
         function debounce(callback, delay) {
             let timer;
@@ -70,7 +71,8 @@
     <script src="/js/scroll-snap.js" async></script>
     <script src="/js/izly.js" defer></script>
     <script src="/js/component.js" defer></script>
-    <script src="/js/index.js" defer></script>
+    <script src="/js/index.js" async></script>
+    <script src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.13.0/dist/cdn.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.13.0/dist/cdn.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.13.0/dist/cdn.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.0/dist/cdn.min.js" defer></script>
@@ -119,7 +121,7 @@
             </li>
             <li>
                 <h3>Formations</h3>
-                <ul class="planning-selector" x-data="planning_selector('study-level')">
+                <ul x-data="planning_selector('study-level')">
                     <template x-for="level in levels" :key="level">
                         <details>
                             <summary x-text="planning_resources_name[level].name"></summary>
@@ -144,7 +146,7 @@
             </li>
             <li>
                 <h3>Bâtiment</h3>
-                <ul class="planning-selector" x-data="planning_selector('place')">
+                <ul x-data="planning_selector('place')">
                     <template x-for="level in levels" :key="level">
                         <details>
                             <summary x-text="planning_resources_name[level].name"></summary>
@@ -192,7 +194,43 @@
             </li>
         </ul>
     </dialog>
-    <planning-viewer></planning-viewer>
+    <div x-data="planning_viewer" @resize.window.passive="resize">
+        <div class="left-bar" x-show="show_left_bar" x-transition.duration.300ms.opacity></div>
+        <div class="container" x-ref="container" @scroll.passive="scroll">
+            <template x-for="day_data in data.days" :key="day_data.date">
+                <div x-data="day_viewer(day_data)" :data-date="day_data.date"
+                    @resize.window.passive="update_indicator_bars">
+                    <time>
+                        <h2 x-text="day_date_format.toString('D Mon YYYY')"></h2>
+                        <h3 x-text="day_date_format.toString('WD')"></h3>
+                    </time>
+                    <div class="top-bar" x-show="show_top_bar" x-transition.duration.300ms.opacity></div>
+                    <div class="container" x-ref="container" @scroll.passive="update_indicator_bars">
+                        <template x-for="lesson_data in data.lessons"
+                            :key="lesson_data.start_date + lesson_data.end_date">
+                            <div tabindex="0" x-data="lesson_viewer(lesson_data)" :class="show && 'show'"
+                                :style="get_background(data.title)"
+                                @click="show = true; $nextTick(() => $el.scrollIntoView({ inline: 'center', behavior: 'smooth' }));"
+                                @focusin="show = true" @click.outside="show = false" @focusout="show = false">
+                                <h3 x-text="data.title"></h3>
+                                <p x-html="data.description.join('<br>')"></p>
+                                <span class="bottom-bar">
+                                    <time :datetime="data.start_date"
+                                        x-text="new $mol_time_moment(data.start_date).toString('hh:mm')"></time> - <time
+                                        :datetime="data.end_date"
+                                        x-text="new $mol_time_moment(data.end_date).toString('hh:mm')"></time>
+                                    <div class="rooms" x-html="show ? data.rooms.join('<br>') : data.rooms.join(', ')">
+                                    </div>
+                                </span>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="bottom-bar" x-show="show_bottom_bar" x-transition.duration.300ms.opacity></div>
+                </div>
+            </template>
+        </div>
+        <div class="right-bar" x-show="show_right_bar" x-transition.duration.300ms.opacity></div>
+    </div>
 </body>
 
 </html>
