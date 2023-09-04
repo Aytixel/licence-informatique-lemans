@@ -53,7 +53,7 @@
 
         if (!Array.isArray(JSON.parse(localStorage.getItem("favorites")))) localStorage.setItem("favorites", "[]");
 
-        screen?.orientation?.lock("natural").catch(() => console.log("Can't lock screen orientation !"))
+        if (screen?.orientation?.lock !== undefined) screen.orientation.lock("natural").catch(() => console.log("Can't lock screen orientation !"));
 
         let loader_count = 0;
 
