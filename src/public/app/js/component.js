@@ -315,6 +315,8 @@ document.addEventListener("alpine:init", () => {
         1000 * 60 * 2,
       );
 
+      this.$watch("data", update_background_position);
+
       update_background_position();
     },
     get_background(title) {

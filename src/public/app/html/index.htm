@@ -198,7 +198,7 @@
         <div class="left-bar" x-show="show_left_bar" x-transition.duration.300ms.opacity></div>
         <div class="container" x-ref="container" @scroll.passive="scroll">
             <template x-for="day_data in data.days" :key="day_data.date">
-                <div x-data="day_viewer(day_data)" :data-date="day_data.date"
+                <div x-data="day_viewer(day_data)" :data-date="data.date" x-model="day_data" x-modelable="data"
                     @resize.window.passive="update_indicator_bars">
                     <time>
                         <h2 x-text="day_date_format.toString('D Mon YYYY')"></h2>
@@ -209,7 +209,7 @@
                         <template x-for="lesson_data in data.lessons"
                             :key="lesson_data.start_date + lesson_data.end_date">
                             <div tabindex="0" x-data="lesson_viewer(lesson_data)" :class="show && 'show'"
-                                :style="get_background(data.title)"
+                                :style="get_background(data.title)" x-model="lesson_data" x-modelable="data"
                                 @click="show = true; $nextTick(() => $el.scrollIntoView({ inline: 'center', behavior: 'smooth' }));"
                                 @focusin="show = true" @click.outside="show = false" @focusout="show = false">
                                 <h3 x-text="data.title"></h3>
