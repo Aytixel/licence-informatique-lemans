@@ -376,13 +376,7 @@ body.offline::after {
     text-align: left;
 }
 
-#izly-tos details {
-    display: inline-block;
-
-    margin: 0.5em;
-}
-
-#izly-tos summary {
+#izly-tos div {
     font-weight: bold;
 
     text-decoration: underline;
