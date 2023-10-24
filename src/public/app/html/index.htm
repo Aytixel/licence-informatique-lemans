@@ -214,9 +214,9 @@
                                 <p x-html="data.description.join('<br>')"></p>
                                 <span class="bottom-bar">
                                     <time :datetime="data.start_date"
-                                        x-text="new $mol_time_moment(data.start_date).toOffset().toString('hh:mm')"></time>
+                                        x-text="new $mol_time_moment(data.start_date).shift(time_offset).toString('hh:mm')"></time>
                                     - <time :datetime="data.end_date"
-                                        x-text="new $mol_time_moment(data.end_date).toOffset().toString('hh:mm')"></time>
+                                        x-text="new $mol_time_moment(data.end_date).shift(time_offset).toString('hh:mm')"></time>
                                     <div class="rooms" x-html="show ? data.rooms.join('<br>') : data.rooms.join(', ')">
                                     </div>
                                 </span>

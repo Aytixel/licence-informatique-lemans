@@ -287,6 +287,7 @@ document.addEventListener("alpine:init", () => {
 
   Alpine.data("lesson_viewer", (data) => ({
     data,
+    time_offset: -new Date(data.start_date).getTimezoneOffset() * 60 * 1000,
     show: false,
 
     init() {
