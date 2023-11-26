@@ -321,7 +321,7 @@ document.addEventListener("alpine:init", () => {
       update_background_position();
     },
     get_background(title) {
-      if (title.match(/exam|qcm|contrôle|partiel|soutenance/i)) {
+      if (title.match(/exam|qcm|contrôle|partiel|soutenance|session/i)) {
         //exam
         return "background-image: linear-gradient(180deg, #f9d2d9 0%, #f9d2d9 50%, #f9335f 50%, #f9335f 100%);";
       }
